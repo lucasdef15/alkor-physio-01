@@ -8,7 +8,7 @@ export default function HeroContent() {
       <h1 className="text-[2.6rem] leading-[1.05] font-semibold tracking-tighter text-white sm:text-5xl md:text-6xl lg:text-7xl">
         Recupere seu movimento
         <br className="hidden sm:block" />
-        <span>com </span>
+        <span> com </span>
         <span className="text-emerald-400">qualidade e cuidado</span>
       </h1>
       <p className="mx-auto mt-6 max-w-lg text-[1.1rem] text-slate-300 sm:max-w-xl sm:text-lg md:max-w-2xl md:text-xl lg:text-2xl">
