@@ -8,7 +8,7 @@ const indicators = [
 
 export default function Indicators() {
   return (
-    <section className="mt-20 px-6">
+    <section className="mt-10 mb-10 px-6 md:mt-20">
       <div className="mx-auto max-w-5xl">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
           {indicators.map((item) => (
