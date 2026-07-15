@@ -1,30 +1,33 @@
 import CountUp from 'react-countup';
 
 const indicators = [
-  { base: 'Anos de Experiência', sub: 'em Reabilitação', value: 8 },
-  { base: 'Pacientes atendidos', sub: 'com Excelência', value: 500 },
-  { base: 'Satisfação', sub: 'dos Pacientes', value: 98 },
+  { base: 'Anos de Experiência', sub: 'em Reabilitação', suffix: '+', value: 8 },
+  { base: 'Pacientes atendidos', sub: 'com Excelência', suffix: '+', value: 500 },
+  { base: 'Satisfação', sub: 'dos Pacientes', suffix: '%', value: 98 },
 ];
 
 export default function Indicators() {
   return (
-    <div>
-      <div className="mt-16 flex flex-wrap items-center justify-center gap-x-10 gap-y-6 text-sm font-semibold tracking-tight text-slate-400">
-        {indicators.map((text, index) => (
-          <div className="flex items-center gap-3" key={index}>
-            <CountUp
-              className="text-5xl font-semibold text-white"
-              end={text.value}
-              start={0}
-              suffix={text.value === 98 ? '%' : '+'}
-            />
-            <div className="flex flex-col items-start text-white">
-              <p className="font-medium">{text.base}</p>
-              <p className="text-slate-300/70">{text.sub}</p>
+    <section className="mt-20 px-6">
+      <div className="mx-auto max-w-5xl">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+          {indicators.map((item) => (
+            <div className="group flex flex-col items-center text-center" key={item.base}>
+              <CountUp
+                className="text-6xl font-semibold tracking-tighter text-white transition-colors duration-300 group-hover:text-emerald-400 md:text-7xl"
+                duration={2.2}
+                end={item.value}
+                start={0}
+                suffix={item.suffix}
+              />
+
+              <h3 className="mt-4 text-xl font-medium text-white">{item.base}</h3>
+
+              <p className="mt-1 text-sm text-slate-400">{item.sub}</p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

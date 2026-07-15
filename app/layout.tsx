@@ -2,9 +2,10 @@ import type { Metadata } from 'next';
 
 import { Geist, Geist_Mono, Montserrat_Alternates, Space_Grotesk } from 'next/font/google';
 
-import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 import './globals.css';
+import Header from '@/components/layout/Header';
 
 const geistSans = Geist({
   subsets: ['latin'],
@@ -46,7 +47,7 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col">
         <Header />
         <main className="flex-1">{children}</main>
-        <footer>footer</footer>
+        <Footer />
       </body>
     </html>
   );
