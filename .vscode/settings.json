@@ -5,6 +5,7 @@
   },
 
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.minimap.enabled": false,
 
   "editor.formatOnSave": true,
 

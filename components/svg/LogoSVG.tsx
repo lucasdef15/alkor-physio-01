@@ -45,7 +45,7 @@ export default function LogoSVG({
         {name}
       </text>
 
-      <g opacity=".75" stroke="currentColor" strokeLinecap="round" strokeWidth=".5">
+      <g opacity=".75" stroke={fill ?? 'currentColor'} strokeLinecap="round" strokeWidth=".5">
         <line x1="20" x2={leftLineEnd} y1="52" y2="52" />
         <line x1={rightLineStart} x2="160" y1="52" y2="52" />
       </g>

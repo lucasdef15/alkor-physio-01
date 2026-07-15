@@ -9,7 +9,7 @@ interface MobileHeaderProps {
 
 export default function MobileHeader({ Links, setIsMenuOpen }: MobileHeaderProps) {
   return (
-    <div className="rounded-b-2xl border-t border-slate-100 bg-white/95 backdrop-blur-xl md:hidden">
+    <div className="flex rounded-b-2xl border-t border-slate-100 bg-white/95 backdrop-blur-xl lg:hidden">
       <nav className="px-6 py-6">
         <ul className="flex flex-col gap-6 text-base font-medium text-slate-700">
           {Links.map((link) => (

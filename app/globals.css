@@ -6,7 +6,7 @@
   --foreground: #1f3a5f;
 
   /* Brand */
-  --primary: #1f3a5f;
+  --primary: teal-500;
   --accent: #5fa8a5;
 
   /* Surfaces */
@@ -56,6 +56,42 @@
   --font-mono: var(--font-geist-mono);
   --font-space-grotesk: var(--font-space-grotesk);
   --font-montserrat: var(--font-montserrat);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateY(4px);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-scroll {
+  animation: scroll 2s ease-in-out infinite;
 }
 
 body {
