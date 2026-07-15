@@ -21,39 +21,42 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScrool = () => {
+    const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
 
-    handleScrool();
-    window.addEventListener('scroll', handleScrool);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle('menu-open', isMenuOpen);
 
     return () => {
-      window.removeEventListener('scroll', handleScrool);
+      document.body.classList.remove('menu-open');
     };
-  });
+  }, [isMenuOpen]);
 
   return (
     <header
-      className={`fixed left-1/2 z-50 -translate-x-1/2 transition-all duration-500 ${
-        isScrolled ? 'top-3 max-w-[85%]' : 'top-4 max-w-[92%]'
-      } w-full`}
+      className={`fixed left-1/2 z-50 w-full -translate-x-1/2 transition-all duration-500 ${
+        isScrolled ? 'top-3 max-w-[88%]' : 'top-4 max-w-[92%]'
+      }`}
     >
       <div
-        className={`rounded-2xl border transition-all duration-500 ${
+        className={`rounded-3xl border shadow-2xl backdrop-saturate-180 transition-colors duration-500 ${
           isScrolled
-            ? 'border-white/15 bg-white/15 backdrop-blur-3xl'
-            : 'border-white/20 bg-white/20 backdrop-blur-xl'
+            ? 'border-white/15 bg-white/10 shadow-black/35 backdrop-blur-3xl'
+            : 'border-white/20 bg-white/15 shadow-black/20 backdrop-blur-2xl'
         }`}
       >
-        <div
-          className={`flex items-center justify-between px-4 transition-all duration-500 md:px-6 ${
-            isScrolled ? 'py-3' : 'py-3'
-          }`}
-        >
+        <div className="flex items-center justify-between px-4 py-3 md:px-5">
           <div className="flex items-center">
             <LogoSVG
-              className={`w-auto transition-all duration-500 ${isScrolled ? 'md-11 h-10' : 'h-10 md:h-12'}`}
+              className={`h-12 w-auto transition-transform duration-500 ${
+                isScrolled ? 'scale-90' : 'scale-100'
+              }`}
               fill="white"
               name="ΛLKOR"
               surname="PHYSIO"
@@ -77,7 +80,7 @@ export default function Header() {
 
           <div className="hidden items-center gap-3 lg:flex">
             <button
-              className={`rounded-3xl bg-white text-sm font-semibold text-slate-900 shadow-lg transition-all hover:bg-white/90 active:scale-95 ${isScrolled ? 'px-4 py-2.5' : 'px-5 py-2.5'}`}
+              className="rounded-3xl bg-white px-6 py-2.5 text-sm font-semibold text-slate-900 shadow-lg transition-all hover:bg-white/90 active:scale-95"
               onClick={() =>
                 document.getElementById('contato')?.scrollIntoView({ behavior: 'smooth' })
               }
@@ -88,14 +91,14 @@ export default function Header() {
 
           <button
             aria-label="Toggle menu"
-            className={`p-2 text-white lg:hidden ${isScrolled ? 'p-1' : 'p-2'}`}
+            className="p-2 text-white transition-[height,width] lg:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X size={isScrolled ? 24 : 28} /> : <Menu size={isScrolled ? 24 : 28} />}
+            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
 
-        {isMenuOpen && <MobileHeader Links={Links} setIsMenuOpen={setIsMenuOpen} />}
+        <MobileHeader isOpen={isMenuOpen} links={Links} setIsMenuOpen={setIsMenuOpen} />
       </div>
     </header>
   );

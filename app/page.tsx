@@ -6,7 +6,7 @@ export const borderDebug = {
 
 export default function Home() {
   return (
-    <div className="">
+    <div className="relative">
       <Hero />
     </div>
   );

@@ -94,6 +94,10 @@
   animation: scroll 2s ease-in-out infinite;
 }
 
+body.menu-open {
+  overflow: hidden;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
