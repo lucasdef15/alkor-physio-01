@@ -4,7 +4,7 @@ export default function ScrollBadge({ text = 'Explore' }: { text?: string }) {
       <span>{text}</span>
 
       <div className="relative mt-2 flex h-9 w-5 items-center justify-center rounded-full border border-slate-400/60">
-        <div className="animate-scroll absolute h-3 w-1 rounded-full bg-emerald-400" />
+        <div className="animate-scroll bg-primary absolute h-3 w-1 rounded-full" />
       </div>
     </div>
   );

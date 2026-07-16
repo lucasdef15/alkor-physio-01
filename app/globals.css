@@ -3,59 +3,74 @@
 :root {
   /* Base */
   --background: #fafaf8;
-  --foreground: #1f3a5f;
+  --surface: #f5f5f4;
+  --surface-elevated: #ffffff;
 
-  /* Brand */
-  --primary: teal-500;
-  --accent: #5fa8a5;
+  /* Texto */
+  --foreground: #0f172a;
+  --foreground-muted: #e2e8f0d4;
 
-  /* Surfaces */
-  --surface: #ffffff;
-  --surface-muted: #f3f5f7;
+  /* Marca */
+  --primary: #10b981;
+  --primary-foreground: #f8fafc;
+  --primary-foreground-muted: #cbd5e1;
 
-  /* Text */
-  --text-primary: #1f3a5f;
-  --text-secondary: #6b7280;
+  /* variações*/
+  --primary-soft: #6ee7b7;
+  --primary-hover: #047857;
+  --primary-active: #065f46;
 
-  /* Border */
-  --border: #e5e7eb;
+  /* Interface */
+  --border: #e2e8f0;
+  --ring: #10b981;
 
   /* Feedback */
-  --success: #16a34a;
-  --warning: #d97706;
-  --danger: #dc2626;
+  --success: #22c55e;
+  --warning: #eab308;
+  --error: #ef4444;
+
+  /* Effects */
+  --shadow: rgba(5, 150, 105);
+  --hero-overlay: linear-gradient(
+    to bottom,
+    rgba(2, 23, 17, 0.5),
+    rgb(2, 23, 17, /0.6),
+    rgb(2, 23, 17, /0.7)
+  );
 }
 
 @theme inline {
-  /* Core */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-
-  /* Brand */
-  --color-primary: var(--primary);
-  --color-accent: var(--accent);
-
-  /* Surface */
-  --color-surface: var(--surface);
-  --color-surface-muted: var(--surface-muted);
-
-  /* Text */
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-
-  /* Border */
-  --color-border: var(--border);
-
-  /* Feedback */
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-danger: var(--danger);
-
   /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-space-grotesk: var(--font-space-grotesk);
   --font-montserrat: var(--font-montserrat);
+
+  /* Colors */
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-foreground-muted: var(--primary-foreground-muted);
+
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+
+  --color-shadow: var(--shadow);
+  --color-hero-overlay: var(--hero-overlay);
 }
 
 @keyframes float {

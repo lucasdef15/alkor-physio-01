@@ -47,8 +47,8 @@ export default function Header() {
       <div
         className={`rounded-3xl border shadow-2xl backdrop-saturate-180 transition-colors duration-500 ${
           isScrolled
-            ? 'border-white/15 bg-slate-900/20 shadow-black/35 backdrop-blur-3xl'
-            : 'border-white/20 bg-white/15 shadow-black/20 backdrop-blur-2xl'
+            ? 'border-white/15 bg-slate-900/10 shadow-black/35 backdrop-blur-3xl'
+            : 'border-white/20 bg-white/30 shadow-black/20 backdrop-blur-2xl'
         }`}
       >
         <div className="flex items-center justify-between px-4 py-3 md:px-5">
