@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function Indicators() {
   return (
     <div className="mt-16 mb-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm text-slate-400">

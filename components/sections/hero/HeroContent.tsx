@@ -13,7 +13,7 @@ export default function HeroContent() {
         </span>
       </div>
 
-      <h1 className="text-[2.75rem] leading-[1.08] font-semibold tracking-tight text-slate-900 sm:text-6xl md:text-[4.25rem]">
+      <h1 className="text-foreground text-[2.75rem] leading-[1.08] font-semibold tracking-tight sm:text-6xl md:text-[4.25rem]">
         Respire fundo.
         <br />
         <span className="bg-linear-to-r from-teal-600 via-teal-500 to-sky-500 bg-clip-text text-transparent">
@@ -23,7 +23,7 @@ export default function HeroContent() {
         merecem cuidado especializado.
       </h1>
 
-      <p className="mt-7 max-w-2xl text-lg leading-relaxed text-slate-500 md:text-xl">
+      <p className="text-foreground-muted mt-7 max-w-2xl text-lg leading-relaxed md:text-xl">
         Reabilitação cardiorrespiratória guiada por evidência científica, com acompanhamento próximo
         e humano — para você recuperar fôlego, força e qualidade de vida.
       </p>
