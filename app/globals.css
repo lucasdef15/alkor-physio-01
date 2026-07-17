@@ -158,7 +158,24 @@
 .fw-particle {
   transform-box: fill-box;
   transform-origin: center;
-  animation: fw-float 9s ease-in-out infinite;
+  animation: fw-float var(--particle-dur, 9s) ease-in-out infinite;
+}
+
+@keyframes fw-ripple {
+  0% {
+    opacity: 0.5;
+    transform: scale(0.66);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.32);
+  }
+}
+
+.fw-ripple {
+  transform-box: view-box;
+  transform-origin: 300px 352px;
+  animation: fw-ripple var(--ripple-dur, 4s) ease-out infinite;
 }
 
 .fw-drift-a {
@@ -188,6 +205,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .fw-particle,
+  .fw-ripple,
   .fw-drift-a,
   .fw-drift-b,
   .fw-rise {

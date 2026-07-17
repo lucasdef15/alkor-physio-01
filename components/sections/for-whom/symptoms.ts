@@ -10,20 +10,24 @@ export interface BreathingProfile {
   breathRate: number;
   /** Irregularity of the breath — introduces a "catch"/stutter (0..1). */
   catch: number;
-  /** Intensity of the ambient glow behind the lungs (0..1). */
+  /** Base intensity of the ambient glow behind the lungs (0..1). */
   glow: number;
-  /** How lively the floating particles are (0..1). */
+  /** Slow, gradual swelling of the glow — reads as recovery (0..1). */
+  glowSwell: number;
+  /** Density/opacity of the floating particles (0..1). */
   particle: number;
+  /** Relative float speed of the particles (higher = faster). */
+  particleSpeed: number;
   /** Primary gradient color as an RGB triple. */
   primary: RGB;
   /** Secondary gradient color as an RGB triple. */
   secondary: RGB;
+  /** Amplitude of a subtle chest sway synced to the breath, in degrees. */
+  sway: number;
   /** Subtle postural tilt of the whole figure, in degrees. */
   tilt: number;
-  /** Amplitude of the breathing waves that flow outward (0..1). */
+  /** Amplitude/opacity of the breath ripples emanating from the chest (0..1). */
   waveAmp: number;
-  /** Flow speed of the breathing waves (relative). */
-  waveSpeed: number;
 }
 
 export type RGB = readonly [number, number, number];
@@ -55,16 +59,18 @@ export const SYMPTOMS: Symptom[] = [
     icon: 'breath',
     id: 'breathless',
     profile: {
-      breathDepth: 0.05,
-      breathRate: 2.6,
+      breathDepth: 0.032,
+      breathRate: 2.9,
       catch: 0,
-      glow: 0.5,
-      particle: 0.55,
+      glow: 0.4,
+      glowSwell: 0,
+      particle: 0.42,
+      particleSpeed: 0.6,
       primary: TEAL,
       secondary: SKY,
+      sway: 0,
       tilt: 0,
-      waveAmp: 0.7,
-      waveSpeed: 1.45,
+      waveAmp: 0.42,
     },
     short: 'Falta de ar',
     title: 'Você perde o fôlego em tarefas simples',
@@ -74,16 +80,18 @@ export const SYMPTOMS: Symptom[] = [
     icon: 'stairs',
     id: 'effort',
     profile: {
-      breathDepth: 0.09,
-      breathRate: 2.2,
+      breathDepth: 0.088,
+      breathRate: 2.05,
       catch: 0,
-      glow: 0.62,
+      glow: 0.6,
+      glowSwell: 0,
       particle: 0.85,
+      particleSpeed: 1.85,
       primary: INDIGO,
       secondary: SKY,
-      tilt: 2,
-      waveAmp: 1,
-      waveSpeed: 1.95,
+      sway: 1.4,
+      tilt: 2.4,
+      waveAmp: 0.9,
     },
     short: 'Esforço ao caminhar',
     title: 'Caminhar ou subir escadas cansa mais que antes',
@@ -93,16 +101,18 @@ export const SYMPTOMS: Symptom[] = [
     icon: 'recovery',
     id: 'recovery',
     profile: {
-      breathDepth: 0.11,
+      breathDepth: 0.1,
       breathRate: 6.4,
       catch: 0,
-      glow: 0.72,
-      particle: 0.35,
+      glow: 0.5,
+      glowSwell: 1,
+      particle: 0.32,
+      particleSpeed: 0.5,
       primary: EMERALD,
       secondary: TEAL,
+      sway: 0,
       tilt: 0,
-      waveAmp: 0.62,
-      waveSpeed: 0.72,
+      waveAmp: 0.6,
     },
     short: 'Recuperação',
     title: 'Está se recuperando de uma cirurgia cardíaca ou pulmonar',
@@ -112,16 +122,18 @@ export const SYMPTOMS: Symptom[] = [
     icon: 'cough',
     id: 'cough',
     profile: {
-      breathDepth: 0.045,
-      breathRate: 3.2,
+      breathDepth: 0.05,
+      breathRate: 3.4,
       catch: 1,
-      glow: 0.55,
-      particle: 0.6,
+      glow: 0.5,
+      glowSwell: 0,
+      particle: 0.55,
+      particleSpeed: 1,
       primary: VIOLET,
       secondary: SKY,
-      tilt: -1.4,
-      waveAmp: 0.45,
-      waveSpeed: 1.1,
+      sway: 0,
+      tilt: -1.2,
+      waveAmp: 0.5,
     },
     short: 'Tosse / aperto',
     title: 'Convive com tosse frequente ou aperto no peito',
@@ -131,16 +143,18 @@ export const SYMPTOMS: Symptom[] = [
     icon: 'limit',
     id: 'limitation',
     profile: {
-      breathDepth: 0.045,
+      breathDepth: 0.026,
       breathRate: 4.2,
       catch: 0,
-      glow: 0.4,
-      particle: 0.3,
+      glow: 0.36,
+      glowSwell: 0,
+      particle: 0.28,
+      particleSpeed: 0.55,
       primary: AMBER,
       secondary: VIOLET,
-      tilt: 1.6,
-      waveAmp: 0.5,
-      waveSpeed: 0.9,
+      sway: 0,
+      tilt: 3,
+      waveAmp: 0.38,
     },
     short: 'Limitação',
     title: 'Sente que o corpo já não acompanha sua rotina',

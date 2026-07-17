@@ -9,17 +9,16 @@ interface AnimatedState {
   breathRate: number;
   catch: number;
   glow: number;
+  glowSwell: number;
   particle: number;
+  particleSpeed: number;
   phase: number;
   primary: [number, number, number];
   secondary: [number, number, number];
+  sway: number;
   tilt: number;
   waveAmp: number;
-  waveShift: number;
-  waveSpeed: number;
 }
-
-const WAVE_TILE = 120;
 
 /**
  * Drives the breathing illustration entirely through CSS custom properties
@@ -51,14 +50,15 @@ export function useBreathingAnimation(
       breathRate: initial.breathRate,
       catch: initial.catch,
       glow: initial.glow,
+      glowSwell: initial.glowSwell,
       particle: initial.particle,
+      particleSpeed: initial.particleSpeed,
       phase: 0,
       primary: [...initial.primary] as [number, number, number],
       secondary: [...initial.secondary] as [number, number, number],
+      sway: initial.sway,
       tilt: initial.tilt,
       waveAmp: initial.waveAmp,
-      waveShift: 0,
-      waveSpeed: initial.waveSpeed,
     };
 
     let raf = 0;
@@ -76,28 +76,33 @@ export function useBreathingAnimation(
       state.breathRate = lerp(state.breathRate, target.breathRate, ease);
       state.catch = lerp(state.catch, target.catch, ease);
       state.glow = lerp(state.glow, target.glow, ease);
+      state.glowSwell = lerp(state.glowSwell, target.glowSwell, ease);
       state.particle = lerp(state.particle, target.particle, ease);
+      state.particleSpeed = lerp(state.particleSpeed, target.particleSpeed, ease);
+      state.sway = lerp(state.sway, target.sway, ease);
       state.tilt = lerp(state.tilt, target.tilt, ease);
       state.waveAmp = lerp(state.waveAmp, target.waveAmp, ease);
-      state.waveSpeed = lerp(state.waveSpeed, target.waveSpeed, ease);
       state.primary = lerpRGB(state.primary, target.primary, easeColor);
       state.secondary = lerpRGB(state.secondary, target.secondary, easeColor);
 
       let breath = 0.5;
       let coughPulse = 0;
       let sway = 0;
+      let swell = 0;
 
       if (!prefersReducedMotion) {
         state.phase += (dt * (Math.PI * 2)) / Math.max(0.6, state.breathRate);
         breath = smootherstep((Math.sin(state.phase - Math.PI / 2) + 1) / 2);
         coughPulse = state.catch * Math.pow(Math.max(0, Math.sin(state.phase * 2.15)), 14);
-        sway = Math.sin(state.phase) * 0.45;
-        state.waveShift = (state.waveShift + dt * state.waveSpeed * 26) % WAVE_TILE;
+        sway = Math.sin(state.phase) * state.sway;
+        swell = state.glowSwell * ((Math.sin(state.phase * 0.4) + 1) / 2) * 0.24;
       }
 
-      const lungScale = 1 + breath * state.breathDepth - coughPulse * 0.055;
-      const glow = Math.min(1, state.glow * (0.72 + 0.28 * breath) + coughPulse * 0.22);
+      const lungScale = 1 + breath * state.breathDepth - coughPulse * 0.07;
+      const glow = Math.min(1, state.glow * (0.7 + 0.3 * breath) + swell + coughPulse * 0.22);
       const waveAmp = state.waveAmp * (0.85 + 0.25 * breath);
+      const rippleDur = clamp(state.breathRate * 1.25, 2.2, 9);
+      const particleDur = clamp(6.5 / Math.max(0.35, state.particleSpeed), 3, 14);
 
       const [r1, g1, b1] = state.primary;
       const [r2, g2, b2] = state.secondary;
@@ -107,8 +112,9 @@ export function useBreathingAnimation(
       s.setProperty('--lung-scale', lungScale.toFixed(4));
       s.setProperty('--glow', glow.toFixed(4));
       s.setProperty('--wave-amp', waveAmp.toFixed(4));
-      s.setProperty('--wave-shift', `${state.waveShift.toFixed(2)}px`);
+      s.setProperty('--ripple-dur', `${rippleDur.toFixed(2)}s`);
       s.setProperty('--particle', state.particle.toFixed(4));
+      s.setProperty('--particle-dur', `${particleDur.toFixed(2)}s`);
       s.setProperty('--tilt', `${(state.tilt + sway).toFixed(3)}deg`);
       s.setProperty('--cough', coughPulse.toFixed(4));
       s.setProperty('--c1r', Math.round(r1).toString());
@@ -125,6 +131,10 @@ export function useBreathingAnimation(
 
     return () => cancelAnimationFrame(raf);
   }, [targetRef]);
+}
+
+function clamp(x: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, x));
 }
 
 function lerp(a: number, b: number, t: number): number {
