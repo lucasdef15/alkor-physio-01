@@ -10,7 +10,6 @@ import MobileHeader from './MobileHeader';
 const Links = [
   { href: '#inicio', name: 'Início' },
   { href: '#especialidades', name: 'Especialidades' },
-  { href: '#como-funciona', name: 'Como Funciona' },
   { href: '#sobre', name: 'Sobre' },
   { href: '#depoimentos', name: 'Depoimentos' },
   { href: '#contato', name: 'Contato' },
@@ -48,7 +47,7 @@ export default function Header() {
         className={`rounded-3xl border shadow-2xl backdrop-saturate-180 transition-colors duration-500 ${
           isScrolled
             ? 'border-white/15 bg-slate-900/10 shadow-black/35 backdrop-blur-3xl'
-            : 'border-white/20 bg-white/30 shadow-black/20 backdrop-blur-2xl'
+            : 'border-white/15 bg-white/30 shadow-black/35 backdrop-blur-3xl'
         }`}
       >
         <div className="flex items-center justify-between px-4 py-3 md:px-5">
@@ -57,14 +56,14 @@ export default function Header() {
               className={`h-12 w-auto transition-transform duration-500 ${
                 isScrolled ? 'scale-90' : 'scale-100'
               }`}
-              fill="white"
+              fill="#0f172a"
               name="ΛLKOR"
               surname="PHYSIO"
             />
           </div>
 
           <nav className="hidden items-center lg:flex">
-            <ul className="flex items-center gap-8 text-sm font-medium text-white">
+            <ul className="flex items-center gap-8 text-sm font-medium text-slate-900">
               {Links.map((link) => (
                 <li key={link.name}>
                   <Link
@@ -80,7 +79,7 @@ export default function Header() {
 
           <div className="hidden items-center gap-3 lg:flex">
             <button
-              className="rounded-3xl bg-white px-6 py-2.5 text-sm font-semibold text-slate-900 shadow-lg transition-all hover:bg-white/90 active:scale-95"
+              className="rounded-3xl bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:bg-white/90 active:scale-95"
               onClick={() =>
                 document.getElementById('contato')?.scrollIntoView({ behavior: 'smooth' })
               }
@@ -91,7 +90,7 @@ export default function Header() {
 
           <button
             aria-label="Toggle menu"
-            className="p-2 text-white transition-[height,width] lg:hidden"
+            className="p-2 text-slate-900 transition-[height,width] lg:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X size={28} /> : <Menu size={28} />}

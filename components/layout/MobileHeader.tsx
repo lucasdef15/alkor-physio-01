@@ -13,7 +13,7 @@ export default function MobileHeader({ isOpen, links, setIsMenuOpen }: MobileHea
   return (
     <div
       className={`overflow-hidden rounded-b-3xl border-t border-white/10 bg-slate-900/60 backdrop-blur-2xl backdrop-saturate-150 transition-all duration-500 lg:hidden ${
-        isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+        isOpen ? 'max-h-125 opacity-100' : 'max-h-0 opacity-0'
       }`}
     >
       <nav className="px-5 py-6">
