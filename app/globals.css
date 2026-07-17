@@ -118,6 +118,83 @@
   animation: badge-breathe 9s cubic-bezier(0.45, 0, 0.2, 1) infinite;
 }
 
+/* ForWhom — illustration ambience */
+
+@keyframes fw-float {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.75);
+  }
+  20%,
+  80% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-24px) scale(1);
+  }
+}
+
+@keyframes fw-drift-a {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(20px, -16px);
+  }
+}
+
+@keyframes fw-drift-b {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-18px, 18px);
+  }
+}
+
+.fw-particle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: fw-float 9s ease-in-out infinite;
+}
+
+.fw-drift-a {
+  transform-box: view-box;
+  animation: fw-drift-a 16s ease-in-out infinite;
+}
+
+.fw-drift-b {
+  transform-box: view-box;
+  animation: fw-drift-b 20s ease-in-out infinite;
+}
+
+@keyframes fw-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fw-rise {
+  animation: fw-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fw-particle,
+  .fw-drift-a,
+  .fw-drift-b,
+  .fw-rise {
+    animation: none;
+  }
+}
+
 body.menu-open {
   overflow: hidden;
 }
