@@ -31,12 +31,7 @@ const PARTICLES = [
   { cx: 380, cy: 200, d: 8, delay: 2.3, r: 1.9 },
 ];
 
-const flowStyle = (opacity: number): CSSProperties => ({
-  opacity,
-  transform: 'translateX(var(--wave-shift)) scaleY(var(--wave-amp))',
-  transformBox: 'view-box',
-  transformOrigin: '300px 350px',
-});
+const RIPPLES = [0, 1, 2];
 
 const DEFAULT_VARS = {
   '--breath': 0.5,
@@ -47,12 +42,13 @@ const DEFAULT_VARS = {
   '--c2g': 189,
   '--c2r': 56,
   '--cough': 0,
-  '--glow': 0.55,
+  '--glow': 0.5,
   '--lung-scale': 1,
-  '--particle': 0.55,
+  '--particle': 0.45,
+  '--particle-dur': '8s',
+  '--ripple-dur': '4s',
   '--tilt': '0deg',
-  '--wave-amp': 0.8,
-  '--wave-shift': '0px',
+  '--wave-amp': 0.5,
 } as CSSProperties;
 
 export default function BreathingIllustration({ className, stageRef }: BreathingIllustrationProps) {
@@ -80,11 +76,6 @@ export default function BreathingIllustration({ className, stageRef }: Breathing
             <stop offset="0" style={{ stopColor: c2(0.28) }} />
             <stop offset="1" style={{ stopColor: 'rgba(255,255,255,0)' }} />
           </radialGradient>
-          <linearGradient id="fw-wave" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0" style={{ stopColor: c1(0) }} />
-            <stop offset="0.5" style={{ stopColor: c1(0.9) }} />
-            <stop offset="1" style={{ stopColor: c1(0) }} />
-          </linearGradient>
           <linearGradient id="fw-figure" x1="0" x2="0" y1="0" y2="1">
             <stop offset="0" style={{ stopColor: c1(0.1) }} />
             <stop offset="1" style={{ stopColor: c2(0.02) }} />
@@ -101,42 +92,6 @@ export default function BreathingIllustration({ className, stageRef }: Breathing
           <ellipse className="fw-drift-b" cx="410" cy="420" fill="url(#fw-blob)" rx="170" ry="160" />
         </g>
 
-        {/* Breathing waves */}
-        <g style={flowStyle(0.9)}>
-          <path
-            d="M40 330 C110 306 170 306 240 330 C170 354 110 354 40 330 Z"
-            fill="none"
-            stroke="url(#fw-wave)"
-            strokeWidth="2"
-          />
-          <path
-            d="M40 300 C120 282 180 282 250 300"
-            stroke="url(#fw-wave)"
-            strokeLinecap="round"
-            strokeWidth="1.6"
-          />
-          <path
-            d="M40 362 C120 380 180 380 250 362"
-            stroke="url(#fw-wave)"
-            strokeLinecap="round"
-            strokeWidth="1.6"
-          />
-          <g transform="translate(600 0) scale(-1 1)">
-            <path
-              d="M40 300 C120 282 180 282 250 300"
-              stroke="url(#fw-wave)"
-              strokeLinecap="round"
-              strokeWidth="1.6"
-            />
-            <path
-              d="M40 362 C120 380 180 380 250 362"
-              stroke="url(#fw-wave)"
-              strokeLinecap="round"
-              strokeWidth="1.6"
-            />
-          </g>
-        </g>
-
         {/* Glow halo */}
         <ellipse
           cx="300"
@@ -146,6 +101,24 @@ export default function BreathingIllustration({ className, stageRef }: Breathing
           ry="230"
           style={{ opacity: 'var(--glow, 0.5)' }}
         />
+
+        {/* Breath ripples emanating from the chest */}
+        <g style={{ opacity: 'calc(var(--wave-amp, 0.5) * (1 - var(--cough, 0)))' }}>
+          {RIPPLES.map((i) => (
+            <ellipse
+              className="fw-ripple"
+              cx="300"
+              cy="352"
+              fill="none"
+              key={i}
+              rx="150"
+              ry="142"
+              stroke={i % 2 === 0 ? c1(0.85) : c2(0.7)}
+              strokeWidth={1.6 - i * 0.35}
+              style={{ animationDelay: `calc(var(--ripple-dur, 4s) * ${(-i / 3).toFixed(3)})` }}
+            />
+          ))}
+        </g>
 
         {/* Figure + lungs, tilts with posture */}
         <g
@@ -202,7 +175,7 @@ export default function BreathingIllustration({ className, stageRef }: Breathing
         </g>
 
         {/* Particles */}
-        <g style={{ opacity: 'var(--particle, 0.5)' }}>
+        <g style={{ opacity: 'calc(var(--particle, 0.5) * (1 - var(--cough, 0) * 0.6))' }}>
           {PARTICLES.map((p, i) => (
             <circle
               className="fw-particle"
@@ -211,7 +184,10 @@ export default function BreathingIllustration({ className, stageRef }: Breathing
               fill={c2(0.85)}
               key={i}
               r={p.r}
-              style={{ animationDelay: `${p.delay}s`, animationDuration: `${p.d}s` }}
+              style={{
+                animationDelay: `${p.delay}s`,
+                animationDuration: `calc(var(--particle-dur, 8s) * ${(p.d / 8).toFixed(2)})`,
+              }}
             />
           ))}
         </g>
