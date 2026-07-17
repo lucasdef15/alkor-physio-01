@@ -124,12 +124,32 @@ export function useBreathingAnimation(
       s.setProperty('--c2g', Math.round(g2).toString());
       s.setProperty('--c2b', Math.round(b2).toString());
 
-      raf = requestAnimationFrame(frame);
+      if (isRunning) raf = requestAnimationFrame(frame);
     };
 
-    raf = requestAnimationFrame(frame);
+    let isRunning = false;
+    const start = () => {
+      if (isRunning) return;
+      isRunning = true;
+      last = performance.now();
+      raf = requestAnimationFrame(frame);
+    };
+    const stop = () => {
+      isRunning = false;
+      cancelAnimationFrame(raf);
+    };
 
-    return () => cancelAnimationFrame(raf);
+    // Only run the loop while the illustration is on screen.
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) start();
+      else stop();
+    });
+    observer.observe(el);
+
+    return () => {
+      observer.disconnect();
+      stop();
+    };
   }, [targetRef]);
 }
 

@@ -1,42 +1,14 @@
-'use client';
-
 import Link from 'next/link';
 
 import LogoSVG from '../svg/LogoSVG';
-
-/**
- * Footer v2.0
- * ------------------------------------------------------------------
- * Mesma estrutura/grid e mesmo conteúdo da v1. O que mudou foi alinhar
- * à identidade visual do resto do site:
- *
- * - Paleta: emerald → gradiente teal/sky (mesma família de cores do
- *   blob, header e logo), com underline animado no hover em vez de
- *   troca abrupta de cor.
- * - Uma glow sutil no topo do footer, na mesma linguagem do Hero —
- *   funciona como uma transição suave entre o fundo claro do site e o
- *   fundo escuro do footer, em vez de um corte seco de cor.
- * - Botão "Fazer Agendamento" com o mesmo tratamento do CTA do
- *   Header/MobileHeader (rounded-full, sombra em camadas, hover
- *   consistente), reforçando que é a mesma marca em todo o site.
- * - Easing consistente (`cubic-bezier`) em todas as transições.
- * ------------------------------------------------------------------
- */
-
-const navLinks = [
-  { href: '#especialidades', name: 'Especialidades' },
-  { href: '#como-funciona', name: 'Como Funciona' },
-  { href: '#sobre', name: 'Sobre Mim' },
-  { href: '#depoimentos', name: 'Depoimentos' },
-];
+import { NAV_LINKS } from './navLinks';
 
 export default function Footer() {
   return (
     <footer
       className="relative overflow-hidden border-t border-white/[0.06] bg-slate-950 pt-16 pb-10"
-      data-header-theme="dark"
+      id="contato"
     >
-      {/* Glow sutil de transição — mesma linguagem do Hero, em versão discreta */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-400/40 to-transparent" />
       <div className="pointer-events-none absolute top-0 left-1/2 h-64 w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal-500/[0.08] blur-[120px]" />
 
@@ -63,15 +35,9 @@ export default function Footer() {
           <div className="md:col-span-3">
             <h3 className="mb-5 text-sm font-semibold tracking-wide text-white">Navegação</h3>
             <ul className="space-y-3.5 text-slate-400">
-              {navLinks.map((link) => (
+              {NAV_LINKS.map((link) => (
                 <li key={link.name}>
-                  <Link
-                    className="group relative inline-block py-0.5 transition-colors duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] hover:text-white"
-                    href={link.href}
-                  >
-                    {link.name}
-                    <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gradient-to-r from-teal-400 to-sky-400 transition-all duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] group-hover:w-full" />
-                  </Link>
+                  <FooterLink href={link.href}>{link.name}</FooterLink>
                 </li>
               ))}
             </ul>
@@ -83,34 +49,22 @@ export default function Footer() {
 
             <div className="space-y-3.5 text-slate-400">
               <p>
-                <a
-                  className="group relative inline-block py-0.5 transition-colors duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] hover:text-white"
-                  href="tel:+5511999999999"
-                >
-                  (11) 99999-9999
-                  <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gradient-to-r from-teal-400 to-sky-400 transition-all duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] group-hover:w-full" />
-                </a>
+                <FooterLink href="tel:+5511999999999">(11) 99999-9999</FooterLink>
               </p>
               <p>
-                <a
-                  className="group relative inline-block py-0.5 transition-colors duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] hover:text-white"
-                  href="mailto:contato@alkorphysio.com"
-                >
+                <FooterLink href="mailto:contato@alkorphysio.com">
                   contato@alkorphysio.com
-                  <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gradient-to-r from-teal-400 to-sky-400 transition-all duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] group-hover:w-full" />
-                </a>
+                </FooterLink>
               </p>
             </div>
 
             <div className="mt-8">
-              <button
-                className="rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] hover:border-white/25 hover:bg-white/[0.07] active:scale-[0.97]"
-                onClick={() =>
-                  document.getElementById('contato')?.scrollIntoView({ behavior: 'smooth' })
-                }
+              <a
+                className="inline-block rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] hover:border-white/25 hover:bg-white/[0.07] active:scale-[0.97]"
+                href="mailto:contato@alkorphysio.com"
               >
                 Fazer Agendamento
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -121,5 +75,17 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterLink({ children, href }: { children: React.ReactNode; href: string }) {
+  return (
+    <Link
+      className="group relative inline-block py-0.5 transition-colors duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] hover:text-white"
+      href={href}
+    >
+      {children}
+      <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gradient-to-r from-teal-400 to-sky-400 transition-all duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] group-hover:w-full" />
+    </Link>
   );
 }

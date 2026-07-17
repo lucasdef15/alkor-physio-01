@@ -42,7 +42,6 @@
 @theme inline {
   /* Fonts */
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
   --font-space-grotesk: var(--font-space-grotesk);
   --font-montserrat: var(--font-montserrat);
 
@@ -208,8 +207,22 @@
   .fw-ripple,
   .fw-drift-a,
   .fw-drift-b,
-  .fw-rise {
+  .fw-rise,
+  .animate-scroll-dot,
+  .animate-badge-breathe,
+  .animate-ping {
     animation: none;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 

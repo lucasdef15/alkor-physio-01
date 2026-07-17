@@ -387,10 +387,29 @@ export function useBackgroundCanvas({ canvasRef }: UseBackgroundCanvasProps) {
       drawOrganicBorders();
       drawParticles();
 
-      animationFrameId = requestAnimationFrame(animate);
+      if (isRunning) animationFrameId = requestAnimationFrame(animate);
     };
 
-    animate();
+    let isRunning = false;
+    const start = () => {
+      if (isRunning) return;
+      isRunning = true;
+      animationFrameId = requestAnimationFrame(animate);
+    };
+    const stop = () => {
+      isRunning = false;
+      cancelAnimationFrame(animationFrameId);
+    };
+
+    // Only animate while the hero is on screen; with reduced motion, render a single static frame.
+    const observer = new IntersectionObserver(([entry]) => {
+      if (prefersReducedMotion) return;
+      if (entry.isIntersecting) start();
+      else stop();
+    });
+    observer.observe(canvas);
+
+    if (prefersReducedMotion) animate();
 
     const handleResize = () => {
       logicalWidth = window.innerWidth;
@@ -418,7 +437,8 @@ export function useBackgroundCanvas({ canvasRef }: UseBackgroundCanvasProps) {
         window.removeEventListener('pointermove', handlePointerMove);
         window.removeEventListener('pointerleave', handlePointerLeave);
       }
-      cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
+      stop();
     };
   }, [canvasRef]);
 }

@@ -6,34 +6,7 @@ import { useEffect, useState } from 'react';
 
 import LogoSVG from '../svg/LogoSVG';
 import MobileHeader from './MobileHeader';
-
-/**
- * Header v2.0
- * ------------------------------------------------------------------
- * Mesma arquitetura, mesmas props e mesmo comportamento (scroll shrink,
- * menu mobile via MobileHeader, mesma lista `Links`). O que evoluiu:
- *
- * - Paleta alinhada ao Hero/blob (teal/sky) em vez de emerald, que
- *   destoava do resto do sistema visual.
- * - Easing consistente (`cubic-bezier` suave) em vez de `duration-500`
- *   com timing function padrão do Tailwind — transições mais "líquidas".
- * - Estado de scroll mais sutil: em vez de trocar o fundo inteiro para
- *   slate-900/10 (que ficava escuro e destoava do resto claro do site),
- *   agora só aumenta a opacidade/blur e reduz a sombra — pill sempre
- *   clara e com a mesma "temperatura" do Hero.
- * - Underline animado no hover do nav (em vez de scale, que é abrupto).
- * - Botão de menu com ícone que faz cross-fade + rotação suave em vez
- *   de troca abrupta de ícone.
- * ------------------------------------------------------------------
- */
-
-const Links = [
-  { href: '#inicio', name: 'Início' },
-  { href: '#especialidades', name: 'Especialidades' },
-  { href: '#sobre', name: 'Sobre' },
-  { href: '#depoimentos', name: 'Depoimentos' },
-  { href: '#contato', name: 'Contato' },
-];
+import { NAV_LINKS } from './navLinks';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -52,8 +25,16 @@ export default function Header() {
   useEffect(() => {
     document.body.classList.toggle('menu-open', isMenuOpen);
 
+    if (!isMenuOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsMenuOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
     return () => {
       document.body.classList.remove('menu-open');
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isMenuOpen]);
 
@@ -84,7 +65,7 @@ export default function Header() {
 
           <nav className="hidden items-center lg:flex">
             <ul className="flex items-center gap-8 text-sm font-medium text-slate-700">
-              {Links.map((link) => (
+              {NAV_LINKS.map((link) => (
                 <li key={link.name}>
                   <Link
                     className="group relative py-1 transition-colors duration-300 hover:text-slate-900"
@@ -99,18 +80,18 @@ export default function Header() {
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
-            <button
+            <a
               className="rounded-full bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white shadow-[0_1px_2px_rgba(15,23,42,0.1),0_8px_20px_-6px_rgba(15,23,42,0.3)] transition-all duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] hover:shadow-[0_1px_2px_rgba(15,23,42,0.1),0_10px_24px_-6px_rgba(15,23,42,0.4)] hover:brightness-110 active:scale-[0.97]"
-              onClick={() =>
-                document.getElementById('contato')?.scrollIntoView({ behavior: 'smooth' })
-              }
+              href="#contato"
             >
               Agendar Consulta
-            </button>
+            </a>
           </div>
 
           <button
-            aria-label="Toggle menu"
+            aria-controls="mobile-menu"
+            aria-expanded={isMenuOpen}
+            aria-label={isMenuOpen ? 'Fechar menu' : 'Abrir menu'}
             className="relative h-9 w-9 text-slate-900 lg:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
@@ -129,7 +110,7 @@ export default function Header() {
           </button>
         </div>
 
-        <MobileHeader isOpen={isMenuOpen} links={Links} setIsMenuOpen={setIsMenuOpen} />
+        <MobileHeader isOpen={isMenuOpen} links={NAV_LINKS} setIsMenuOpen={setIsMenuOpen} />
       </div>
     </header>
   );

@@ -15,6 +15,7 @@ export default function MobileHeader({ isOpen, links, setIsMenuOpen }: MobileHea
       className={`overflow-hidden rounded-b-3xl border-t border-slate-900/6 bg-white/85 backdrop-blur-2xl backdrop-saturate-150 transition-all duration-500 ease-[cubic-bezier(0.45,0,0.2,1)] lg:hidden ${
         isOpen ? 'max-h-125 opacity-100' : 'max-h-0 opacity-0'
       }`}
+      id="mobile-menu"
     >
       <nav className="px-5 py-6">
         <ul className="flex flex-col">
@@ -40,20 +41,18 @@ export default function MobileHeader({ isOpen, links, setIsMenuOpen }: MobileHea
           ))}
         </ul>
 
-        <button
-          className={`mt-6 w-full rounded-full bg-slate-900 py-3.5 text-[15px] font-semibold text-white shadow-[0_1px_2px_rgba(15,23,42,0.1),0_8px_20px_-6px_rgba(15,23,42,0.3)] transition-all duration-400 ease-[cubic-bezier(0.45,0,0.2,1)] active:scale-[0.98] ${
+        <a
+          className={`mt-6 block w-full rounded-full bg-slate-900 py-3.5 text-center text-[15px] font-semibold text-white shadow-[0_1px_2px_rgba(15,23,42,0.1),0_8px_20px_-6px_rgba(15,23,42,0.3)] transition-all duration-400 ease-[cubic-bezier(0.45,0,0.2,1)] active:scale-[0.98] ${
             isOpen ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'
           }`}
-          onClick={() => {
-            setIsMenuOpen(false);
-            document.getElementById('contato')?.scrollIntoView({ behavior: 'smooth' });
-          }}
+          href="#contato"
+          onClick={() => setIsMenuOpen(false)}
           style={{
             transitionDelay: isOpen ? `${links.length * 75}ms` : '0ms',
           }}
         >
           Agendar Consulta
-        </button>
+        </a>
       </nav>
     </div>
   );

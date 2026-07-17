@@ -15,7 +15,10 @@ export default function Hero() {
   useBackgroundCanvas({ canvasRef });
 
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-linear-to-b from-[#F8FCFD] via-[#F3FAFB] to-[#EDF8FA]">
+    <section
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-linear-to-b from-[#F8FCFD] via-[#F3FAFB] to-[#EDF8FA]"
+      id="inicio"
+    >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute top-[5%] left-[-15%] h-144 w-xl rounded-full bg-cyan-300/18 blur-[180px]" />
         <div className="absolute right-[-15%] bottom-[-10%] h-136 w-136 rounded-full bg-teal-300/18 blur-[180px]" />
