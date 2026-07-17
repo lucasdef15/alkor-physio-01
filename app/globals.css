@@ -75,40 +75,47 @@
 
 /* Animations */
 
-@keyframes float {
+@keyframes scroll-dot {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.6);
+    filter: blur(1px);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1);
+    filter: blur(0);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(10px) scale(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(15px) scale(0.6);
+    filter: blur(1px);
+  }
+}
+
+@keyframes badge-breathe {
   0%,
   100% {
-    transform: translateY(0);
+    opacity: 0.75;
+    transform: translate(-50%, 0);
   }
   50% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes scroll {
-  0% {
-    transform: translateY(4px);
-    opacity: 0;
-  }
-  40% {
     opacity: 1;
-  }
-  80% {
-    transform: translateY(18px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(18px);
-    opacity: 0;
+    transform: translate(-50%, -3px);
   }
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+.animate-scroll-dot {
+  animation: scroll-dot 4s cubic-bezier(0.45, 0, 0.2, 1) infinite;
 }
 
-.animate-scroll {
-  animation: scroll 2s ease-in-out infinite;
+.animate-badge-breathe {
+  animation: badge-breathe 9s cubic-bezier(0.45, 0, 0.2, 1) infinite;
 }
 
 body.menu-open {

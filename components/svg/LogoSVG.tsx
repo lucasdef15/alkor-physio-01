@@ -1,7 +1,4 @@
 'use client';
-import { useRef } from 'react';
-
-import { useSvgTextWidth } from '@/hooks/useTextWidth';
 
 interface LogoSVGProps {
   className?: string;
@@ -11,6 +8,7 @@ interface LogoSVGProps {
   name: string;
   surname: string;
 }
+const AVG_CHAR_WIDTH_RATIO = 0.62;
 
 export default function LogoSVG({
   className,
@@ -20,50 +18,83 @@ export default function LogoSVG({
   name,
   surname,
 }: LogoSVGProps) {
-  const textRef = useRef<SVGTextElement>(null);
-  const width = useSvgTextWidth(textRef, surname);
+  const nameFontSize = Number(fontSize ?? 28);
+  const surnameFontSize = 10;
 
-  const w = width ?? 0;
+  const nameLetterSpacing = nameFontSize * 0.16;
+  const surnameLetterSpacing = surnameFontSize * 0.3;
+
+  const nameWidth = estimateTextWidth(name, nameFontSize, nameLetterSpacing);
+  const surnameWidth = estimateTextWidth(surname, surnameFontSize, surnameLetterSpacing);
+
+  const horizontalPadding = 20;
+  const contentWidth = Math.max(nameWidth, surnameWidth + 16);
+  const viewWidth = Math.max(160, contentWidth + horizontalPadding * 2);
+
+  const centerX = viewWidth / 2;
   const padding = 8;
 
-  const leftLineEnd = Math.max(20, 90 - w / 2 - padding);
-  const rightLineStart = Math.min(160, 90 + w / 2 + padding);
+  const leftLineEnd = Math.max(horizontalPadding, centerX - surnameWidth / 2 - padding);
+  const rightLineStart = Math.min(
+    viewWidth - horizontalPadding,
+    centerX + surnameWidth / 2 + padding,
+  );
 
   return (
-    <svg className={className} fill="none" viewBox="0 0 180 70" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      className={className}
+      fill="none"
+      viewBox={`0 0 ${viewWidth} 70`}
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <text
         dominantBaseline="middle"
         fill={fill ?? 'currentColor'}
         fontFamily="var(--font-space-grotesk), sans-serif"
-        fontSize={fontSize ?? 28}
+        fontSize={nameFontSize}
         fontWeight={fontWeight ?? 700}
-        letterSpacing="5px"
+        letterSpacing={nameLetterSpacing}
         textAnchor="middle"
-        x="90"
+        x={centerX}
         y="30"
       >
         {name}
       </text>
 
-      <g opacity=".75" stroke={fill ?? 'currentColor'} strokeLinecap="round" strokeWidth=".5">
-        <line x1="20" x2={leftLineEnd} y1="52" y2="52" />
-        <line x1={rightLineStart} x2="160" y1="52" y2="52" />
+      <g opacity=".7" stroke={fill ?? 'currentColor'} strokeLinecap="round" strokeWidth="1">
+        <line x1={horizontalPadding} x2={leftLineEnd} y1="52" y2="52" />
+
+        <path
+          d={`M ${rightLineStart} 52
+              C ${rightLineStart + (viewWidth - horizontalPadding - rightLineStart) * 0.28} 52,
+                ${rightLineStart + (viewWidth - horizontalPadding - rightLineStart) * 0.36} 48.5,
+                ${rightLineStart + (viewWidth - horizontalPadding - rightLineStart) * 0.5} 52
+              S ${rightLineStart + (viewWidth - horizontalPadding - rightLineStart) * 0.72} 55.5,
+                ${viewWidth - horizontalPadding} 52`}
+          fill="none"
+        />
       </g>
 
       <text
         dominantBaseline="middle"
         fill={fill ?? 'currentColor'}
         fontFamily="var(--font-montserrat), sans-serif"
-        fontSize={fontSize ?? 10}
+        fontSize={surnameFontSize}
         fontWeight={fontWeight ?? 500}
-        letterSpacing="3px"
-        ref={textRef}
+        letterSpacing={surnameLetterSpacing}
         textAnchor="middle"
-        x="90"
+        x={centerX}
         y="52"
       >
         {surname}
       </text>
     </svg>
   );
+}
+
+function estimateTextWidth(text: string, fontSize: number, letterSpacing: number): number {
+  if (!text) return 0;
+  const glyphsWidth = text.length * fontSize * AVG_CHAR_WIDTH_RATIO;
+  const spacingWidth = Math.max(0, text.length - 1) * letterSpacing;
+  return glyphsWidth + spacingWidth;
 }
