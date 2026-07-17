@@ -88,8 +88,22 @@ export default function BreathingIllustration({ className, stageRef }: Breathing
 
         {/* Ambient blobs */}
         <g style={{ opacity: 'calc(0.5 + var(--glow, 0.5) * 0.5)' }}>
-          <ellipse className="fw-drift-a" cx="200" cy="250" fill="url(#fw-blob)" rx="180" ry="150" />
-          <ellipse className="fw-drift-b" cx="410" cy="420" fill="url(#fw-blob)" rx="170" ry="160" />
+          <ellipse
+            className="fw-drift-a"
+            cx="200"
+            cy="250"
+            fill="url(#fw-blob)"
+            rx="180"
+            ry="150"
+          />
+          <ellipse
+            className="fw-drift-b"
+            cx="410"
+            cy="420"
+            fill="url(#fw-blob)"
+            rx="170"
+            ry="160"
+          />
         </g>
 
         {/* Glow halo */}
@@ -136,6 +150,7 @@ export default function BreathingIllustration({ className, stageRef }: Breathing
             fill="url(#fw-figure)"
             stroke={c1(0.16)}
             strokeWidth="1"
+            transform="translate(0, -45)"
           />
 
           {/* Lungs */}
