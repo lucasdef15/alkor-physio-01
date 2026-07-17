@@ -32,7 +32,10 @@ const navLinks = [
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-white/[0.06] bg-slate-950 pt-16 pb-10">
+    <footer
+      className="relative overflow-hidden border-t border-white/[0.06] bg-slate-950 pt-16 pb-10"
+      data-header-theme="dark"
+    >
       {/* Glow sutil de transição — mesma linguagem do Hero, em versão discreta */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-400/40 to-transparent" />
       <div className="pointer-events-none absolute top-0 left-1/2 h-64 w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal-500/[0.08] blur-[120px]" />

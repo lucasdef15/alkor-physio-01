@@ -1,6 +1,6 @@
 export default function ScrollBadge({ text = 'Explore' }: { text?: string }) {
   return (
-    <div className="animate-badge-breathe absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-3 text-slate-400">
+    <div className="animate-badge-breathe absolute bottom-0 left-1/2 flex w-full flex-col items-center gap-3 text-slate-400">
       <span className="text-[11px] font-medium tracking-[0.24em] text-slate-400 uppercase">
         {text}
       </span>
