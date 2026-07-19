@@ -31,7 +31,7 @@ export default function ForWhom() {
       <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-x-16 gap-y-16 px-6 py-28 md:py-36 lg:grid-cols-12">
         {/* Text + symptoms */}
         <div className="lg:col-span-5">
-          <span className="text-xs font-semibold tracking-[0.22em] text-teal-600/80 uppercase">
+          <span className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
             Para quem é
           </span>
 
@@ -70,10 +70,7 @@ export default function ForWhom() {
         {/* Illustration */}
         <div className="lg:col-span-7">
           <div className="relative mx-auto flex aspect-square w-full max-w-[560px] items-center justify-center">
-            <BreathingIllustration
-              className="h-full w-full"
-              stageRef={stageRef}
-            />
+            <BreathingIllustration className="h-full w-full" stageRef={stageRef} />
 
             <div className="pointer-events-none absolute top-2 right-2 hidden max-w-[13rem] text-right sm:top-6 sm:right-4 sm:block">
               <p className="text-[13px] font-semibold text-slate-600">
@@ -95,7 +92,9 @@ export default function ForWhom() {
                 >
                   {active.short}
                 </span>
-                <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{active.description}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
+                  {active.description}
+                </p>
               </div>
             </div>
           </div>
@@ -103,7 +102,12 @@ export default function ForWhom() {
       </div>
 
       <p className="relative z-10 mx-auto flex max-w-7xl items-center justify-center gap-2 px-6 pb-20 text-sm text-slate-400">
-        <svg className="h-4 w-4 text-teal-500/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          className="h-4 w-4 text-teal-500/70"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             d="M12 3l7 3v6c0 4.4-3 7.5-7 9-4-1.5-7-4.6-7-9V6l7-3z"
             strokeLinecap="round"
