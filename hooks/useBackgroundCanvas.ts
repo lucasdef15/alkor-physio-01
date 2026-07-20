@@ -73,26 +73,47 @@ export function useBackgroundCanvas({ canvasRef }: UseBackgroundCanvasProps) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    const container = canvas.parentElement;
+    if (!container) return;
     const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
-    const dpr = window.devicePixelRatio || 1;
-
-    let logicalWidth = window.innerWidth;
-    let logicalHeight = window.innerHeight;
-
-    canvas.width = logicalWidth * dpr;
-    canvas.height = logicalHeight * dpr;
-    canvas.style.width = `${logicalWidth}px`;
-    canvas.style.height = `${logicalHeight}px`;
-
-    ctx.scale(dpr, dpr);
+    let logicalWidth = Math.max(1, container.clientWidth);
+    let logicalHeight = Math.max(1, container.clientHeight);
 
     let time = 0;
     let animationFrameId: number;
 
     let centerX = logicalWidth / 2;
-    let centerY = logicalHeight * 0.42;
+    let centerY = logicalHeight * 0.4;
+
+    const syncCanvasSize = () => {
+      logicalWidth = Math.max(1, container.clientWidth);
+      logicalHeight = Math.max(1, container.clientHeight);
+
+      const currentDpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      canvas.width = Math.round(logicalWidth * currentDpr);
+      canvas.height = Math.round(logicalHeight * currentDpr);
+      canvas.style.width = `${logicalWidth}px`;
+      canvas.style.height = `${logicalHeight}px`;
+
+      ctx.resetTransform();
+      ctx.scale(currentDpr, currentDpr);
+
+      centerX = logicalWidth / 2;
+
+      const heading = container.querySelector<HTMLElement>('[data-hero-heading]');
+      if (heading) {
+        const containerRect = container.getBoundingClientRect();
+        const headingRect = heading.getBoundingClientRect();
+        centerY = headingRect.top - containerRect.top + headingRect.height / 2;
+      } else {
+        centerY = Math.min(logicalHeight, window.innerHeight) * 0.42;
+      }
+    };
+
+    syncCanvasSize();
 
     const noise2D = createNoise2D(1337);
 
@@ -112,8 +133,9 @@ export function useBackgroundCanvas({ canvasRef }: UseBackgroundCanvasProps) {
     let parallaxY = 0;
 
     const handlePointerMove = (event: PointerEvent) => {
-      const nx = (event.clientX / logicalWidth) * 2 - 1;
-      const ny = (event.clientY / logicalHeight) * 2 - 1;
+      const rect = container.getBoundingClientRect();
+      const nx = ((event.clientX - rect.left) / logicalWidth) * 2 - 1;
+      const ny = ((event.clientY - rect.top) / logicalHeight) * 2 - 1;
       targetParallaxX = nx * PARALLAX_MAX_OFFSET;
       targetParallaxY = ny * PARALLAX_MAX_OFFSET;
     };
@@ -124,8 +146,8 @@ export function useBackgroundCanvas({ canvasRef }: UseBackgroundCanvasProps) {
     };
 
     if (parallaxEnabled) {
-      window.addEventListener('pointermove', handlePointerMove, { passive: true });
-      window.addEventListener('pointerleave', handlePointerLeave, { passive: true });
+      container.addEventListener('pointermove', handlePointerMove, { passive: true });
+      container.addEventListener('pointerleave', handlePointerLeave, { passive: true });
     }
 
     const blobConfig = {
@@ -229,12 +251,18 @@ export function useBackgroundCanvas({ canvasRef }: UseBackgroundCanvasProps) {
       const inhale = (breath + 1) * 0.5;
       const inhaleEased = inhale * inhale * (3 - 2 * inhale);
 
-      const currentIsMobile = logicalWidth < 768;
+      const currentIsMobile = logicalWidth < 640;
+      const currentIsTablet = logicalWidth < 1024;
       const globalPulse = 1 + inhaleEased * 0.022;
 
-      const baseRadius =
-        Math.min(logicalWidth, logicalHeight) * (currentIsMobile ? 0.32 : 0.35) * globalPulse;
-      const activeParticleCount = currentIsMobile ? 12 : 22;
+      const responsiveRadius = currentIsMobile
+        ? Math.min(170, Math.max(124, logicalWidth * 0.38))
+        : currentIsTablet
+          ? Math.min(330, Math.max(230, logicalWidth * 0.36))
+          : Math.min(390, Math.max(300, logicalWidth * 0.225));
+      const heightLimit = logicalHeight * (currentIsMobile ? 0.24 : currentIsTablet ? 0.34 : 0.4);
+      const baseRadius = Math.min(responsiveRadius, heightLimit) * globalPulse;
+      const activeParticleCount = currentIsMobile ? 10 : currentIsTablet ? 16 : 22;
 
       const breathingOffset = inhaleEased * 7 - 3.5;
       const stretchY = 0.93 + inhaleEased * 0.035;
@@ -401,7 +429,6 @@ export function useBackgroundCanvas({ canvasRef }: UseBackgroundCanvasProps) {
       cancelAnimationFrame(animationFrameId);
     };
 
-    // Only animate while the hero is on screen; with reduced motion, render a single static frame.
     const observer = new IntersectionObserver(([entry]) => {
       if (prefersReducedMotion) return;
       if (entry.isIntersecting) start();
@@ -411,31 +438,28 @@ export function useBackgroundCanvas({ canvasRef }: UseBackgroundCanvasProps) {
 
     if (prefersReducedMotion) animate();
 
-    const handleResize = () => {
-      logicalWidth = window.innerWidth;
-      logicalHeight = window.innerHeight;
+    const resizeObserver = new ResizeObserver(() => {
+      syncCanvasSize();
+      if (prefersReducedMotion) animate();
+    });
+    resizeObserver.observe(container);
 
-      const currentDpr = window.devicePixelRatio || 1;
+    const heading = container.querySelector<HTMLElement>('[data-hero-heading]');
+    if (heading) resizeObserver.observe(heading);
 
-      canvas.width = logicalWidth * currentDpr;
-      canvas.height = logicalHeight * currentDpr;
-      canvas.style.width = `${logicalWidth}px`;
-      canvas.style.height = `${logicalHeight}px`;
-
-      ctx.resetTransform();
-      ctx.scale(currentDpr, currentDpr);
-
-      centerX = logicalWidth / 2;
-      centerY = logicalHeight * 0.42;
-    };
-
-    window.addEventListener('resize', handleResize);
+    let disposed = false;
+    void document.fonts?.ready.then(() => {
+      if (disposed) return;
+      syncCanvasSize();
+      if (prefersReducedMotion) animate();
+    });
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      disposed = true;
+      resizeObserver.disconnect();
       if (parallaxEnabled) {
-        window.removeEventListener('pointermove', handlePointerMove);
-        window.removeEventListener('pointerleave', handlePointerLeave);
+        container.removeEventListener('pointermove', handlePointerMove);
+        container.removeEventListener('pointerleave', handlePointerLeave);
       }
       observer.disconnect();
       stop();

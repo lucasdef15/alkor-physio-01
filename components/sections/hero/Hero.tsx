@@ -16,7 +16,7 @@ export default function Hero() {
 
   return (
     <section
-      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-linear-to-b from-[#F8FCFD] via-[#F3FAFB] to-[#EDF8FA]"
+      className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-linear-to-b from-[#F8FCFD] via-[#F3FAFB] to-[#EDF8FA]"
       id="inicio"
     >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -25,10 +25,11 @@ export default function Hero() {
       </div>
 
       <canvas
+        aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-90 mix-blend-multiply"
         ref={canvasRef}
       />
-      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 pt-32 pb-32 text-center md:pb-24">
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-5 pt-32 pb-32 text-center sm:px-8 md:pt-36 md:pb-28">
         <HeroContent />
         <HeroActions />
         <Indicators />

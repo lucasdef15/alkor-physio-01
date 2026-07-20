@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { CSSProperties, useRef } from 'react';
 
 import { useActiveSymptom } from '@/hooks/useActiveSymptom';
 import { useBreathingAnimation } from '@/hooks/useBreathingAnimation';
@@ -16,107 +16,169 @@ export default function ForWhom() {
   useBreathingAnimation(stageRef, active.profile);
 
   const [r, g, b] = active.profile.primary;
+  const [r2, g2, b2] = active.profile.secondary;
   const accent = `${r}, ${g}, ${b}`;
+  const panelStyle = {
+    '--fw-accent': accent,
+    '--fw-accent-secondary': `${r2}, ${g2}, ${b2}`,
+  } as CSSProperties;
 
   return (
     <section
-      className="relative overflow-hidden bg-linear-to-b from-[#EDF8FA] via-[#F4FAFB] to-[#F8FCFD]"
+      className="relative overflow-hidden bg-linear-to-b from-[#f7fbfc] via-white to-[#f5fafb]"
       id="para-quem"
     >
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute top-[8%] right-[-12%] h-120 w-120 rounded-full bg-teal-300/12 blur-[170px]" />
-        <div className="absolute bottom-[-10%] left-[-12%] h-120 w-120 rounded-full bg-sky-300/12 blur-[170px]" />
-      </div>
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_50%_0%,rgba(20,184,166,.1),transparent_62%)]" />
 
-      <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-x-16 gap-y-16 px-6 py-28 md:py-36 lg:grid-cols-12">
-        {/* Text + symptoms */}
-        <div className="lg:col-span-5">
-          <span className="text-primary text-xs font-semibold tracking-[0.22em] uppercase">
-            Para quem é
-          </span>
-
-          <h2 className="mt-5 text-4xl leading-[1.1] font-semibold tracking-tight text-slate-900 sm:text-5xl">
-            Este cuidado é
-            <br />
-            <span className="bg-linear-to-r from-teal-600 via-teal-500 to-sky-500 bg-clip-text text-transparent">
-              para você que:
+      <div className="site-container section-space relative z-10">
+        <div className="mx-auto max-w-3xl text-center">
+          <span className="section-eyebrow">Para quem é</span>
+          <h2 className="section-title mt-5">
+            O que você sente também
+            <span className="block bg-linear-to-r from-teal-600 via-cyan-500 to-sky-500 bg-clip-text text-transparent">
+              pode ser compreendido.
             </span>
           </h2>
-
-          <p className="mt-6 max-w-md text-lg leading-relaxed text-slate-500">
-            A fisioterapia cardiorrespiratória é indicada para quem enfrenta limitações que afetam a
-            respiração, a energia e a qualidade de vida.
+          <p className="section-copy mx-auto mt-6 max-w-2xl">
+            Cada sintoma muda a forma como o corpo respira. Explore os sinais abaixo e veja como um
+            cuidado individualizado começa pela escuta certa.
           </p>
-
-          <div
-            aria-label="Situações atendidas pela fisioterapia cardiorrespiratória"
-            className="mt-10 flex flex-col gap-2.5"
-            onKeyDown={onKeyNavigate}
-            role="group"
-          >
-            {SYMPTOMS.map((symptom) => (
-              <SymptomCard
-                active={isActive(symptom.id)}
-                key={symptom.id}
-                onLeave={clearHover}
-                onPeek={hover}
-                onSelect={select}
-                symptom={symptom}
-              />
-            ))}
-          </div>
         </div>
+        <div
+          className="fw-console relative mt-12 overflow-hidden rounded-[2rem] border border-white/10 bg-[#07131f] shadow-[0_42px_100px_-42px_rgba(2,15,27,.72)] md:mt-16 md:rounded-[2.5rem]"
+          style={panelStyle}
+        >
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.025)_1px,transparent_1px)] [mask-image:linear-gradient(to_bottom,black,transparent_85%)] bg-size-[48px_48px]" />
+          <div
+            className="pointer-events-none absolute -top-40 right-[-10%] h-[34rem] w-[34rem] rounded-full blur-[120px] transition-colors duration-700"
+            style={{ background: `rgba(${accent}, .2)` }}
+          />
 
-        {/* Illustration */}
-        <div className="lg:col-span-7">
-          <div className="relative mx-auto flex aspect-square w-full max-w-[560px] items-center justify-center">
-            <BreathingIllustration className="h-full w-full" stageRef={stageRef} />
+          <div className="relative flex items-center justify-between border-b border-white/8 px-5 py-4 sm:px-7 lg:px-9">
+            <div className="flex items-center gap-3">
+              <span className="relative flex h-2.5 w-2.5">
+                <span
+                  className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-50"
+                  style={{ background: `rgb(${accent})` }}
+                />
+                <span
+                  className="relative inline-flex h-2.5 w-2.5 rounded-full"
+                  style={{ background: `rgb(${accent})` }}
+                />
+              </span>
+              <span className="text-[10px] font-semibold tracking-[0.2em] text-slate-300 uppercase">
+                Resposta respiratória
+              </span>
+            </div>
+            <span className="hidden text-[10px] tracking-[0.14em] text-slate-500 uppercase sm:block">
+              Selecione um sinal para explorar
+            </span>
+          </div>
 
-            <div className="pointer-events-none absolute top-2 right-2 hidden max-w-[13rem] text-right sm:top-6 sm:right-4 sm:block">
-              <p className="text-[13px] font-semibold text-slate-600">
-                A ilustração reage ao que você sente.
+          <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(320px,0.84fr)_minmax(0,1.5fr)]">
+            <div className="min-w-0 border-b border-white/8 p-4 sm:p-6 lg:border-r lg:border-b-0 lg:p-7 xl:p-9">
+              <p className="mb-5 max-w-sm text-sm leading-relaxed text-slate-400">
+                A visualização reage ao ritmo, à expansão e ao esforço percebido em cada situação.
               </p>
-              <p className="mt-1 text-[13px] leading-relaxed text-slate-400">
-                Passe o mouse ou use o teclado para explorar cada situação.
-              </p>
+
+              <div
+                aria-label="Situações atendidas pela fisioterapia cardiorrespiratória"
+                className="flex snap-x snap-mandatory [scrollbar-width:none] gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:grid-cols-1 [&::-webkit-scrollbar]:hidden"
+                onKeyDown={onKeyNavigate}
+                role="group"
+              >
+                {SYMPTOMS.map((symptom, index) => (
+                  <SymptomCard
+                    active={isActive(symptom.id)}
+                    index={index}
+                    key={symptom.id}
+                    onLeave={clearHover}
+                    onPeek={hover}
+                    onSelect={select}
+                    symptom={symptom}
+                  />
+                ))}
+              </div>
             </div>
 
-            <div className="pointer-events-none absolute bottom-1 left-1/2 w-[min(90%,22rem)] -translate-x-1/2">
-              <div
-                className="fw-rise rounded-2xl border border-white/60 bg-white/70 px-5 py-4 text-center shadow-[0_1px_2px_rgba(15,23,42,0.04),0_20px_40px_-28px_rgba(15,23,42,0.5)] backdrop-blur-md"
-                key={active.id}
-              >
-                <span
-                  className="text-[11px] font-semibold tracking-[0.18em] uppercase"
-                  style={{ color: `rgb(${accent})` }}
-                >
-                  {active.short}
-                </span>
-                <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
-                  {active.description}
-                </p>
+            <div className="relative flex min-h-[530px] min-w-0 flex-col overflow-hidden sm:min-h-[600px] lg:min-h-0">
+              <div className="relative min-h-0 flex-1">
+                <div className="absolute top-6 left-6 z-10 sm:top-8 sm:left-8">
+                  <span className="text-[10px] font-semibold tracking-[0.18em] text-slate-500 uppercase">
+                    Sinal selecionado
+                  </span>
+                  <div className="mt-2 flex items-center gap-2.5">
+                    <span
+                      className="h-px w-7 transition-colors duration-500"
+                      style={{ background: `rgb(${accent})` }}
+                    />
+                    <span className="text-sm font-medium text-white">{active.short}</span>
+                  </div>
+                </div>
+
+                <BreathingIllustration
+                  className="absolute inset-0 h-full w-full px-2 pt-14 sm:px-10 sm:pt-8"
+                  stageRef={stageRef}
+                />
+
+                <div className="pointer-events-none absolute right-5 bottom-4 left-5 sm:right-8 sm:bottom-7 sm:left-8">
+                  <div
+                    className="fw-rise overflow-hidden rounded-2xl border border-white/10 bg-[#0a1927]/78 shadow-[0_18px_50px_rgba(0,0,0,.28)] backdrop-blur-xl"
+                    key={active.id}
+                  >
+                    <div className="px-5 py-4 sm:px-6 sm:py-5">
+                      <p className="max-w-xl text-sm leading-relaxed text-slate-300 sm:text-[15px]">
+                        {active.description}
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-3 border-t border-white/8">
+                      <Readout label="Ritmo" value={active.readout.rhythm} />
+                      <Readout label="Expansão" value={active.readout.expansion} />
+                      <Readout label="Foco do cuidado" value={active.readout.focus} />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <p className="relative z-10 mx-auto flex max-w-7xl items-center justify-center gap-2 px-6 pb-20 text-sm text-slate-400">
-        <svg
-          className="h-4 w-4 text-teal-500/70"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M12 3l7 3v6c0 4.4-3 7.5-7 9-4-1.5-7-4.6-7-9V6l7-3z"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-          />
-        </svg>
-        Cada pessoa tem uma história. O tratamento é sempre individualizado.
-      </p>
+        <div className="mx-auto mt-8 flex max-w-2xl items-center justify-between gap-3 rounded-lg p-3 text-xs leading-relaxed text-slate-500">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-teal-100 bg-teal-50 text-teal-600">
+            <svg
+              aria-hidden="true"
+              className="h-3.5 w-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 3l7 3v6c0 4.4-3 7.5-7 9-4-1.5-7-4.6-7-9V6l7-3z"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+              />
+            </svg>
+          </span>
+          <p className="flex-1 text-left">
+            Esta experiência é ilustrativa, não diagnóstica. A avaliação profissional é o que
+            transforma sinais em um plano de cuidado seguro e individualizado.
+          </p>
+        </div>
+      </div>
     </section>
+  );
+}
+
+function Readout({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="min-w-0 border-r border-white/8 px-3 py-3.5 last:border-r-0 sm:px-5">
+      <span className="block text-[8px] font-semibold tracking-[0.13em] text-slate-500 uppercase sm:text-[9px]">
+        {label}
+      </span>
+      <span className="mt-1.5 block text-[9px] leading-snug font-medium text-slate-200 sm:text-xs">
+        {value}
+      </span>
+    </div>
   );
 }

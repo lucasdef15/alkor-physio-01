@@ -52,7 +52,7 @@ export default function Header() {
         }`}
       >
         <div className="flex items-center justify-between px-4 py-3 md:px-5">
-          <div className="flex items-center">
+          <Link aria-label="Ir para o início" className="flex items-center" href="#inicio">
             <LogoSVG
               className={`h-12 w-auto transition-transform duration-500 ease-[cubic-bezier(0.45,0,0.2,1)] ${
                 isScrolled ? 'scale-90' : 'scale-100'
@@ -61,7 +61,7 @@ export default function Header() {
               name="ΛLKOR"
               surname="PHYSIO"
             />
-          </div>
+          </Link>
 
           <nav className="hidden items-center lg:flex">
             <ul className="flex items-center gap-8 text-sm font-medium text-slate-700">
@@ -92,7 +92,7 @@ export default function Header() {
             aria-controls="mobile-menu"
             aria-expanded={isMenuOpen}
             aria-label={isMenuOpen ? 'Fechar menu' : 'Abrir menu'}
-            className="relative h-9 w-9 text-slate-900 lg:hidden"
+            className="relative h-9 w-9 rounded-full text-slate-900 lg:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <Menu

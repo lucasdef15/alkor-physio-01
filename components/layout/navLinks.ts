@@ -4,7 +4,9 @@ export interface NavLink {
 }
 
 export const NAV_LINKS: NavLink[] = [
-  { href: '#inicio', name: 'Início' },
   { href: '#para-quem', name: 'Para quem é' },
-  { href: '#contato', name: 'Contato' },
+  { href: '#sobre', name: 'Especialista' },
+  { href: '#especialidades', name: 'Tratamentos' },
+  { href: '#depoimentos', name: 'Depoimentos' },
+  { href: '#faq', name: 'Dúvidas' },
 ];

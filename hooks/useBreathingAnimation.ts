@@ -8,6 +8,8 @@ interface AnimatedState {
   breathDepth: number;
   breathRate: number;
   catch: number;
+  compression: number;
+  flow: number;
   glow: number;
   glowSwell: number;
   particle: number;
@@ -20,12 +22,6 @@ interface AnimatedState {
   waveAmp: number;
 }
 
-/**
- * Drives the breathing illustration entirely through CSS custom properties
- * written onto a single element. No React re-render happens per frame: the
- * loop lerps every visual parameter toward the active symptom's profile, so
- * switching symptoms feels like a natural, continuous change of state.
- */
 export function useBreathingAnimation(
   targetRef: RefObject<HTMLElement | null>,
   profile: BreathingProfile,
@@ -49,6 +45,8 @@ export function useBreathingAnimation(
       breathDepth: initial.breathDepth,
       breathRate: initial.breathRate,
       catch: initial.catch,
+      compression: initial.compression,
+      flow: initial.flow,
       glow: initial.glow,
       glowSwell: initial.glowSwell,
       particle: initial.particle,
@@ -75,6 +73,8 @@ export function useBreathingAnimation(
       state.breathDepth = lerp(state.breathDepth, target.breathDepth, ease);
       state.breathRate = lerp(state.breathRate, target.breathRate, ease);
       state.catch = lerp(state.catch, target.catch, ease);
+      state.compression = lerp(state.compression, target.compression, ease);
+      state.flow = lerp(state.flow, target.flow, ease);
       state.glow = lerp(state.glow, target.glow, ease);
       state.glowSwell = lerp(state.glowSwell, target.glowSwell, ease);
       state.particle = lerp(state.particle, target.particle, ease);
@@ -117,6 +117,8 @@ export function useBreathingAnimation(
       s.setProperty('--particle-dur', `${particleDur.toFixed(2)}s`);
       s.setProperty('--tilt', `${(state.tilt + sway).toFixed(3)}deg`);
       s.setProperty('--cough', coughPulse.toFixed(4));
+      s.setProperty('--compression', state.compression.toFixed(4));
+      s.setProperty('--flow', state.flow.toFixed(4));
       s.setProperty('--c1r', Math.round(r1).toString());
       s.setProperty('--c1g', Math.round(g1).toString());
       s.setProperty('--c1b', Math.round(b1).toString());
@@ -139,7 +141,6 @@ export function useBreathingAnimation(
       cancelAnimationFrame(raf);
     };
 
-    // Only run the loop while the illustration is on screen.
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) start();
       else stop();

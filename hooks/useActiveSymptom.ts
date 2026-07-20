@@ -14,11 +14,6 @@ interface UseActiveSymptom {
   select: (id: string) => void;
 }
 
-/**
- * Owns which symptom the illustration is currently reacting to. Hovering a card
- * previews its state; clicking (or keyboard-selecting) pins it so the preview
- * survives once the pointer leaves.
- */
 export function useActiveSymptom(symptoms: Symptom[]): UseActiveSymptom {
   const [pinnedId, setPinnedId] = useState(symptoms[0].id);
   const [hoverId, setHoverId] = useState<null | string>(null);
@@ -39,7 +34,12 @@ export function useActiveSymptom(symptoms: Symptom[]): UseActiveSymptom {
 
   const onKeyNavigate = useCallback(
     (event: { key: string; preventDefault: () => void }) => {
-      const dir = event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0;
+      const dir =
+        event.key === 'ArrowDown' || event.key === 'ArrowRight'
+          ? 1
+          : event.key === 'ArrowUp' || event.key === 'ArrowLeft'
+            ? -1
+            : 0;
       if (dir === 0) return;
       event.preventDefault();
       const index = symptoms.findIndex((s) => s.id === activeId);

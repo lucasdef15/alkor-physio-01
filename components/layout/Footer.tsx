@@ -5,16 +5,11 @@ import { NAV_LINKS } from './navLinks';
 
 export default function Footer() {
   return (
-    <footer
-      className="relative overflow-hidden border-t border-white/[0.06] bg-slate-950 pt-16 pb-10"
-      id="contato"
-    >
+    <footer className="relative overflow-hidden border-t border-white/[0.06] bg-slate-950 pt-16 pb-10">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-400/40 to-transparent" />
       <div className="pointer-events-none absolute top-0 left-1/2 h-64 w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal-500/[0.08] blur-[120px]" />
-
       <div className="relative mx-auto max-w-6xl px-6">
         <div className="grid grid-cols-1 gap-y-12 md:grid-cols-12">
-          {/* Logo + Descrição */}
           <div className="md:col-span-5">
             <div className="flex items-center gap-3">
               <LogoSVG className="h-10 w-auto" fill="#fff" name="ΛLKOR" surname="PHYSIO" />
