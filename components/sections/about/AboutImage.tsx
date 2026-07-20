@@ -39,8 +39,8 @@ export default function AboutImage({
         className="absolute -bottom-6 left-1/2 -z-10 h-16 w-[78%] -translate-x-1/2 rounded-[100%] bg-slate-900/15 blur-2xl transition-all duration-700 ease-out motion-safe:group-hover:w-[84%] motion-safe:group-hover:bg-teal-950/20"
       />
 
-      <div className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/40 p-1.5 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_24px_70px_-28px_rgba(15,23,42,0.35)] backdrop-blur-2xl transition-[transform,box-shadow,border-color] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:group-hover:-translate-y-1.5 motion-safe:group-hover:border-white/90 motion-safe:group-hover:shadow-[0_2px_3px_rgba(15,23,42,0.04),0_36px_90px_-30px_rgba(13,148,136,0.32)] sm:rounded-[2.5rem]">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[1.65rem] bg-slate-100 ring-1 ring-slate-950/5 sm:rounded-[2.1rem]">
+      <div className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/40 p-1.5 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_24px_70px_-28px_rgba(15,23,42,0.35)] backdrop-blur-2xl transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:group-hover:-translate-y-1.5 motion-safe:group-hover:border-white/90 motion-safe:group-hover:shadow-[0_2px_3px_rgba(15,23,42,0.04),0_36px_90px_-30px_rgba(13,148,136,0.32)] sm:rounded-[2.5rem]">
+        <div className="relative aspect-4/5 overflow-hidden rounded-[1.65rem] bg-slate-100 ring-1 ring-slate-950/5 sm:rounded-[2.1rem]">
           <Image
             alt={alt}
             className="object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:group-hover:scale-[1.035]"
