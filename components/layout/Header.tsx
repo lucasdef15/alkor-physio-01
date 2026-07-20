@@ -36,13 +36,6 @@ export default function Header() {
       if (!header || !shell || !content || !logo) return;
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      /*
-       * Estado inicial.
-       *
-       * translate3d e force3D ajudam o navegador a manter
-       * a animação na camada de composição.
-       */
       gsap.set(header, {
         force3D: true,
         y: 16,
@@ -69,14 +62,6 @@ export default function Header() {
         return;
       }
 
-      /*
-       * Em vez de play/reverse ao cruzar um ponto,
-       * a timeline acompanha o scroll entre 0px e 140px.
-       *
-       * scrub: 0.65 adiciona uma pequena suavização,
-       * evitando que o header siga cada microvariação
-       * brusca da roda do mouse.
-       */
       const timeline = gsap.timeline({
         defaults: {
           ease: 'none',

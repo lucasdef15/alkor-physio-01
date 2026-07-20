@@ -261,7 +261,7 @@
 }
 
 .fw-rise {
-  animation: fw-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: fw-rise 0.72s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

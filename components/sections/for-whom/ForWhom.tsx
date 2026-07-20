@@ -1,9 +1,10 @@
 'use client';
 
-import { CSSProperties, useRef } from 'react';
+import { CSSProperties, useEffect, useRef } from 'react';
 
 import { useActiveSymptom } from '@/hooks/useActiveSymptom';
 import { useBreathingAnimation } from '@/hooks/useBreathingAnimation';
+import { useHorizontalScroll } from '@/hooks/useHorizontalScroll';
 
 import BreathingIllustration from './BreathingIllustration';
 import SymptomCard from './SymptomCard';
@@ -11,7 +12,27 @@ import { SYMPTOMS } from './symptoms';
 
 export default function ForWhom() {
   const stageRef = useRef<HTMLDivElement>(null);
-  const { active, clearHover, hover, isActive, onKeyNavigate, select } = useActiveSymptom(SYMPTOMS);
+  const symptomsRef = useRef<HTMLDivElement>(null);
+  const {
+    active,
+    clearHover,
+    clearSelection,
+    hasSelection,
+    hover,
+    isActive,
+    onKeyNavigate,
+    select,
+  } = useActiveSymptom(SYMPTOMS);
+  const horizontalScroll = useHorizontalScroll(symptomsRef);
+
+  useEffect(() => {
+    const clearWhenOutside = (event: PointerEvent) => {
+      if (!symptomsRef.current?.contains(event.target as Node)) clearSelection();
+    };
+
+    document.addEventListener('pointerdown', clearWhenOutside);
+    return () => document.removeEventListener('pointerdown', clearWhenOutside);
+  }, [clearSelection]);
 
   useBreathingAnimation(stageRef, active.profile);
 
@@ -83,9 +104,11 @@ export default function ForWhom() {
 
               <div
                 aria-label="Situações atendidas pela fisioterapia cardiorrespiratória"
-                className="flex snap-x snap-mandatory [scrollbar-width:none] gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:grid-cols-1 [&::-webkit-scrollbar]:hidden"
+                className="flex cursor-grab snap-x snap-mandatory touch-pan-x select-none [scrollbar-width:none] gap-2 overflow-x-auto pb-2 data-[dragging=true]:cursor-grabbing data-[dragging=true]:snap-none sm:grid sm:cursor-auto sm:grid-cols-2 sm:overflow-visible sm:pb-0 sm:select-auto lg:grid-cols-1 [&::-webkit-scrollbar]:hidden"
                 onKeyDown={onKeyNavigate}
+                ref={symptomsRef}
                 role="group"
+                {...horizontalScroll}
               >
                 {SYMPTOMS.map((symptom, index) => (
                   <SymptomCard
@@ -105,7 +128,7 @@ export default function ForWhom() {
               <div className="relative min-h-0 flex-1">
                 <div className="absolute top-6 left-6 z-10 sm:top-8 sm:left-8">
                   <span className="text-[10px] font-semibold tracking-[0.18em] text-slate-500 uppercase">
-                    Sinal selecionado
+                    {hasSelection ? 'Sinal selecionado' : 'Resposta em exploração'}
                   </span>
                   <div className="mt-2 flex items-center gap-2.5">
                     <span

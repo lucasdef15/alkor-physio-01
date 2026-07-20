@@ -67,8 +67,8 @@ export function useBreathingAnimation(
       last = now;
 
       const target = profileRef.current;
-      const ease = 1 - Math.exp(-3.2 * dt);
-      const easeColor = 1 - Math.exp(-2.6 * dt);
+      const ease = 1 - Math.exp(-1.85 * dt);
+      const easeColor = 1 - Math.exp(-1.65 * dt);
 
       state.breathDepth = lerp(state.breathDepth, target.breathDepth, ease);
       state.breathRate = lerp(state.breathRate, target.breathRate, ease);
