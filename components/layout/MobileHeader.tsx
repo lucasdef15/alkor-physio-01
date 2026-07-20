@@ -41,11 +41,6 @@ export default function MobileHeader({
         transformOrigin: 'center top',
       });
 
-      /*
-       * O Header não executa a animação de compactação quando
-       * reduced motion está ativado. Portanto, o menu também
-       * deve permanecer com sua largura original.
-       */
       if (reduceMotion) return;
 
       const timeline = gsap.timeline({

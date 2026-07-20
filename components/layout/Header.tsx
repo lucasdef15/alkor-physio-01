@@ -43,6 +43,8 @@ export default function Header() {
       });
 
       gsap.set(shell, {
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        borderColor: 'rgba(255, 255, 255, 0.4)',
         force3D: true,
         scaleX: 1,
         transformOrigin: 'center center',
