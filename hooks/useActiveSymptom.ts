@@ -1,7 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 
+import {
+  INITIAL_SYMPTOM_STATE,
+  reduceSymptomInteraction,
+} from '@/components/sections/for-whom/activeSymptomState';
 import { Symptom } from '@/components/sections/for-whom/symptoms';
 
 interface UseActiveSymptom {
@@ -12,17 +16,17 @@ interface UseActiveSymptom {
   hasSelection: boolean;
   hover: (id: string) => void;
   isActive: (id: string) => boolean;
-  onKeyNavigate: (event: { key: string; preventDefault: () => void }) => void;
+  isSelected: (id: string) => boolean;
   select: (id: string) => void;
 }
 
 export function useActiveSymptom(symptoms: Symptom[]): UseActiveSymptom {
-  const [pinnedId, setPinnedId] = useState<null | string>(null);
-  const [hoverId, setHoverId] = useState<null | string>(null);
-  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [interaction, dispatch] = useReducer(reduceSymptomInteraction, INITIAL_SYMPTOM_STATE);
+  const hoverTimer = useRef<null | ReturnType<typeof setTimeout>>(null);
 
-  const activeId = pinnedId ?? hoverId ?? symptoms[0].id;
-  const hasSelection = pinnedId !== null;
+  const { previewedId, selectedId } = interaction;
+  const activeId = selectedId ?? previewedId ?? symptoms[0].id;
+  const hasSelection = selectedId !== null;
   const active = useMemo(
     () => symptoms.find((s) => s.id === activeId) ?? symptoms[0],
     [symptoms, activeId],
@@ -39,50 +43,31 @@ export function useActiveSymptom(symptoms: Symptom[]): UseActiveSymptom {
   const hover = useCallback(
     (id: string) => {
       cancelHoverTimer();
-      if (hasSelection || id === hoverId) return;
-      hoverTimer.current = setTimeout(() => setHoverId(id), 140);
+      if (hasSelection || id === previewedId) return;
+      hoverTimer.current = setTimeout(() => dispatch({ id, type: 'preview' }), 140);
     },
-    [cancelHoverTimer, hasSelection, hoverId],
+    [cancelHoverTimer, hasSelection, previewedId],
   );
   const clearHover = useCallback(() => {
     cancelHoverTimer();
-    setHoverId(null);
+    dispatch({ type: 'clear-preview' });
   }, [cancelHoverTimer]);
   const select = useCallback(
     (id: string) => {
       cancelHoverTimer();
-      setPinnedId(id);
-      setHoverId(null);
+      dispatch({ id, type: 'select' });
     },
     [cancelHoverTimer],
   );
   const clearSelection = useCallback(() => {
     cancelHoverTimer();
-    setPinnedId(null);
-    setHoverId(null);
+    dispatch({ type: 'reset' });
   }, [cancelHoverTimer]);
   const isActive = useCallback(
-    (id: string) => id === pinnedId || (!hasSelection && id === hoverId),
-    [hasSelection, hoverId, pinnedId],
+    (id: string) => id === selectedId || (!hasSelection && id === previewedId),
+    [hasSelection, previewedId, selectedId],
   );
-
-  const onKeyNavigate = useCallback(
-    (event: { key: string; preventDefault: () => void }) => {
-      const dir =
-        event.key === 'ArrowDown' || event.key === 'ArrowRight'
-          ? 1
-          : event.key === 'ArrowUp' || event.key === 'ArrowLeft'
-            ? -1
-            : 0;
-      if (dir === 0) return;
-      event.preventDefault();
-      const index = symptoms.findIndex((s) => s.id === activeId);
-      const next = (index + dir + symptoms.length) % symptoms.length;
-      setPinnedId(symptoms[next].id);
-      setHoverId(null);
-    },
-    [symptoms, activeId],
-  );
+  const isSelected = useCallback((id: string) => id === selectedId, [selectedId]);
 
   return {
     active,
@@ -92,7 +77,7 @@ export function useActiveSymptom(symptoms: Symptom[]): UseActiveSymptom {
     hasSelection,
     hover,
     isActive,
-    onKeyNavigate,
+    isSelected,
     select,
   };
 }

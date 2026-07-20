@@ -4,6 +4,7 @@ import { Geist, Montserrat_Alternates, Space_Grotesk } from 'next/font/google';
 
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
+import { SITE_CONFIG, SITE_URL } from '@/lib/site';
 
 import './globals.css';
 
@@ -25,9 +26,25 @@ const montserrat = Montserrat_Alternates({
 });
 
 export const metadata: Metadata = {
-  description:
-    'Reabilitação cardiorrespiratória guiada por evidência científica — recupere fôlego, força e qualidade de vida com acompanhamento próximo e humano.',
-  title: 'ΛLKOR Physio — Fisioterapia Cardiorrespiratória',
+  alternates: {
+    canonical: '/',
+  },
+  description: SITE_CONFIG.description,
+  metadataBase: SITE_URL,
+  openGraph: {
+    description: SITE_CONFIG.description,
+    locale: 'pt_BR',
+    siteName: SITE_CONFIG.name,
+    title: SITE_CONFIG.title,
+    type: 'website',
+    url: '/',
+  },
+  title: SITE_CONFIG.title,
+  twitter: {
+    card: 'summary_large_image',
+    description: SITE_CONFIG.description,
+    title: SITE_CONFIG.title,
+  },
 };
 
 export default function RootLayout({

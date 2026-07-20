@@ -70,11 +70,6 @@ export default function Testimonials() {
             </article>
           ))}
         </div>
-
-        <p className="mx-auto mt-6 max-w-2xl text-center text-xs leading-5 text-slate-400">
-          Relatos demonstrativos deste template. Substitua por depoimentos reais, autorizados e
-          verificáveis antes da publicação.
-        </p>
       </div>
     </section>
   );

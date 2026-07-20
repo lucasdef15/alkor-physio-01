@@ -1,5 +1,3 @@
-'use client';
-
 interface LogoSVGProps {
   className?: string;
   fill?: string;

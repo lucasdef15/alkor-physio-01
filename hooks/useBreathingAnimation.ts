@@ -30,7 +30,16 @@ export function useBreathingAnimation(
 
   useEffect(() => {
     profileRef.current = profile;
-  }, [profile]);
+
+    const el = targetRef.current;
+    if (
+      el &&
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    ) {
+      applyStaticProfile(el, profile);
+    }
+  }, [profile, targetRef]);
 
   useEffect(() => {
     const el = targetRef.current;
@@ -39,6 +48,11 @@ export function useBreathingAnimation(
     const prefersReducedMotion =
       typeof window !== 'undefined' &&
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      applyStaticProfile(el, profileRef.current);
+      return;
+    }
 
     const initial = profileRef.current;
     const state: AnimatedState = {
@@ -90,13 +104,11 @@ export function useBreathingAnimation(
       let sway = 0;
       let swell = 0;
 
-      if (!prefersReducedMotion) {
-        state.phase += (dt * (Math.PI * 2)) / Math.max(0.6, state.breathRate);
-        breath = smootherstep((Math.sin(state.phase - Math.PI / 2) + 1) / 2);
-        coughPulse = state.catch * Math.pow(Math.max(0, Math.sin(state.phase * 2.15)), 14);
-        sway = Math.sin(state.phase) * state.sway;
-        swell = state.glowSwell * ((Math.sin(state.phase * 0.4) + 1) / 2) * 0.24;
-      }
+      state.phase += (dt * (Math.PI * 2)) / Math.max(0.6, state.breathRate);
+      breath = smootherstep((Math.sin(state.phase - Math.PI / 2) + 1) / 2);
+      coughPulse = state.catch * Math.pow(Math.max(0, Math.sin(state.phase * 2.15)), 14);
+      sway = Math.sin(state.phase) * state.sway;
+      swell = state.glowSwell * ((Math.sin(state.phase * 0.4) + 1) / 2) * 0.24;
 
       const lungScale = 1 + breath * state.breathDepth - coughPulse * 0.07;
       const glow = Math.min(1, state.glow * (0.7 + 0.3 * breath) + swell + coughPulse * 0.22);
@@ -152,6 +164,35 @@ export function useBreathingAnimation(
       stop();
     };
   }, [targetRef]);
+}
+
+function applyStaticProfile(el: HTMLElement, profile: BreathingProfile): void {
+  const breath = 0.5;
+  const lungScale = 1 + breath * profile.breathDepth;
+  const glow = Math.min(1, profile.glow * 0.85 + profile.glowSwell * 0.12);
+  const rippleDur = clamp(profile.breathRate * 1.25, 2.2, 9);
+  const particleDur = clamp(6.5 / Math.max(0.35, profile.particleSpeed), 3, 14);
+  const [r1, g1, b1] = profile.primary;
+  const [r2, g2, b2] = profile.secondary;
+  const style = el.style;
+
+  style.setProperty('--breath', breath.toString());
+  style.setProperty('--lung-scale', lungScale.toFixed(4));
+  style.setProperty('--glow', glow.toFixed(4));
+  style.setProperty('--wave-amp', profile.waveAmp.toFixed(4));
+  style.setProperty('--ripple-dur', `${rippleDur.toFixed(2)}s`);
+  style.setProperty('--particle', profile.particle.toFixed(4));
+  style.setProperty('--particle-dur', `${particleDur.toFixed(2)}s`);
+  style.setProperty('--tilt', `${profile.tilt.toFixed(3)}deg`);
+  style.setProperty('--cough', '0');
+  style.setProperty('--compression', profile.compression.toFixed(4));
+  style.setProperty('--flow', profile.flow.toFixed(4));
+  style.setProperty('--c1r', r1.toString());
+  style.setProperty('--c1g', g1.toString());
+  style.setProperty('--c1b', b1.toString());
+  style.setProperty('--c2r', r2.toString());
+  style.setProperty('--c2g', g2.toString());
+  style.setProperty('--c2b', b2.toString());
 }
 
 function clamp(x: number, min: number, max: number): number {

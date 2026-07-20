@@ -1,3 +1,5 @@
+import { SITE_CONFIG } from '@/lib/site';
+
 export interface AboutDataProps {
   manifesto: string;
   name: string;
@@ -5,8 +7,5 @@ export interface AboutDataProps {
 }
 
 export const PHYSIOTHERAPIST: AboutDataProps = {
-  manifesto:
-    'Acredito que respirar bem é recuperar liberdade. Meu compromisso é oferecer um atendimento humanizado, baseado em evidências científicas e focado em devolver qualidade de vida a cada paciente.',
-  name: 'Davi Faria',
-  title: 'Fisioterapeuta Cardiorrespiratório',
+  ...SITE_CONFIG.professional,
 };

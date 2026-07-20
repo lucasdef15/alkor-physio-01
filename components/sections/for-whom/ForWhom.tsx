@@ -20,7 +20,7 @@ export default function ForWhom() {
     hasSelection,
     hover,
     isActive,
-    onKeyNavigate,
+    isSelected,
     select,
   } = useActiveSymptom(SYMPTOMS);
   const horizontalScroll = useHorizontalScroll(symptomsRef);
@@ -31,7 +31,15 @@ export default function ForWhom() {
     };
 
     document.addEventListener('pointerdown', clearWhenOutside);
-    return () => document.removeEventListener('pointerdown', clearWhenOutside);
+    const clearWithEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') clearSelection();
+    };
+    document.addEventListener('keydown', clearWithEscape);
+
+    return () => {
+      document.removeEventListener('pointerdown', clearWhenOutside);
+      document.removeEventListener('keydown', clearWithEscape);
+    };
   }, [clearSelection]);
 
   useBreathingAnimation(stageRef, active.profile);
@@ -91,7 +99,7 @@ export default function ForWhom() {
                 Resposta respiratória
               </span>
             </div>
-            <span className="hidden text-[10px] tracking-[0.14em] text-slate-500 uppercase sm:block">
+            <span className="hidden text-[10px] tracking-[0.14em] text-slate-400 uppercase sm:block">
               Selecione um sinal para explorar
             </span>
           </div>
@@ -105,7 +113,6 @@ export default function ForWhom() {
               <div
                 aria-label="Situações atendidas pela fisioterapia cardiorrespiratória"
                 className="flex cursor-grab snap-x snap-mandatory touch-pan-x select-none [scrollbar-width:none] gap-2 overflow-x-auto pb-2 data-[dragging=true]:cursor-grabbing data-[dragging=true]:snap-none sm:grid sm:cursor-auto sm:grid-cols-2 sm:overflow-visible sm:pb-0 sm:select-auto lg:grid-cols-1 [&::-webkit-scrollbar]:hidden"
-                onKeyDown={onKeyNavigate}
                 ref={symptomsRef}
                 role="group"
                 {...horizontalScroll}
@@ -118,6 +125,7 @@ export default function ForWhom() {
                     onLeave={clearHover}
                     onPeek={hover}
                     onSelect={select}
+                    selected={isSelected(symptom.id)}
                     symptom={symptom}
                   />
                 ))}
@@ -127,7 +135,7 @@ export default function ForWhom() {
             <div className="relative flex min-h-[530px] min-w-0 flex-col overflow-hidden sm:min-h-[600px] lg:min-h-0">
               <div className="relative min-h-0 flex-1">
                 <div className="absolute top-6 left-6 z-10 sm:top-8 sm:left-8">
-                  <span className="text-[10px] font-semibold tracking-[0.18em] text-slate-500 uppercase">
+                  <span className="text-[10px] font-semibold tracking-[0.18em] text-slate-400 uppercase">
                     {hasSelection ? 'Sinal selecionado' : 'Resposta em exploração'}
                   </span>
                   <div className="mt-2 flex items-center gap-2.5">
@@ -196,7 +204,7 @@ export default function ForWhom() {
 function Readout({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0 border-r border-white/8 px-3 py-3.5 last:border-r-0 sm:px-5">
-      <span className="block text-[8px] font-semibold tracking-[0.13em] text-slate-500 uppercase sm:text-[9px]">
+      <span className="block text-[8px] font-semibold tracking-[0.13em] text-slate-400 uppercase sm:text-[9px]">
         {label}
       </span>
       <span className="mt-1.5 block text-[9px] leading-snug font-medium text-slate-200 sm:text-xs">

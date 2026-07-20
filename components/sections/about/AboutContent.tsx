@@ -41,7 +41,6 @@ export default function AboutContent() {
                 <path d="M6 6v3a6 6 0 0 0 12 0V6" />
               </svg>
             }
-            priority
             src={Physiotherapist}
             title="Atendimento humanizado"
           />

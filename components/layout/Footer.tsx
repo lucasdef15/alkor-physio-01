@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { SITE_CONFIG } from '@/lib/site';
+
 import LogoSVG from '../svg/LogoSVG';
 import { NAV_LINKS } from './navLinks';
 
@@ -22,7 +24,7 @@ export default function Footer() {
 
             <div className="mt-8 flex items-center gap-2 text-sm text-slate-500">
               <span className="h-1 w-1 rounded-full bg-gradient-to-br from-teal-400 to-sky-400" />
-              São Paulo, SP
+              {SITE_CONFIG.contact.location}
             </div>
           </div>
 
@@ -44,11 +46,13 @@ export default function Footer() {
 
             <div className="space-y-3.5 text-slate-400">
               <p>
-                <FooterLink href="tel:+5511999999999">(11) 99999-9999</FooterLink>
+                <FooterLink href={`tel:${SITE_CONFIG.contact.phoneHref}`}>
+                  {SITE_CONFIG.contact.phoneDisplay}
+                </FooterLink>
               </p>
               <p>
-                <FooterLink href="mailto:contato@alkorphysio.com">
-                  contato@alkorphysio.com
+                <FooterLink href={`mailto:${SITE_CONFIG.contact.email}`}>
+                  {SITE_CONFIG.contact.email}
                 </FooterLink>
               </p>
             </div>
@@ -56,7 +60,7 @@ export default function Footer() {
             <div className="mt-8">
               <a
                 className="inline-block rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] hover:border-white/25 hover:bg-white/[0.07] active:scale-[0.97]"
-                href="mailto:contato@alkorphysio.com"
+                href={`mailto:${SITE_CONFIG.contact.email}`}
               >
                 Fazer Agendamento
               </a>
@@ -64,9 +68,9 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 border-t border-white/[0.06] pt-8 text-center text-sm text-slate-500">
+        <div className="mt-16 border-t border-white/[0.06] pt-8 text-center text-sm text-slate-400">
           <p>© 2026 ΛLKOR PHYSIO • Todos os direitos reservados</p>
-          <p className="mt-2 text-slate-600">Desenvolvido com foco na sua recuperação</p>
+          <p className="mt-2 text-slate-400">Desenvolvido com foco na sua recuperação</p>
         </div>
       </div>
     </footer>

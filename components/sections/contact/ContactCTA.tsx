@@ -1,5 +1,7 @@
 import { ArrowRight, CalendarCheck, Phone } from 'lucide-react';
 
+import { SITE_CONFIG } from '@/lib/site';
+
 export default function ContactCTA() {
   return (
     <section className="relative overflow-hidden bg-slate-950" id="contato">
@@ -24,22 +26,22 @@ export default function ContactCTA() {
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
               className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-semibold text-slate-950 shadow-[0_16px_36px_-18px_rgba(255,255,255,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-teal-50"
-              href="mailto:contato@alkorphysio.com"
+              href={`mailto:${SITE_CONFIG.contact.email}`}
             >
               Agendar avaliação
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </a>
             <a
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-7 py-3 text-sm font-medium text-white transition-all duration-300 hover:border-white/25 hover:bg-white/[0.08]"
-              href="tel:+5511999999999"
+              href={`tel:${SITE_CONFIG.contact.phoneHref}`}
             >
               <Phone className="size-4" strokeWidth={1.75} />
-              (11) 99999-9999
+              {SITE_CONFIG.contact.phoneDisplay}
             </a>
           </div>
 
-          <p className="mt-6 text-xs leading-relaxed text-slate-500">
-            Atendimento individualizado • São Paulo, SP • CREFITO ativo
+          <p className="mt-6 text-xs leading-relaxed text-slate-400">
+            Atendimento individualizado • {SITE_CONFIG.contact.location} • CREFITO ativo
           </p>
         </div>
       </div>

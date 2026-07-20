@@ -83,6 +83,7 @@ export function useBackgroundCanvas({ canvasRef }: UseBackgroundCanvasProps) {
 
     let time = 0;
     let animationFrameId: number;
+    let lastFrameTime = performance.now();
 
     let centerX = logicalWidth / 2;
     let centerY = logicalHeight * 0.4;
@@ -240,11 +241,14 @@ export function useBackgroundCanvas({ canvasRef }: UseBackgroundCanvasProps) {
       ctx.closePath();
     };
 
-    const animate = () => {
+    const animate = (now = performance.now()) => {
+      const deltaTime = Math.min(0.05, Math.max(0, (now - lastFrameTime) / 1000));
+      lastFrameTime = now;
       ctx.clearRect(0, 0, logicalWidth, logicalHeight);
-      time += 0.008;
-      parallaxX += (targetParallaxX - parallaxX) * PARALLAX_LERP;
-      parallaxY += (targetParallaxY - parallaxY) * PARALLAX_LERP;
+      time += deltaTime * 0.48;
+      const parallaxEase = 1 - Math.exp(-PARALLAX_LERP * 60 * deltaTime);
+      parallaxX += (targetParallaxX - parallaxX) * parallaxEase;
+      parallaxY += (targetParallaxY - parallaxY) * parallaxEase;
 
       const breathTime = performance.now() * 0.001;
       const breath = Math.sin(breathTime * breathAngularSpeed);
@@ -387,8 +391,8 @@ export function useBackgroundCanvas({ canvasRef }: UseBackgroundCanvasProps) {
       const drawParticles = () => {
         for (let i = 0; i < activeParticleCount; i++) {
           const p = particles[i];
-          p.angle += p.angleSpeed;
-          p.radialJitterPhase += p.radialJitterSpeed * 0.016;
+          p.angle += p.angleSpeed * 60 * deltaTime;
+          p.radialJitterPhase += p.radialJitterSpeed * deltaTime;
 
           const radialJitter = Math.sin(p.radialJitterPhase) * 0.06;
           const orbitRadius = baseRadius * (p.orbitRadiusFactor + radialJitter);
@@ -422,6 +426,7 @@ export function useBackgroundCanvas({ canvasRef }: UseBackgroundCanvasProps) {
     const start = () => {
       if (isRunning) return;
       isRunning = true;
+      lastFrameTime = performance.now();
       animationFrameId = requestAnimationFrame(animate);
     };
     const stop = () => {

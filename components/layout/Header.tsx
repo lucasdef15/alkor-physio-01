@@ -1,7 +1,7 @@
 'use client';
 
 import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
@@ -23,6 +23,7 @@ export default function Header() {
 
   const menuIconRef = useRef<SVGSVGElement>(null);
   const closeIconRef = useRef<SVGSVGElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const menuTimelineRef = useRef<gsap.core.Timeline | null>(null);
 
@@ -187,8 +188,14 @@ export default function Header() {
 
   useEffect(() => {
     const timeline = menuTimelineRef.current;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (!timeline) return;
+
+    if (reduceMotion) {
+      timeline.pause(isMenuOpen ? timeline.duration() : 0);
+      return;
+    }
 
     if (isMenuOpen) {
       timeline.play();
@@ -280,6 +287,7 @@ export default function Header() {
             aria-label={isMenuOpen ? 'Fechar menu' : 'Abrir menu'}
             className="relative grid h-10 w-10 shrink-0 place-items-center rounded-full text-slate-900 transition-colors duration-300 outline-none hover:bg-slate-900/5 focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 lg:hidden"
             onClick={() => setIsMenuOpen((current) => !current)}
+            ref={menuButtonRef}
             type="button"
           >
             <Menu
@@ -298,7 +306,12 @@ export default function Header() {
           </button>
         </div>
 
-        <MobileHeader isOpen={isMenuOpen} links={NAV_LINKS} setIsMenuOpen={setIsMenuOpen} />
+        <MobileHeader
+          isOpen={isMenuOpen}
+          links={NAV_LINKS}
+          setIsMenuOpen={setIsMenuOpen}
+          triggerRef={menuButtonRef}
+        />
       </div>
     </header>
   );

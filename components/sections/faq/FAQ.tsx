@@ -28,7 +28,7 @@ export default function FAQ() {
           <div className="divide-y divide-slate-200/80 border-y border-slate-200/80">
             {FAQ_ITEMS.map((item, index) => (
               <details className="group" key={item.question} name="faq">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-left marker:content-none focus-visible:outline-none sm:py-7">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 rounded-xl py-6 text-left marker:content-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-500 sm:py-7">
                   <span className="flex items-start gap-4 sm:gap-5">
                     <span className="mt-1 text-[0.65rem] font-bold tracking-[0.14em] text-teal-600">
                       0{index + 1}
@@ -37,7 +37,7 @@ export default function FAQ() {
                       {item.question}
                     </span>
                   </span>
-                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-500 transition-all duration-300 group-open:rotate-45 group-open:border-teal-200 group-open:bg-teal-50 group-open:text-teal-700 group-focus-visible:ring-2 group-focus-visible:ring-teal-500 group-focus-visible:ring-offset-2">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-500 transition-all duration-300 motion-reduce:transition-none group-open:rotate-45 group-open:border-teal-200 group-open:bg-teal-50 group-open:text-teal-700">
                     <Plus className="size-4" strokeWidth={1.75} />
                   </span>
                 </summary>

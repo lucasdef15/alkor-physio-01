@@ -7,6 +7,7 @@ interface SymptomCardProps {
   onLeave: () => void;
   onPeek: (id: string) => void;
   onSelect: (id: string) => void;
+  selected: boolean;
   symptom: Symptom;
 }
 
@@ -16,6 +17,7 @@ export default function SymptomCard({
   onLeave,
   onPeek,
   onSelect,
+  selected,
   symptom,
 }: SymptomCardProps) {
   const [r, g, b] = symptom.profile.primary;
@@ -23,7 +25,7 @@ export default function SymptomCard({
 
   return (
     <button
-      aria-pressed={active}
+      aria-pressed={selected}
       className="group relative flex min-h-[74px] w-[278px] min-w-[278px] snap-start items-center gap-3 overflow-hidden rounded-2xl border px-3.5 py-3 text-left transition-all duration-500 ease-out outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#07131f] sm:w-full sm:min-w-0 sm:gap-4 sm:px-4"
       onBlur={onLeave}
       onClick={() => onSelect(symptom.id)}
@@ -45,7 +47,7 @@ export default function SymptomCard({
         style={{ background: `rgb(${rgb})`, opacity: active ? 1 : 0 }}
       />
 
-      <span className="w-5 shrink-0 text-[10px] font-semibold tracking-[0.12em] text-slate-500">
+      <span className="w-5 shrink-0 text-[10px] font-semibold tracking-[0.12em] text-slate-400">
         {String(index + 1).padStart(2, '0')}
       </span>
 
@@ -61,11 +63,15 @@ export default function SymptomCard({
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="block text-[13px] leading-snug font-medium text-slate-300 transition-colors duration-500 sm:text-sm" style={{ color: active ? 'white' : undefined }}>
+        <span
+          className="block text-[13px] leading-snug font-medium text-slate-300 transition-colors duration-500 sm:text-sm"
+          style={{ color: active ? 'white' : undefined }}
+        >
           {symptom.title}
         </span>
         <span
-          className="mt-1 block overflow-hidden text-[10px] font-semibold tracking-[0.12em] uppercase transition-all duration-500"
+          aria-hidden="true"
+          className="mt-1 block overflow-hidden text-[9px] font-semibold tracking-[0.12em] uppercase transition-all duration-500 md:text-[10px]"
           style={{ color: `rgb(${rgb})`, maxHeight: active ? 20 : 0, opacity: active ? 0.9 : 0 }}
         >
           Explorar resposta
@@ -77,8 +83,18 @@ export default function SymptomCard({
         className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-all duration-500"
         style={{ color: `rgb(${rgb})` }}
       >
-        <svg className="h-3 w-3 transition-transform duration-500" fill="none" style={{ transform: active ? 'translateX(1px)' : 'none' }} viewBox="0 0 12 12">
-          <path d="M3.5 2.5 7 6 3.5 9.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+        <svg
+          className="h-3 w-3 transition-transform duration-500"
+          fill="none"
+          style={{ transform: active ? 'translateX(1px)' : 'none' }}
+          viewBox="0 0 12 12"
+        >
+          <path
+            d="M3.5 2.5 7 6 3.5 9.5"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </span>
     </button>

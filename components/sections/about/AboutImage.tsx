@@ -9,7 +9,6 @@ interface AboutImageProps {
   description: string;
   eyebrow: string;
   icon: ReactNode;
-  priority?: boolean;
   src: StaticImageData | string;
   title: string;
 }
@@ -19,7 +18,6 @@ export default function AboutImage({
   description,
   eyebrow,
   icon,
-  priority = false,
   src,
   title,
 }: AboutImageProps) {
@@ -45,7 +43,6 @@ export default function AboutImage({
             alt={alt}
             className="object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:group-hover:scale-[1.035]"
             fill
-            priority={priority}
             sizes="(max-width: 640px) 92vw, 512px"
             src={src}
           />

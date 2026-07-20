@@ -12,6 +12,7 @@ interface HorizontalScrollHandlers {
   onClickCapture: (event: ReactMouseEvent<HTMLElement>) => void;
   onPointerCancel: (event: ReactPointerEvent<HTMLElement>) => void;
   onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
+  onPointerLeave: (event: ReactPointerEvent<HTMLElement>) => void;
   onPointerMove: (event: ReactPointerEvent<HTMLElement>) => void;
   onPointerUp: (event: ReactPointerEvent<HTMLElement>) => void;
 }
@@ -61,6 +62,7 @@ export function useHorizontalScroll(
       event.stopPropagation();
       drag.current.moved = false;
     },
+    onPointerCancel: finishDrag,
     onPointerDown: (event) => {
       if (event.pointerType !== 'mouse' || event.button !== 0) return;
       drag.current = {
@@ -70,9 +72,15 @@ export function useHorizontalScroll(
         startX: event.clientX,
       };
     },
-    onPointerCancel: finishDrag,
+    onPointerLeave: (event) => {
+      if (drag.current.active && !drag.current.moved) finishDrag(event);
+    },
     onPointerMove: (event) => {
       if (!drag.current.active) return;
+      if (event.buttons !== 1) {
+        finishDrag(event);
+        return;
+      }
       const distance = event.clientX - drag.current.startX;
       if (Math.abs(distance) > 5 && !drag.current.moved) {
         drag.current.moved = true;
