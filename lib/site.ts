@@ -23,7 +23,7 @@ export const SITE_CONFIG = {
   professional: {
     manifesto:
       'Acredito que respirar bem é recuperar liberdade. Meu compromisso é oferecer um atendimento humanizado, baseado em evidências científicas e focado em devolver qualidade de vida a cada paciente.',
-    name: 'Davi Faria',
+    name: 'Nilton Petrone',
     title: 'Fisioterapeuta Cardiorrespiratório',
   },
   title: 'ΛLKOR Physio — Fisioterapia Cardiorrespiratória',
