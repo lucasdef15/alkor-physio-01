@@ -4,6 +4,7 @@ import { SITE_URL } from '@/lib/site';
 
 export default function robots(): MetadataRoute.Robots {
   return {
+    host: SITE_URL.toString(),
     rules: {
       allow: '/',
       userAgent: '*',

@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 
 import { SITE_CONFIG } from '@/lib/site';
 
-export const alt = 'ΛLKOR Physio — Fisioterapia Cardiorrespiratória';
+export const alt = 'Davi Faria Physio — Fisioterapia Cardiorrespiratória';
 export const contentType = 'image/png';
 export const size = { height: 630, width: 1200 };
 
