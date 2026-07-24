@@ -5,23 +5,29 @@ import Physiotherapist from '@/public/physiotherapist.png';
 import { PHYSIOTHERAPIST } from './about.data';
 import AboutImage from './AboutImage';
 
+const CARE_HIGHLIGHTS = [
+  'Experiência em UTI',
+  'Reabilitação pós-hospitalar',
+  'Atendimento domiciliar',
+] as const;
+
 export default function AboutContent() {
   return (
     <div className="relative isolate">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-20 left-1/2 -z-10 h-[34rem] w-[80%] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(45,212,191,0.10),transparent_68%)] blur-3xl"
+        className="pointer-events-none absolute top-20 left-1/2 -z-10 h-[34rem] w-[90%] max-w-6xl -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(45,212,191,0.10),transparent_68%)] blur-3xl sm:w-[80%]"
       />
 
-      <div className="flex flex-col gap-24 lg:gap-32">
+      <div className="flex flex-col gap-20 sm:gap-24 lg:gap-32">
         <section
           aria-labelledby="specialist-title"
-          className="grid items-center gap-14 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-20 xl:gap-28"
+          className="grid items-center gap-12 sm:gap-14 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16 xl:gap-24 2xl:gap-28"
         >
           <AboutImage
-            alt="Dr. Davi Faria durante atendimento fisioterapêutico."
-            description="Abordagem baseada em evidências científicas e foco na recuperação ágil."
-            eyebrow="Destaque clínico"
+            alt="Fisioterapeuta Davi Faria, profissional com atuação hospitalar, cardiorrespiratória e domiciliar."
+            description="Reabilitação cardiorrespiratória e funcional"
+            eyebrow="Experiência hospitalar e cuidado domiciliar"
             icon={
               <svg
                 aria-hidden="true"
@@ -42,10 +48,10 @@ export default function AboutContent() {
               </svg>
             }
             src={Physiotherapist}
-            title="Atendimento humanizado"
+            title="Dr. Davi Faria"
           />
 
-          <div className="relative mx-auto w-full max-w-xl lg:mx-0">
+          <div className="relative mx-auto w-full max-w-xl lg:mx-0 lg:max-w-none">
             <div
               aria-hidden="true"
               className="border-primary/10 bg-primary/[0.03] absolute -top-8 -left-8 hidden size-24 rounded-full border lg:block"
@@ -54,25 +60,25 @@ export default function AboutContent() {
             </div>
 
             <div className="relative">
-              <span className="section-eyebrow mb-5">Sobre o especialista</span>
+              <span className="section-eyebrow mb-4 sm:mb-5">Sobre o fisioterapeuta</span>
 
               <h2
-                className="font-space-grotesk text-foreground max-w-2xl text-4xl leading-[1.02] font-semibold tracking-[-0.045em] sm:text-5xl xl:text-6xl"
+                className="font-space-grotesk text-foreground max-w-2xl text-[clamp(2rem,7vw,3.75rem)] leading-[1.02] font-semibold tracking-[-0.045em]"
                 id="specialist-title"
               >
                 {PHYSIOTHERAPIST.name}
               </h2>
 
-              <p className="text-primary mt-4 text-lg font-medium tracking-[-0.015em] sm:text-xl">
+              <p className="text-primary mt-3 max-w-xl text-base leading-7 font-medium tracking-[-0.015em] sm:mt-4 sm:text-lg lg:text-xl">
                 {PHYSIOTHERAPIST.title}
               </p>
 
-              <div className="from-primary/30 via-primary/10 mt-8 h-px w-full bg-gradient-to-r to-transparent" />
+              <div className="from-primary/30 via-primary/10 mt-6 h-px w-full bg-gradient-to-r to-transparent sm:mt-8" />
 
-              <blockquote className="border-primary/30 text-foreground-muted relative mt-8 border-l pl-6 text-base leading-8 sm:pl-8 sm:text-lg">
+              <blockquote className="border-primary/30 text-foreground-muted relative mt-6 border-l pl-4 text-sm leading-7 sm:mt-8 sm:pl-6 sm:text-base sm:leading-8 xl:pl-8 xl:text-lg">
                 <span
                   aria-hidden="true"
-                  className="text-primary/15 absolute -top-3 left-4 font-serif text-5xl leading-none sm:left-5"
+                  className="text-primary/15 absolute -top-2 left-3 font-serif text-4xl leading-none sm:-top-3 sm:left-4 sm:text-5xl"
                 >
                   “
                 </span>
@@ -80,36 +86,58 @@ export default function AboutContent() {
                 <p className="relative">{PHYSIOTHERAPIST.manifesto}</p>
               </blockquote>
 
-              <div className="mt-9 flex flex-wrap gap-2.5">
-                {['Escuta ativa', 'Evidência científica', 'Cuidado individual'].map((item) => (
-                  <span
-                    className="border-border/70 bg-background/60 text-foreground-muted inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-medium shadow-[0_1px_2px_rgba(15,23,42,0.03)] backdrop-blur-md"
-                    key={item}
-                  >
-                    <svg
-                      aria-hidden="true"
-                      className="text-primary size-3.5"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="m5 12 4 4L19 6" />
-                    </svg>
+              <div className="mt-7 grid grid-cols-1 gap-2 min-[390px]:grid-cols-2 sm:mt-8">
+                {CARE_HIGHLIGHTS.map((item, index) => {
+                  const isLastItem = index === CARE_HIGHLIGHTS.length - 1;
 
-                    {item}
-                  </span>
-                ))}
+                  return (
+                    <span
+                      className={[
+                        'border-border/70 bg-background/60 text-foreground-muted',
+                        'inline-flex min-h-10 w-full items-center justify-center gap-2',
+                        'rounded-full border px-3 py-2 text-center text-[0.68rem] leading-4 font-medium',
+                        'shadow-[0_1px_2px_rgba(15,23,42,0.03)] backdrop-blur-md',
+                        'sm:text-xs',
+                        isLastItem
+                          ? 'min-[390px]:col-span-2 min-[390px]:mx-auto min-[390px]:max-w-60'
+                          : '',
+                      ].join(' ')}
+                      key={item}
+                    >
+                      <svg
+                        aria-hidden="true"
+                        className="text-primary size-3.5 shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="m5 12 4 4L19 6" />
+                      </svg>
+
+                      <span>{item}</span>
+                    </span>
+                  );
+                })}
               </div>
 
-              <div className="mt-10 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-                <Link className="button-primary group/button" href="#contato">
-                  Agendar avaliação
+              <div className="mt-8 flex flex-col gap-5 sm:mt-9 md:flex-row-reverse md:items-center md:justify-between">
+                <p className="text-foreground-muted max-w-md text-sm leading-6">
+                  Atendimento individual para pacientes que precisam dar continuidade à recuperação
+                  respiratória e funcional após a alta hospitalar.
+                </p>
+
+                <Link
+                  className="button-primary group/button w-full shrink-0 justify-center text-center sm:w-auto"
+                  href="#contato"
+                >
+                  <span>Conversar com o fisioterapeuta</span>
+
                   <svg
                     aria-hidden="true"
-                    className="size-4 transition-transform duration-300 group-hover/button:translate-x-0.5"
+                    className="size-4 shrink-0 transition-transform duration-300 group-hover/button:translate-x-0.5"
                     fill="none"
                     stroke="currentColor"
                     strokeLinecap="round"
@@ -121,10 +149,6 @@ export default function AboutContent() {
                     <path d="m13 6 6 6-6 6" />
                   </svg>
                 </Link>
-
-                <p className="text-foreground-muted max-w-52 text-xs leading-relaxed">
-                  Avaliação individual para compreender suas necessidades e seus objetivos.
-                </p>
               </div>
             </div>
           </div>
@@ -132,35 +156,38 @@ export default function AboutContent() {
 
         <section
           aria-labelledby="care-manifesto-title"
-          className="relative mx-auto w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/60 bg-white/45 px-6 py-14 text-center shadow-[0_24px_80px_-42px_rgba(15,23,42,0.25)] backdrop-blur-2xl sm:px-12 sm:py-16 lg:rounded-[2.75rem] lg:px-20 lg:py-20"
+          className="border-border/60 bg-background/65 relative mx-auto w-full max-w-5xl overflow-hidden rounded-[1.75rem] border px-5 py-10 text-center shadow-[0_24px_80px_-42px_rgba(15,23,42,0.25)] backdrop-blur-2xl sm:rounded-[2rem] sm:px-10 sm:py-12 lg:rounded-[2.5rem] lg:px-16 lg:py-14"
         >
           <div
             aria-hidden="true"
-            className="bg-primary/10 absolute top-0 left-1/2 h-40 w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+            className="bg-primary/10 absolute top-0 left-1/2 h-32 w-4/5 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl sm:w-2/3"
           />
 
           <div
             aria-hidden="true"
-            className="via-primary/30 absolute inset-x-16 top-0 h-px bg-gradient-to-r from-transparent to-transparent"
+            className="via-primary/30 absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent to-transparent sm:inset-x-16"
           />
 
           <div className="relative mx-auto max-w-3xl">
-            <span className="text-primary mb-5 inline-flex items-center gap-2 text-[0.65rem] font-bold tracking-[0.2em] uppercase">
-              <span className="bg-primary/40 h-px w-7" />
-              Nossa visão
-              <span className="bg-primary/40 h-px w-7" />
+            <span className="text-primary mb-4 inline-flex max-w-full items-center justify-center gap-2 text-center text-[0.6rem] leading-4 font-bold tracking-[0.16em] uppercase sm:text-[0.65rem] sm:tracking-[0.2em]">
+              <span className="bg-primary/40 h-px w-5 shrink-0 sm:w-7" />
+              <span>Continuidade do cuidado</span>
+              <span className="bg-primary/40 h-px w-5 shrink-0 sm:w-7" />
             </span>
 
             <h3
-              className="font-montserrat text-foreground text-3xl leading-tight font-semibold tracking-[-0.035em] text-balance sm:text-4xl lg:text-[2.75rem]"
+              className="font-montserrat text-foreground mx-auto max-w-3xl text-[clamp(1.75rem,4.5vw,2.5rem)] leading-[1.12] font-semibold tracking-[-0.035em] text-balance"
               id="care-manifesto-title"
             >
-              Cada pessoa possui uma <span className="text-primary">história única.</span>
+              Da internação ao retorno à rotina, cada etapa da{' '}
+              <span className="text-primary">recuperação</span> importa.
             </h3>
 
-            <p className="text-foreground-muted mx-auto mt-6 max-w-2xl text-base leading-8 text-pretty sm:text-lg">
-              O tratamento respeita sua realidade, seus objetivos e seu tempo, porque recuperar a
-              qualidade de vida vai muito além de aliviar sintomas.
+            <p className="text-foreground-muted mx-auto mt-5 max-w-2xl text-sm leading-7 text-pretty sm:text-base">
+              Após uma internação, ventilação mecânica, AVC ou um período de imobilidade, atividades
+              simples podem se tornar desafiadoras. O atendimento domiciliar dá continuidade ao
+              cuidado iniciado no hospital, auxiliando na recuperação respiratória, funcional e da
+              autonomia.
             </p>
           </div>
         </section>
