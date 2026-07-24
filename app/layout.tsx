@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+
 import { Geist, Montserrat_Alternates, Space_Grotesk } from 'next/font/google';
 
 import Footer from '@/components/layout/Footer';
@@ -25,15 +26,6 @@ const montserratAlternates = Montserrat_Alternates({
 });
 
 export const metadata: Metadata = {
-  metadataBase: SITE_URL,
-
-  title: {
-    default: SITE_CONFIG.title,
-    template: `%s | ${SITE_CONFIG.name}`,
-  },
-
-  description: SITE_CONFIG.description,
-
   alternates: {
     canonical: '/',
   },
@@ -44,46 +36,55 @@ export const metadata: Metadata = {
     },
   ],
 
-  creator: SITE_CONFIG.professional.name,
-  publisher: SITE_CONFIG.name,
-
   category: 'Saúde e fisioterapia',
 
+  creator: SITE_CONFIG.professional.name,
+
+  description: SITE_CONFIG.description,
+
+  metadataBase: SITE_URL,
   openGraph: {
-    type: 'website',
-    locale: 'pt_BR',
-    url: '/',
-    siteName: SITE_CONFIG.name,
-    title: SITE_CONFIG.title,
     description: SITE_CONFIG.description,
     images: [
       {
+        alt: `${SITE_CONFIG.professional.name} — ${SITE_CONFIG.professional.title}`,
+        height: 630,
         url: '/opengraph-image.jpg',
         width: 1200,
-        height: 630,
-        alt: `${SITE_CONFIG.professional.name} — ${SITE_CONFIG.professional.title}`,
       },
     ],
+    locale: 'pt_BR',
+    siteName: SITE_CONFIG.name,
+    title: SITE_CONFIG.title,
+    type: 'website',
+    url: '/',
   },
 
-  twitter: {
-    card: 'summary_large_image',
-    title: SITE_CONFIG.title,
-    description: SITE_CONFIG.description,
-    images: ['/twitter-image.jpg'],
-  },
+  publisher: SITE_CONFIG.name,
 
   robots: {
-    index: true,
     follow: true,
-
     googleBot: {
-      index: true,
       follow: true,
+      index: true,
       'max-image-preview': 'large',
       'max-snippet': -1,
       'max-video-preview': -1,
     },
+
+    index: true,
+  },
+
+  title: {
+    default: SITE_CONFIG.title,
+    template: `%s | ${SITE_CONFIG.name}`,
+  },
+
+  twitter: {
+    card: 'summary_large_image',
+    description: SITE_CONFIG.description,
+    images: ['/twitter-image.jpg'],
+    title: SITE_CONFIG.title,
   },
 };
 
@@ -105,17 +106,17 @@ export default function RootLayout({
 
         address: {
           '@type': 'PostalAddress',
+          addressCountry: 'BR',
           addressLocality: 'Mococa',
           addressRegion: 'SP',
-          addressCountry: 'BR',
         },
         areaServed: {
           '@type': 'City',
-          name: 'Mococa',
           containedInPlace: {
             '@type': 'State',
             name: 'São Paulo',
           },
+          name: 'Mococa',
         },
         contactPoint: {
           '@type': 'ContactPoint',
@@ -264,5 +265,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-} );
 }
