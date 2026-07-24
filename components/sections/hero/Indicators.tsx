@@ -1,5 +1,4 @@
-const INDICATORS = ['CREFITO ativo', '+10 anos de experiência', 'Atendimento personalizado'];
-
+const INDICATORS = ['Avaliação detalhada', 'Plano 100% individualizado', 'Acompanhamento contínuo'];
 export default function Indicators() {
   return (
     <div className="mt-12 mb-10 grid w-full max-w-2xl grid-cols-1 gap-3 text-xs text-slate-500 sm:mt-14 sm:grid-cols-3 sm:text-sm">

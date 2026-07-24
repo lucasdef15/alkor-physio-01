@@ -248,7 +248,7 @@ export default function Header() {
             onClick={() => setIsMenuOpen(false)}
           >
             <div className="will-change-transform" ref={logoRef}>
-              <LogoSVG className="h-12 w-auto" fill="#0f172a" name="ΛLKOR" surname="PHYSIO" />
+              <LogoSVG className="h-12 w-auto" fill="#0f172a" name="DAVI FARIA" surname="PHYSIO" />
             </div>
           </Link>
 

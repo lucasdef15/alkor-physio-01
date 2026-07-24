@@ -14,7 +14,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-y-12 md:grid-cols-12">
           <div className="md:col-span-5">
             <div className="flex items-center gap-3">
-              <LogoSVG className="h-10 w-auto" fill="#fff" name="ΛLKOR" surname="PHYSIO" />
+              <LogoSVG className="h-10 w-auto" fill="#fff" name="DAVI FARIA" surname="PHYSIO" />
             </div>
 
             <p className="mt-6 max-w-md leading-relaxed text-slate-400">
@@ -28,7 +28,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Links Rápidos */}
           <div className="md:col-span-3">
             <h3 className="mb-5 text-sm font-semibold tracking-wide text-white">Navegação</h3>
             <ul className="space-y-3.5 text-slate-400">
@@ -40,7 +39,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contato */}
           <div className="md:col-span-4">
             <h3 className="mb-5 text-sm font-semibold tracking-wide text-white">Contato</h3>
 

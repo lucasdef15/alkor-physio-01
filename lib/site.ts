@@ -11,20 +11,28 @@ const normalizedDeploymentUrl = deploymentHost.startsWith('http')
 export const SITE_URL = new URL(normalizedDeploymentUrl);
 
 export const SITE_CONFIG = {
+  agenda: {
+    href: 'https://calendly.com/davifaria/consulta-fisioterapia-cardiorrespiratoria',
+    text: 'Agende uma consulta',
+  },
   contact: {
-    email: 'contato@alkorphysio.com',
-    location: 'São Paulo, SP',
-    phoneDisplay: '(11) 99999-9999',
-    phoneHref: '+5511999999999',
+    email: 'contato@davifaria.com',
+    location: 'Mococa, SP',
+    phoneDisplay: '(19) 99112-7205',
+    phoneHref: '+5519991127205',
   },
   description:
     'Reabilitação cardiorrespiratória guiada por evidência científica — recupere fôlego, força e qualidade de vida com acompanhamento próximo e humano.',
-  name: 'ΛLKOR Physio',
+  name: 'Davi Faria Physio',
   professional: {
     manifesto:
       'Acredito que respirar bem é recuperar liberdade. Meu compromisso é oferecer um atendimento humanizado, baseado em evidências científicas e focado em devolver qualidade de vida a cada paciente.',
-    name: 'Nilton Petrone',
+    name: 'Davi Faria',
     title: 'Fisioterapeuta Cardiorrespiratório',
   },
-  title: 'ΛLKOR Physio — Fisioterapia Cardiorrespiratória',
+  title: 'Davi Faria Physio — Fisioterapia Cardiorrespiratória',
+  whatsapp: {
+    href: 'https://api.whatsapp.com/send?phone=5519991127205',
+    text: 'Olá, Dr. Davi! Conheci seu trabalho pelo site e gostaria de agendar uma avaliação.',
+  },
 } as const;

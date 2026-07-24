@@ -1,4 +1,5 @@
 import { ArrowRight, CalendarCheck, Phone } from 'lucide-react';
+import Link from 'next/link';
 
 import { SITE_CONFIG } from '@/lib/site';
 
@@ -24,20 +25,24 @@ export default function ContactCTA() {
           </p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <a
+            <Link
               className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-semibold text-slate-950 shadow-[0_16px_36px_-18px_rgba(255,255,255,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-teal-50"
-              href={`mailto:${SITE_CONFIG.contact.email}`}
+              href={SITE_CONFIG.agenda.href}
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Agendar avaliação
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-            </a>
-            <a
+            </Link>
+            <Link
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-7 py-3 text-sm font-medium text-white transition-all duration-300 hover:border-white/25 hover:bg-white/[0.08]"
-              href={`tel:${SITE_CONFIG.contact.phoneHref}`}
+              href={SITE_CONFIG.whatsapp.href}
+              rel="noopener noreferrer"
+              target="_blank"
             >
               <Phone className="size-4" strokeWidth={1.75} />
               {SITE_CONFIG.contact.phoneDisplay}
-            </a>
+            </Link>
           </div>
 
           <p className="mt-6 text-xs leading-relaxed text-slate-400">
