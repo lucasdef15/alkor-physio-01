@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-
 import { Geist, Montserrat_Alternates, Space_Grotesk } from 'next/font/google';
 
 import Footer from '@/components/layout/Footer';
@@ -19,31 +18,72 @@ const spaceGrotesk = Space_Grotesk({
   weight: ['300', '400', '500', '600', '700'],
 });
 
-const montserrat = Montserrat_Alternates({
+const montserratAlternates = Montserrat_Alternates({
   subsets: ['latin'],
-  variable: '--font-montserrat',
+  variable: '--font-montserrat-alternates',
   weight: ['700'],
 });
 
 export const metadata: Metadata = {
+  metadataBase: SITE_URL,
+
+  title: {
+    default: SITE_CONFIG.title,
+    template: `%s | ${SITE_CONFIG.name}`,
+  },
+
+  description: SITE_CONFIG.description,
+
   alternates: {
     canonical: '/',
   },
-  description: SITE_CONFIG.description,
-  metadataBase: SITE_URL,
+
+  authors: [
+    {
+      name: SITE_CONFIG.professional.name,
+    },
+  ],
+
+  creator: SITE_CONFIG.professional.name,
+  publisher: SITE_CONFIG.name,
+
+  category: 'Saúde e fisioterapia',
+
   openGraph: {
-    description: SITE_CONFIG.description,
+    type: 'website',
     locale: 'pt_BR',
+    url: '/',
     siteName: SITE_CONFIG.name,
     title: SITE_CONFIG.title,
-    type: 'website',
-    url: '/',
+    description: SITE_CONFIG.description,
+    images: [
+      {
+        url: '/opengraph-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: `${SITE_CONFIG.professional.name} — ${SITE_CONFIG.professional.title}`,
+      },
+    ],
   },
-  title: SITE_CONFIG.title,
+
   twitter: {
     card: 'summary_large_image',
-    description: SITE_CONFIG.description,
     title: SITE_CONFIG.title,
+    description: SITE_CONFIG.description,
+    images: ['/twitter-image.jpg'],
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
   },
 };
 
@@ -52,16 +92,177 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteUrl = SITE_URL.toString();
+  const imageUrl = new URL('/opengraph-image.jpg', SITE_URL).toString();
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+
+    '@graph': [
+      {
+        '@id': `${siteUrl}#physiotherapy`,
+        '@type': 'Physiotherapy',
+
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Mococa',
+          addressRegion: 'SP',
+          addressCountry: 'BR',
+        },
+        areaServed: {
+          '@type': 'City',
+          name: 'Mococa',
+          containedInPlace: {
+            '@type': 'State',
+            name: 'São Paulo',
+          },
+        },
+        contactPoint: {
+          '@type': 'ContactPoint',
+          areaServed: 'BR',
+          availableLanguage: 'Portuguese',
+          contactType: 'Agendamento e atendimento',
+          email: SITE_CONFIG.contact.email,
+          telephone: SITE_CONFIG.contact.phoneHref,
+        },
+        description: SITE_CONFIG.description,
+
+        email: SITE_CONFIG.contact.email,
+        employee: {
+          '@id': `${siteUrl}#davi-faria`,
+        },
+
+        founder: {
+          '@id': `${siteUrl}#davi-faria`,
+        },
+
+        image: imageUrl,
+
+        name: SITE_CONFIG.name,
+
+        potentialAction: {
+          '@type': 'ReserveAction',
+          name: SITE_CONFIG.agenda.text,
+          target: {
+            '@type': 'EntryPoint',
+            actionPlatform: [
+              'https://schema.org/DesktopWebPlatform',
+              'https://schema.org/MobileWebPlatform',
+            ],
+            urlTemplate: SITE_CONFIG.agenda.href,
+          },
+        },
+
+        telephone: SITE_CONFIG.contact.phoneHref,
+
+        url: siteUrl,
+      },
+
+      {
+        '@id': `${siteUrl}#davi-faria`,
+        '@type': 'Person',
+
+        description: SITE_CONFIG.professional.manifesto,
+        email: SITE_CONFIG.contact.email,
+        image: imageUrl,
+        jobTitle: SITE_CONFIG.professional.title,
+        knowsAbout: [
+          'Fisioterapia cardiorrespiratória',
+          'Reabilitação cardiorrespiratória',
+          'Fisioterapia respiratória',
+          'Reabilitação pulmonar',
+          'Qualidade de vida',
+        ],
+
+        name: SITE_CONFIG.professional.name,
+        telephone: SITE_CONFIG.contact.phoneHref,
+
+        url: siteUrl,
+
+        workLocation: {
+          '@type': 'Place',
+          address: {
+            '@type': 'PostalAddress',
+            addressCountry: 'BR',
+            addressLocality: 'Mococa',
+            addressRegion: 'SP',
+          },
+
+          name: SITE_CONFIG.contact.location,
+        },
+
+        worksFor: {
+          '@id': `${siteUrl}#physiotherapy`,
+        },
+      },
+
+      {
+        '@id': `${siteUrl}#website`,
+        '@type': 'WebSite',
+
+        alternateName: SITE_CONFIG.professional.name,
+        description: SITE_CONFIG.description,
+        inLanguage: 'pt-BR',
+        name: SITE_CONFIG.name,
+        publisher: {
+          '@id': `${siteUrl}#physiotherapy`,
+        },
+
+        url: siteUrl,
+      },
+
+      {
+        '@id': `${siteUrl}#webpage`,
+        '@type': 'WebPage',
+
+        about: [
+          {
+            '@id': `${siteUrl}#physiotherapy`,
+          },
+          {
+            '@id': `${siteUrl}#davi-faria`,
+          },
+        ],
+        description: SITE_CONFIG.description,
+        inLanguage: 'pt-BR',
+        isPartOf: {
+          '@id': `${siteUrl}#website`,
+        },
+
+        name: SITE_CONFIG.title,
+
+        primaryImageOfPage: {
+          '@type': 'ImageObject',
+          height: 630,
+          url: imageUrl,
+          width: 1200,
+        },
+
+        url: siteUrl,
+      },
+    ],
+  };
+
   return (
     <html
-      className={`${geistSans.variable} ${spaceGrotesk.variable} ${montserrat.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${spaceGrotesk.variable} ${montserratAlternates.variable} h-full antialiased`}
       lang="pt-BR"
     >
       <body className="flex min-h-screen flex-col">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+          }}
+          type="application/ld+json"
+        />
+
         <Header />
+
         <main className="flex-1">{children}</main>
+
         <Footer />
       </body>
     </html>
   );
+} );
 }
