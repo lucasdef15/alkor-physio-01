@@ -2,44 +2,108 @@ import { PILLARS } from './works.data';
 
 export default function HowItWorks() {
   return (
-    <section className="relative bg-white" id="como-funciona">
-      <div className="site-container section-space">
-        <div className="mx-auto max-w-3xl text-center">
-          <span className="section-eyebrow">Como funciona</span>
-          <h2 className="section-title mx-auto mt-6">Segurança clínica em cada etapa.</h2>
-          <p className="section-copy mx-auto mt-6">
-            Um processo claro, próximo e ajustado à sua evolução — da primeira avaliação à retomada
-            confiante das atividades do dia a dia.
-          </p>
-        </div>
+    <section
+      aria-labelledby="clinical-approach-title"
+      className="relative overflow-hidden border-y border-slate-100 bg-[linear-gradient(180deg,#ffffff_0%,#f7fcfc_100%)]"
+      id="como-funciona"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-0 left-0 size-[32rem] -translate-x-1/2 -translate-y-1/3 rounded-full bg-[radial-gradient(circle,rgba(20,184,166,0.09),transparent_68%)] blur-3xl"
+      />
 
-        <div className="border-border/70 relative mt-14 overflow-hidden rounded-[var(--radius-panel)] border bg-slate-50/70 shadow-[var(--shadow-card)]">
-          <div
-            aria-hidden="true"
-            className="via-primary/25 pointer-events-none absolute inset-x-[16.67%] top-[5.35rem] hidden h-px bg-gradient-to-r from-transparent to-transparent md:block"
-          />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 bottom-0 size-[28rem] translate-x-1/2 translate-y-1/3 rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.06),transparent_68%)] blur-3xl"
+      />
 
-          <div className="divide-border/60 grid grid-cols-1 divide-y md:grid-cols-3 md:divide-x md:divide-y-0">
-            {PILLARS.map((pillar, index) => (
-              <article
-                className="group relative flex flex-col items-center px-7 py-10 text-center sm:px-10 md:py-14"
-                key={pillar.id}
-              >
-                <span className="absolute top-7 right-8 text-xs font-semibold tracking-[0.16em] text-slate-300">
-                  0{index + 1}
-                </span>
-                <div className="border-border group-hover:border-primary/35 group-hover:bg-primary/[0.06] text-primary relative z-10 mb-7 flex size-14 items-center justify-center rounded-full border bg-white shadow-sm transition-all duration-300 motion-safe:group-hover:scale-105">
-                  <pillar.icon className="size-6" strokeWidth={1.75} />
-                </div>
-                <h3 className="font-space-grotesk text-xl font-semibold tracking-[-0.025em] text-slate-900">
-                  {pillar.title}
-                </h3>
-                <p className="mt-3 max-w-[29ch] text-sm leading-6 text-slate-600">
-                  {pillar.description}
+      <div className="site-container section-space relative">
+        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:gap-20 xl:gap-28">
+          <header className="lg:relative">
+            <div className="lg:sticky lg:top-28">
+              <span className="section-eyebrow">Abordagem clínica</span>
+
+              <h2 className="section-title mt-6 max-w-lg" id="clinical-approach-title">
+                Cada decisão parte do que o paciente apresenta.
+              </h2>
+
+              <p className="section-copy mt-6 max-w-lg">
+                A avaliação orienta o plano, a resposta ao esforço define a progressão e o
+                acompanhamento dá continuidade à recuperação no ambiente em que o paciente vive.
+              </p>
+
+              <div className="mt-8 flex max-w-md items-center gap-3">
+                <span className="bg-primary/45 h-px w-8 shrink-0" />
+
+                <p className="text-foreground-muted text-xs leading-5">
+                  Da avaliação inicial à continuidade do cuidado em casa.
                 </p>
-              </article>
-            ))}
-          </div>
+              </div>
+            </div>
+          </header>
+
+          <ol className="border-border/70 border-y">
+            {PILLARS.map((pillar, index) => {
+              const number = String(index + 1).padStart(2, '0');
+
+              return (
+                <li
+                  className="group border-border/70 relative overflow-hidden border-b last:border-b-0"
+                  key={pillar.id}
+                >
+                  <div
+                    aria-hidden="true"
+                    className="from-primary/[0.045] absolute inset-0 bg-gradient-to-r to-transparent opacity-0 transition-opacity duration-500 motion-safe:group-hover:opacity-100"
+                  />
+
+                  <div
+                    className={[
+                      'relative grid grid-cols-[2.5rem_minmax(0,1fr)]',
+                      'gap-x-4 py-7',
+                      'sm:grid-cols-[3rem_minmax(0,1fr)] sm:gap-x-6 sm:py-9',
+                      'lg:grid-cols-[3.5rem_minmax(0,0.8fr)_minmax(0,1.2fr)]',
+                      'lg:items-start lg:gap-x-7 lg:py-10',
+                    ].join(' ')}
+                  >
+                    <span
+                      className={[
+                        'row-span-2 pt-1',
+                        'font-mono text-[0.65rem] font-semibold',
+                        'tracking-[0.18em] text-slate-300',
+                        'transition-colors duration-300',
+                        'group-hover:text-primary/70',
+                        'lg:row-span-1',
+                      ].join(' ')}
+                    >
+                      {number}
+                    </span>
+
+                    <h3
+                      className={[
+                        'font-space-grotesk text-foreground',
+                        'max-w-sm text-lg leading-[1.2] font-semibold',
+                        'tracking-[-0.025em]',
+                        'transition-transform duration-500',
+                        'motion-safe:group-hover:translate-x-1',
+                        'sm:text-xl',
+                      ].join(' ')}
+                    >
+                      {pillar.title}
+                    </h3>
+
+                    <p className="text-foreground-muted mt-3 max-w-xl text-sm leading-6 lg:mt-0 lg:pr-5">
+                      {pillar.description}
+                    </p>
+                  </div>
+
+                  <div
+                    aria-hidden="true"
+                    className="bg-primary absolute bottom-0 left-0 h-px w-0 transition-[width] duration-500 ease-out motion-safe:group-hover:w-24"
+                  />
+                </li>
+              );
+            })}
+          </ol>
         </div>
       </div>
     </section>
