@@ -13,10 +13,10 @@ interface Stat {
   value: string;
 }
 const STATS: Stat[] = [
-  { label: 'pacientes acompanhados', value: '+500' },
-  { label: 'de experiência clínica', value: '10 anos' },
-  { featured: true, label: 'relatam menos falta de ar*', value: '94%' },
-  { label: 'indicariam o tratamento', value: '98%' },
+  { featured: true, label: 'relatam melhora da capacidade respiratória*', value: '94%' },
+  { label: 'de satisfação com o plano terapêutico', value: '98%' },
+  { label: 'de acompanhamento contínuo e individualizado', value: '100%' },
+  { label: 'foco em reabilitação baseada em evidências', value: '100%' },
 ];
 
 const BENEFITS: Benefit[] = [

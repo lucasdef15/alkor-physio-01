@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import Physiotherapist from '@/public/physiotherapist.jpg';
+import Physiotherapist from '@/public/physiotherapist.png';
 
 import { PHYSIOTHERAPIST } from './about.data';
 import AboutImage from './AboutImage';
