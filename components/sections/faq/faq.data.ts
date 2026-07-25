@@ -6,32 +6,42 @@ export interface FAQItem {
 export const FAQ_ITEMS: FAQItem[] = [
   {
     answer:
-      'A indicação depende de uma avaliação individual. O cuidado pode auxiliar pessoas com falta de ar, redução do condicionamento, DPOC, asma, bronquite, sequelas pós-Covid ou em recuperação de cirurgias cardíacas e pulmonares.',
-    question: 'Como saber se a fisioterapia cardiorrespiratória é indicada para mim?',
+      'No primeiro encontro, o fisioterapeuta busca compreender o histórico clínico e hospitalar, as condições respiratórias, a mobilidade, a tolerância ao esforço e as dificuldades presentes na rotina. A partir dessa avaliação, são definidas as prioridades e a condução inicial do acompanhamento.',
+    question: 'Como funciona a primeira avaliação domiciliar?',
   },
   {
     answer:
-      'A primeira avaliação reúne sua história clínica, sintomas, rotina, limitações e objetivos. A partir dessas informações e dos testes adequados, é definido um plano de tratamento seguro e personalizado.',
-    question: 'Como funciona a primeira avaliação?',
+      'Quando disponíveis, separe relatórios de alta, exames recentes, prescrições, lista de medicamentos e orientações fornecidas pela equipe responsável. Essas informações ajudam a compreender o histórico e tornam a avaliação mais completa.',
+    question: 'O que devo preparar para o primeiro atendimento?',
   },
   {
     answer:
-      'A frequência e a duração do acompanhamento variam conforme o quadro clínico, os objetivos e a resposta de cada pessoa. Essa estimativa é explicada após a avaliação e pode ser ajustada durante a evolução.',
-    question: 'Quantas sessões serão necessárias?',
+      'Você pode entrar em contato diretamente para conversar sobre uma avaliação fisioterapêutica. Dependendo do quadro clínico, poderão ser solicitados relatórios, exames ou orientações da equipe médica responsável para que o acompanhamento aconteça com mais segurança.',
+    question: 'Preciso de encaminhamento médico?',
   },
   {
     answer:
-      'Sim. O acompanhamento pode fazer parte do preparo e da recuperação de cirurgias cardíacas ou pulmonares, sempre respeitando a liberação da equipe médica e as condições individuais do paciente.',
-    question: 'O tratamento pode ajudar antes ou depois de uma cirurgia?',
+      'A frequência e o período de acompanhamento não são iguais para todos. Eles são definidos após a avaliação e podem ser ajustados conforme a condição clínica, os objetivos e a resposta apresentada pelo paciente durante a evolução.',
+    question: 'Como são definidas a frequência e a duração do acompanhamento?',
   },
   {
     answer:
-      'A reabilitação pode trabalhar expansão pulmonar, controle da respiração, força muscular respiratória e condicionamento físico. Ela complementa o acompanhamento médico e não substitui medicações ou outras condutas prescritas.',
-    question: 'DPOC, asma e bronquite podem ser acompanhadas?',
+      'Sim. Quando autorizado pelo paciente, o familiar ou cuidador pode acompanhar o atendimento, compreender as orientações e contribuir para a continuidade dos cuidados durante a rotina.',
+    question: 'Um familiar ou cuidador pode acompanhar o atendimento?',
   },
   {
     answer:
-      'Entre em contato para confirmar modalidades, localização, disponibilidade e documentos necessários. Assim, a equipe consegue orientar o próximo passo de acordo com o seu caso.',
-    question: 'Como faço para agendar e o que preciso levar?',
+      'O atendimento domiciliar é realizado em Mococa. Para outras localidades próximas, envie sua localização pelo WhatsApp para verificar a disponibilidade.',
+    question: 'Onde o atendimento domiciliar está disponível?',
+  },
+  {
+    answer:
+      'Os valores, a disponibilidade de horários e as formas de pagamento são informados diretamente no primeiro contato, considerando também a localização e as necessidades iniciais do atendimento.',
+    question: 'Como recebo informações sobre valores e formas de pagamento?',
+  },
+  {
+    answer:
+      'Não. O acompanhamento fisioterapêutico domiciliar é planejado e não substitui pronto atendimento ou atendimento emergencial. Em situações de piora súbita, dificuldade importante para respirar ou novos sinais neurológicos, procure assistência médica imediata.',
+    question: 'O atendimento domiciliar substitui um serviço de urgência?',
   },
 ];

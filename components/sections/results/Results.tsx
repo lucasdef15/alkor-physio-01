@@ -1,158 +1,213 @@
-import type { LucideIcon } from 'lucide-react';
+'use client';
 
-import {
-  Activity,
-  Footprints,
-  HeartPulse,
-  House,
-  PersonStanding,
-  ShieldCheck,
-  Wind,
-} from 'lucide-react';
+import Link from 'next/link';
 
-interface Benefit {
-  icon: LucideIcon;
-  label: string;
-}
+import { useRevealAnimation } from '@/components/motion/useRevealAnimation';
 
-interface EvolutionArea {
-  description: string;
-  featured?: boolean;
-  icon: LucideIcon;
-  title: string;
-}
-
-const EVOLUTION_AREAS: EvolutionArea[] = [
-  {
-    description:
-      'Estratégias direcionadas ao controle respiratório e à melhor tolerância às atividades.',
-    featured: true,
-    icon: Wind,
-    title: 'Capacidade respiratória',
-  },
-  {
-    description:
-      'Progressão cuidadosa para caminhar, realizar esforços e enfrentar as atividades da rotina.',
-    icon: Activity,
-    title: 'Condicionamento físico',
-  },
-  {
-    description:
-      'Recuperação de movimentos, equilíbrio e segurança para realizar tarefas com menos dependência.',
-    icon: PersonStanding,
-    title: 'Mobilidade e autonomia',
-  },
-  {
-    description:
-      'Continuidade da reabilitação iniciada no hospital, adaptada à realidade do paciente em casa.',
-    icon: House,
-    title: 'Recuperação pós-hospitalar',
-  },
-];
-
-const BENEFITS: Benefit[] = [
-  {
-    icon: Wind,
-    label: 'Respirar com mais conforto',
-  },
-  {
-    icon: Footprints,
-    label: 'Caminhar com mais segurança',
-  },
-  {
-    icon: Activity,
-    label: 'Aumentar a tolerância ao esforço',
-  },
-  {
-    icon: PersonStanding,
-    label: 'Recuperar movimentos e autonomia',
-  },
-  {
-    icon: ShieldCheck,
-    label: 'Evoluir com acompanhamento',
-  },
-  {
-    icon: HeartPulse,
-    label: 'Retomar a rotina gradualmente',
-  },
-];
+import { EVOLUTION_AREAS, EVOLUTION_DIMENSIONS } from './results.data';
 
 export default function Results() {
+  const { containerRef } = useRevealAnimation<HTMLElement>({
+    start: 'top 82%',
+  });
+
   return (
-    <section className="relative overflow-hidden bg-white" id="resultados">
+    <section
+      aria-labelledby="results-title"
+      className="relative overflow-hidden bg-white"
+      id="resultados"
+      ref={containerRef}
+    >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-0 left-1/2 h-96 w-[60rem] -translate-x-1/2 rounded-full bg-teal-100/35 blur-[130px]"
+        className="pointer-events-none absolute top-1/2 left-1/2 h-[42rem] w-[72rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(20,184,166,0.08),transparent_68%)] blur-3xl"
+      />
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-slate-200/80 to-transparent"
       />
 
       <div className="site-container section-space relative">
-        <div className="mx-auto max-w-3xl text-center">
-          <span className="section-eyebrow">Evolução acompanhada</span>
+        <div
+          className="relative mx-auto max-w-6xl overflow-hidden rounded-[1.75rem] border border-slate-900/10 bg-[#07131f] shadow-[0_45px_110px_-52px_rgba(2,15,27,0.78)] sm:rounded-[2.25rem] lg:rounded-[2.75rem]"
+          data-reveal="media"
+        >
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.024)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.024)_1px,transparent_1px)] [mask-image:linear-gradient(to_bottom,black,transparent_92%)] bg-size-[46px_46px]"
+          />
 
-          <h2 className="section-title mx-auto mt-6">
-            Cada avanço ajuda o paciente a recuperar segurança e autonomia.
-          </h2>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-44 -left-36 size-[30rem] rounded-full bg-teal-400/12 blur-[130px]"
+          />
 
-          <p className="section-copy mx-auto mt-6">
-            A evolução é acompanhada de acordo com a condição clínica, as limitações e os objetivos
-            de cada paciente. O tratamento busca recuperar capacidades importantes para respirar,
-            movimentar-se e retomar a rotina com mais segurança.
-          </p>
-        </div>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-48 -bottom-44 size-[34rem] rounded-full bg-sky-400/8 blur-[150px]"
+          />
 
-        <div className="mx-auto mt-12 grid max-w-5xl gap-3 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4">
-          {EVOLUTION_AREAS.map(({ description, featured, icon: Icon, title }) => (
-            <article
-              className={[
-                'relative flex min-h-60 flex-col rounded-[1.5rem] border p-6',
-                'shadow-[var(--shadow-card)] backdrop-blur-xl',
-                'transition-transform duration-300 hover:-translate-y-1',
-                featured
-                  ? 'border-primary/20 bg-primary/[0.055]'
-                  : 'border-slate-200/70 bg-white/75',
-              ].join(' ')}
-              key={title}
-            >
-              <div
-                className={[
-                  'flex size-11 items-center justify-center rounded-2xl border',
-                  featured
-                    ? 'border-primary/20 bg-primary/10 text-primary'
-                    : 'text-foreground border-slate-200 bg-slate-50',
-                ].join(' ')}
-              >
-                <Icon aria-hidden="true" className="size-5" strokeWidth={1.75} />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-teal-300/30 to-transparent"
+          />
+
+          <div className="relative grid lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]">
+            <header className="relative flex flex-col px-6 py-10 sm:px-10 sm:py-12 lg:min-h-[42rem] lg:px-12 lg:py-14 xl:px-14 xl:py-16">
+              <div>
+                <div data-reveal>
+                  <span className="inline-flex items-center gap-3 text-[0.62rem] font-semibold tracking-[0.2em] text-teal-300 uppercase">
+                    <span className="h-px w-7 bg-teal-300/50" />
+                    Evolução funcional
+                  </span>
+                </div>
+
+                <h2
+                  className="font-space-grotesk mt-6 max-w-xl text-[clamp(2rem,4.5vw,3.45rem)] leading-[1.03] font-semibold tracking-[-0.045em] text-balance text-white"
+                  data-reveal
+                  id="results-title"
+                >
+                  Quando o corpo volta a responder,
+                  <span className="mt-1 block bg-linear-to-r from-teal-300 via-teal-200 to-sky-300 bg-clip-text text-transparent">
+                    a rotina começa a mudar.
+                  </span>
+                </h2>
+
+                <p
+                  className="mt-6 max-w-md text-sm leading-7 text-slate-300 sm:text-base sm:leading-8"
+                  data-reveal
+                >
+                  A evolução é observada em capacidades que podem ser afetadas após internações,
+                  ventilação mecânica, AVC ou por condições respiratórias.
+                </p>
               </div>
 
-              <h3 className="font-space-grotesk text-foreground mt-6 text-lg font-semibold tracking-[-0.025em]">
-                {title}
-              </h3>
+              <div className="mt-10 border-t border-white/8 pt-6 lg:mt-auto" data-reveal>
+                <span className="block text-[0.58rem] font-semibold tracking-[0.17em] text-teal-300/80 uppercase">
+                  Quatro dimensões acompanhadas
+                </span>
 
-              <p className="text-foreground-muted mt-3 text-sm leading-6">{description}</p>
-            </article>
-          ))}
-        </div>
+                <div className="mt-4 flex flex-wrap gap-x-5 gap-y-3">
+                  {EVOLUTION_DIMENSIONS.map((dimension, index) => (
+                    <span
+                      className="group/dimension inline-flex items-center gap-2 text-xs text-slate-400"
+                      key={dimension}
+                    >
+                      <span className="font-mono text-[0.55rem] font-semibold tracking-[0.14em] text-white/20 transition-colors duration-300 group-hover/dimension:text-teal-300/70">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
 
-        <p className="text-foreground-muted/75 mx-auto mt-5 max-w-2xl text-center text-xs leading-5">
-          Cada paciente possui necessidades e tempos de recuperação diferentes. A evolução depende
-          do quadro clínico, da avaliação e da resposta individual ao acompanhamento.
-        </p>
+                      <span className="transition-colors duration-300 group-hover/dimension:text-slate-300">
+                        {dimension}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </header>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-2.5 lg:mt-12">
-          {BENEFITS.map(({ icon: Icon, label }) => (
-            <span
-              className="border-border/70 text-foreground inline-flex items-center gap-2 rounded-full border bg-slate-50 px-4 py-2.5 text-sm shadow-sm"
-              key={label}
+            <ol className="relative grid border-t border-white/8 lg:grid-rows-4 lg:border-t-0 lg:border-l">
+              {EVOLUTION_AREAS.map(({ description, id, indicators, title }, index) => {
+                const number = String(index + 1).padStart(2, '0');
+
+                return (
+                  <li
+                    className="group relative flex overflow-hidden border-b border-white/8 last:border-b-0"
+                    data-reveal
+                    key={id}
+                  >
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-linear-to-r from-teal-400/[0.065] via-teal-400/[0.018] to-transparent opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100"
+                    />
+
+                    <div
+                      aria-hidden="true"
+                      className="absolute top-0 bottom-0 left-0 w-px origin-top scale-y-0 bg-linear-to-b from-teal-300 via-teal-400/60 to-transparent transition-transform duration-500 ease-out group-hover:scale-y-100"
+                    />
+
+                    <div
+                      aria-hidden="true"
+                      className="absolute top-1/2 right-8 size-24 -translate-y-1/2 rounded-full bg-teal-300/[0.035] opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
+                    />
+
+                    <div className="relative grid w-full grid-cols-[2.25rem_minmax(0,1fr)] gap-x-4 px-5 py-7 sm:grid-cols-[2.75rem_minmax(0,1fr)] sm:gap-x-6 sm:px-8 sm:py-8 lg:items-start lg:px-10 lg:py-9">
+                      <div className="relative pt-1">
+                        <span className="font-mono text-[0.62rem] font-semibold tracking-[0.18em] text-slate-500 transition-colors duration-300 group-hover:text-teal-300/80">
+                          {number}
+                        </span>
+
+                        <span
+                          aria-hidden="true"
+                          className="absolute top-7 left-[0.1rem] h-0 w-px bg-linear-to-b from-teal-300/50 to-transparent transition-all duration-500 ease-out group-hover:h-8"
+                        />
+                      </div>
+
+                      <div className="min-w-0">
+                        <h3 className="font-space-grotesk max-w-md text-lg leading-[1.2] font-semibold tracking-[-0.025em] text-white transition-transform duration-500 ease-out motion-safe:group-hover:translate-x-1 sm:text-xl lg:text-[1.35rem]">
+                          {title}
+                        </h3>
+
+                        <p className="mt-3 max-w-xl text-sm leading-6 text-slate-300 sm:text-[0.95rem] sm:leading-7">
+                          {description}
+                        </p>
+
+                        <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/6 pt-4">
+                          {indicators.map((indicator) => (
+                            <span
+                              className="inline-flex items-center gap-2 text-[0.58rem] font-semibold tracking-[0.12em] text-slate-500 uppercase transition-colors duration-300 group-hover:text-slate-400"
+                              key={indicator}
+                            >
+                              <span className="size-1 rounded-full bg-teal-400/60 shadow-[0_0_0_3px_rgba(45,212,191,0.04)] transition-shadow duration-300 group-hover:shadow-[0_0_0_4px_rgba(45,212,191,0.07)]" />
+
+                              {indicator}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+
+          <footer
+            className="relative grid gap-5 border-t border-white/8 px-6 py-6 sm:px-10 sm:py-7 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:px-12 xl:px-14"
+            data-reveal
+          >
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/[0.035] to-transparent"
+            />
+
+            <p className="max-w-3xl text-xs leading-5 text-slate-400">
+              Os objetivos e a progressão são definidos após a avaliação e variam conforme o quadro
+              clínico, as necessidades e a resposta individual de cada paciente.
+            </p>
+
+            <Link
+              className="group inline-flex w-fit items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-white transition-all duration-300 hover:border-teal-300/30 hover:bg-teal-300/[0.07] hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300"
+              href="#contato"
             >
-              <Icon
-                aria-hidden="true"
-                className="text-primary size-4 shrink-0"
-                strokeWidth={1.75}
-              />
+              <span>Conversar sobre sua recuperação</span>
 
-              {label}
-            </span>
-          ))}
+              <svg
+                aria-hidden="true"
+                className="size-4 transition-transform duration-300 ease-out group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.8"
+                viewBox="0 0 24 24"
+              >
+                <path d="M5 12h14" />
+                <path d="m13 6 6 6-6 6" />
+              </svg>
+            </Link>
+          </footer>
         </div>
       </div>
     </section>
