@@ -4,6 +4,7 @@ import type { CSSProperties } from 'react';
 
 import { useEffect, useRef } from 'react';
 
+import { useRevealAnimation } from '@/components/motion/useRevealAnimation';
 import { useActiveSymptom } from '@/hooks/useActiveSymptom';
 import { useBreathingAnimation } from '@/hooks/useBreathingAnimation';
 import { useHorizontalScroll } from '@/hooks/useHorizontalScroll';
@@ -15,6 +16,10 @@ import { SYMPTOMS } from './symptoms';
 export default function ForWhom() {
   const stageRef = useRef<HTMLDivElement>(null);
   const symptomsRef = useRef<HTMLDivElement>(null);
+
+  const { containerRef } = useRevealAnimation<HTMLElement>({
+    start: 'top 84%',
+  });
 
   const { active, clearHover, clearSelection, hasSelection, hover, isActive, isSelected, select } =
     useActiveSymptom(SYMPTOMS);
@@ -52,6 +57,7 @@ export default function ForWhom() {
       aria-labelledby="for-whom-title"
       className="relative overflow-hidden bg-linear-to-b from-[#f7fbfc] via-white to-[#f5fafb]"
       id="para-quem"
+      ref={containerRef}
     >
       <div
         aria-hidden="true"
@@ -59,7 +65,10 @@ export default function ForWhom() {
       />
 
       <div className="site-container section-space relative z-10">
-        <header className="mx-auto max-w-3xl text-center">
+        <header
+          className="flex w-full flex-col items-center justify-center text-center"
+          data-reveal="default"
+        >
           <span className="section-eyebrow">Para quem é o atendimento</span>
 
           <h2 className="section-title mt-5" id="for-whom-title">
@@ -78,6 +87,7 @@ export default function ForWhom() {
 
         <div
           className="fw-console relative mt-10 overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#07131f] shadow-[0_42px_100px_-42px_rgba(2,15,27,.72)] sm:mt-12 sm:rounded-[2rem] md:mt-16 md:rounded-[2.5rem]"
+          data-reveal="panel"
           style={panelStyle}
         >
           <div
@@ -216,7 +226,10 @@ export default function ForWhom() {
           </div>
         </div>
 
-        <aside className="mx-auto mt-6 flex max-w-2xl items-start gap-3 px-1 text-xs leading-relaxed text-slate-500 sm:mt-8 sm:items-center">
+        <aside
+          className="mx-auto mt-6 flex max-w-2xl items-start gap-3 px-1 text-xs leading-relaxed text-slate-500 sm:mt-8 sm:items-center"
+          data-reveal="default"
+        >
           <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-teal-100 bg-teal-50 text-teal-600">
             <svg
               aria-hidden="true"

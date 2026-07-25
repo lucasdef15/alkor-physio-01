@@ -37,7 +37,7 @@ export default function FAQ() {
                       {item.question}
                     </span>
                   </span>
-                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-500 transition-all duration-300 motion-reduce:transition-none group-open:rotate-45 group-open:border-teal-200 group-open:bg-teal-50 group-open:text-teal-700">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-500 transition-all duration-300 group-open:rotate-45 group-open:border-teal-200 group-open:bg-teal-50 group-open:text-teal-700 motion-reduce:transition-none">
                     <Plus className="size-4" strokeWidth={1.75} />
                   </span>
                 </summary>

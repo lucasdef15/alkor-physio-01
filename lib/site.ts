@@ -17,7 +17,7 @@ export const SITE_CONFIG = {
   },
 
   contact: {
-    email: 'contato@davifaria.com',
+    email: 'davifariafisio@gmail.com',
     location: 'Mococa, SP',
     phoneDisplay: '(19) 99112-7205',
     phoneHref: '+5519991127205',

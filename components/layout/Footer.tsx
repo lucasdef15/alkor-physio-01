@@ -1,3 +1,6 @@
+import type { ReactNode } from 'react';
+
+import { ArrowUpRight, MapPin } from 'lucide-react';
 import Link from 'next/link';
 
 import { SITE_CONFIG } from '@/lib/site';
@@ -5,84 +8,163 @@ import { SITE_CONFIG } from '@/lib/site';
 import LogoSVG from '../svg/LogoSVG';
 import { NAV_LINKS } from './navLinks';
 
+interface ContactLinkProps {
+  href: string;
+  label: string;
+  value: string;
+}
+
+interface FooterLinkProps {
+  children: ReactNode;
+  href: string;
+}
+
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-white/[0.06] bg-slate-950 pt-16 pb-10">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-400/40 to-transparent" />
-      <div className="pointer-events-none absolute top-0 left-1/2 h-64 w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal-500/[0.08] blur-[120px]" />
-      <div className="relative mx-auto max-w-6xl px-6">
-        <div className="grid grid-cols-1 gap-y-12 md:grid-cols-12">
-          <div className="md:col-span-5">
-            <div className="flex items-center gap-3">
-              <LogoSVG className="h-10 w-auto" fill="#fff" name="DAVI FARIA" surname="PHYSIO" />
-            </div>
+    <footer className="relative overflow-hidden bg-[#06111c]">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-[-16rem] bottom-[-20rem] size-[32rem] rounded-full bg-sky-400/[0.045] blur-[150px]"
+      />
 
-            <p className="mt-6 max-w-md leading-relaxed text-slate-400">
-              Fisioterapia especializada com foco em resultados, atendimento humanizado e
-              recuperação de qualidade de vida.
-            </p>
-
-            <div className="mt-8 flex items-center gap-2 text-sm text-slate-500">
-              <span className="h-1 w-1 rounded-full bg-gradient-to-br from-teal-400 to-sky-400" />
-              {SITE_CONFIG.contact.location}
-            </div>
-          </div>
-
-          <div className="md:col-span-3">
-            <h3 className="mb-5 text-sm font-semibold tracking-wide text-white">Navegação</h3>
-            <ul className="space-y-3.5 text-slate-400">
-              {NAV_LINKS.map((link) => (
-                <li key={link.name}>
-                  <FooterLink href={link.href}>{link.name}</FooterLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="md:col-span-4">
-            <h3 className="mb-5 text-sm font-semibold tracking-wide text-white">Contato</h3>
-
-            <div className="space-y-3.5 text-slate-400">
-              <p>
-                <FooterLink href={`tel:${SITE_CONFIG.contact.phoneHref}`}>
-                  {SITE_CONFIG.contact.phoneDisplay}
-                </FooterLink>
-              </p>
-              <p>
-                <FooterLink href={`mailto:${SITE_CONFIG.contact.email}`}>
-                  {SITE_CONFIG.contact.email}
-                </FooterLink>
-              </p>
-            </div>
-
-            <div className="mt-8">
-              <a
-                className="inline-block rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] hover:border-white/25 hover:bg-white/[0.07] active:scale-[0.97]"
-                href={`mailto:${SITE_CONFIG.contact.email}`}
+      <div className="site-container relative">
+        <div className="border-t border-white/[0.08] pt-10 pb-8 sm:pt-12 sm:pb-9 lg:pt-14">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.65fr)_minmax(0,0.85fr)] lg:gap-14 xl:gap-20">
+            <div className="sm:col-span-2 lg:col-span-1">
+              <Link
+                aria-label="Davi Faria Physio — Página inicial"
+                className="inline-flex"
+                href="#inicio"
               >
-                Fazer Agendamento
-              </a>
+                <LogoSVG
+                  className="h-9 w-auto sm:h-10"
+                  fill="#fff"
+                  name="DAVI FARIA"
+                  surname="PHYSIO"
+                />
+              </Link>
+
+              <p className="mt-6 max-w-md text-sm leading-7 text-slate-400 sm:text-[0.95rem]">
+                Fisioterapia cardiorrespiratória e funcional para pacientes que precisam continuar
+                sua recuperação após a alta hospitalar, com atendimento domiciliar em Mococa.
+              </p>
+
+              <div className="mt-6 flex items-center gap-2 text-xs text-slate-500">
+                <MapPin
+                  aria-hidden="true"
+                  className="size-3.5 text-teal-300/70"
+                  strokeWidth={1.7}
+                />
+
+                <span>{SITE_CONFIG.contact.location}</span>
+              </div>
+            </div>
+
+            <nav aria-label="Navegação do rodapé">
+              <h2 className="text-[0.62rem] font-semibold tracking-[0.18em] text-slate-500 uppercase">
+                Navegação
+              </h2>
+
+              <ul className="mt-5 space-y-3 text-sm text-slate-400">
+                {NAV_LINKS.map((link) => (
+                  <li key={link.name}>
+                    <FooterLink href={link.href}>{link.name}</FooterLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            <div>
+              <h2 className="text-[0.62rem] font-semibold tracking-[0.18em] text-slate-500 uppercase">
+                Contato
+              </h2>
+
+              <div className="mt-5 space-y-4">
+                <ContactLink
+                  href={SITE_CONFIG.whatsapp.href}
+                  label="WhatsApp"
+                  value={SITE_CONFIG.contact.phoneDisplay}
+                />
+
+                <ContactLink
+                  href={`mailto:${SITE_CONFIG.contact.email}`}
+                  label="E-mail"
+                  value={SITE_CONFIG.contact.email}
+                />
+              </div>
+
+              <Link
+                className={[
+                  'group mt-7 inline-flex items-center gap-2',
+                  'text-sm font-medium text-white',
+                  'transition-colors duration-300',
+                  'hover:text-teal-200',
+                ].join(' ')}
+                href={SITE_CONFIG.agenda.href}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Ver horários disponíveis
+                <ArrowUpRight
+                  aria-hidden="true"
+                  className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  strokeWidth={1.8}
+                />
+              </Link>
             </div>
           </div>
-        </div>
 
-        <div className="mt-16 border-t border-white/[0.06] pt-8 text-center text-sm text-slate-400">
-          <p>© 2026 ΛLKOR PHYSIO • Todos os direitos reservados</p>
-          <p className="mt-2 text-slate-400">Desenvolvido com foco na sua recuperação</p>
+          <div className="mt-12 grid gap-4 border-t border-white/[0.07] pt-6 text-xs leading-5 text-slate-500 sm:mt-14 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+            <p>© 2026 Davi Faria Physio. Todos os direitos reservados.</p>
+
+            <p className="sm:text-right">
+              Presença digital desenvolvida pela{' '}
+              <span className="font-medium text-slate-400">Alkor Labs</span>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
   );
 }
 
-function FooterLink({ children, href }: { children: React.ReactNode; href: string }) {
+function ContactLink({ href, label, value }: ContactLinkProps) {
+  const external = href.startsWith('http');
+
+  return (
+    <a
+      className="group block"
+      href={href}
+      rel={external ? 'noopener noreferrer' : undefined}
+      target={external ? '_blank' : undefined}
+    >
+      <span className="block text-[0.58rem] font-semibold tracking-[0.15em] text-slate-600 uppercase">
+        {label}
+      </span>
+
+      <span className="mt-1 block text-sm break-words text-slate-300 transition-colors duration-300 group-hover:text-white">
+        {value}
+      </span>
+    </a>
+  );
+}
+
+function FooterLink({ children, href }: FooterLinkProps) {
   return (
     <Link
-      className="group relative inline-block py-0.5 transition-colors duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] hover:text-white"
+      className={[
+        'group relative inline-flex py-0.5',
+        'transition-colors duration-300',
+        'hover:text-white',
+      ].join(' ')}
       href={href}
     >
       {children}
-      <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gradient-to-r from-teal-400 to-sky-400 transition-all duration-300 ease-[cubic-bezier(0.45,0,0.2,1)] group-hover:w-full" />
+
+      <span
+        aria-hidden="true"
+        className="absolute -bottom-0.5 left-0 h-px w-0 bg-linear-to-r from-teal-400 to-sky-400 transition-[width] duration-300 group-hover:w-full"
+      />
     </Link>
   );
 }
