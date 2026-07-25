@@ -1,8 +1,10 @@
-import { Activity, HeartPulse, Users } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
+import { Activity, ClipboardPlus, House, ShieldCheck } from 'lucide-react';
 
 export interface PillarProps {
   description: string;
-  icon: typeof Activity | typeof HeartPulse | typeof Users;
+  icon: LucideIcon;
   id: number;
   title: string;
 }
@@ -10,23 +12,30 @@ export interface PillarProps {
 export const PILLARS: PillarProps[] = [
   {
     description:
-      'Cada paciente recebe um plano de tratamento individualizado, respeitando sua história, limitações e objetivos.',
-    icon: HeartPulse,
+      'Avaliação do histórico clínico, da respiração, da mobilidade e da tolerância ao esforço para orientar o cuidado.',
+    icon: ClipboardPlus,
     id: 1,
-    title: 'Atendimento Humanizado',
+    title: 'Avaliação completa',
   },
   {
     description:
-      'Protocolos modernos e condutas fundamentadas nas melhores evidências científicas disponíveis.',
+      'Exercícios respiratórios e funcionais são combinados para recuperar força, equilíbrio, condicionamento e autonomia.',
     icon: Activity,
     id: 2,
-    title: 'Baseado em Evidências',
+    title: 'Respiração e movimento',
   },
   {
     description:
-      'Evolução monitorada de perto para garantir segurança, confiança e resultados consistentes durante todo o tratamento.',
-    icon: Users,
+      'A intensidade do atendimento é ajustada conforme os sintomas, a resposta ao esforço e a evolução do paciente.',
+    icon: ShieldCheck,
     id: 3,
-    title: 'Acompanhamento Contínuo',
+    title: 'Progressão segura',
+  },
+  {
+    description:
+      'Após a alta, a reabilitação continua em casa, respeitando a rotina, as necessidades e os objetivos do paciente.',
+    icon: House,
+    id: 4,
+    title: 'Continuidade em casa',
   },
 ];

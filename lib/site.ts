@@ -30,9 +30,9 @@ export const SITE_CONFIG = {
 
   professional: {
     manifesto:
-      'Acredito que respirar bem é recuperar liberdade. Meu compromisso é oferecer um atendimento humanizado, baseado em evidências científicas e focado em devolver qualidade de vida a cada paciente.',
-    name: 'Davi Faria',
-    title: 'Fisioterapeuta Cardiorrespiratório',
+      'Acredito que a recuperação não termina no momento da alta hospitalar. Cada paciente precisa de um acompanhamento cuidadoso para recuperar sua capacidade respiratória, seus movimentos, sua segurança e sua autonomia para retomar a rotina.',
+    name: 'Dr. Davi Faria',
+    title: 'Fisioterapeuta com atuação hospitalar e cardiorrespiratória',
   },
 
   title: 'Davi Faria Physio | Fisioterapia Cardiorrespiratória em Mococa',

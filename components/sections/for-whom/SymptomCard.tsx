@@ -1,5 +1,4 @@
-import SymptomIcon from './SymptomIcon';
-import { Symptom } from './symptoms';
+import type { Symptom } from './symptoms';
 
 interface SymptomCardProps {
   active: boolean;
@@ -22,11 +21,24 @@ export default function SymptomCard({
 }: SymptomCardProps) {
   const [r, g, b] = symptom.profile.primary;
   const rgb = `${r}, ${g}, ${b}`;
+  const number = String(index + 1).padStart(2, '0');
 
   return (
     <button
+      aria-label={`${symptom.title}. ${symptom.description}`}
       aria-pressed={selected}
-      className="group relative flex min-h-[74px] w-[278px] min-w-[278px] snap-start items-center gap-3 overflow-hidden rounded-2xl border px-3.5 py-3 text-left transition-all duration-500 ease-out outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#07131f] sm:w-full sm:min-w-0 sm:gap-4 sm:px-4"
+      className={[
+        'group relative flex min-h-[92px] w-[86%] max-w-[20rem]',
+        'shrink-0 snap-start flex-col justify-between overflow-hidden',
+        'rounded-[1.1rem] border px-4 py-3.5 text-left',
+        'transition-all duration-500 ease-out outline-none',
+        'focus-visible:ring-2 focus-visible:ring-white/70',
+        'focus-visible:ring-offset-2 focus-visible:ring-offset-[#07131f]',
+        'min-[420px]:w-[78%]',
+        'sm:min-h-[88px] sm:w-full sm:max-w-none',
+        'sm:px-4 sm:py-3.5',
+        'motion-safe:hover:-translate-y-px',
+      ].join(' ')}
       onBlur={onLeave}
       onClick={() => onSelect(symptom.id)}
       onFocus={() => onPeek(symptom.id)}
@@ -34,59 +46,62 @@ export default function SymptomCard({
       onMouseLeave={onLeave}
       style={{
         background: active
-          ? `linear-gradient(135deg, rgba(${rgb}, .16), rgba(255,255,255,.075))`
-          : 'rgba(255, 255, 255, 0.035)',
-        borderColor: active ? `rgba(${rgb}, 0.44)` : 'rgba(255, 255, 255, 0.08)',
+          ? `linear-gradient(
+              135deg,
+              rgba(${rgb}, 0.15),
+              rgba(255, 255, 255, 0.07)
+            )`
+          : 'rgba(255, 255, 255, 0.032)',
+        borderColor: active ? `rgba(${rgb}, 0.42)` : 'rgba(255, 255, 255, 0.08)',
         boxShadow: active
-          ? `inset 0 1px rgba(255,255,255,.09), 0 18px 38px -24px rgba(${rgb}, .72)`
-          : 'inset 0 1px rgba(255,255,255,.025)',
+          ? `inset 0 1px rgba(255, 255, 255, 0.08),
+             0 18px 38px -26px rgba(${rgb}, 0.72)`
+          : 'inset 0 1px rgba(255, 255, 255, 0.025)',
       }}
+      type="button"
     >
-      <span
-        className="absolute inset-y-3 left-0 w-px rounded-full transition-opacity duration-500"
-        style={{ background: `rgb(${rgb})`, opacity: active ? 1 : 0 }}
-      />
-
-      <span className="w-5 shrink-0 text-[10px] font-semibold tracking-[0.12em] text-slate-400">
-        {String(index + 1).padStart(2, '0')}
-      </span>
-
-      <span
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-all duration-500"
-        style={{
-          background: `rgba(${rgb}, ${active ? 0.2 : 0.07})`,
-          borderColor: `rgba(${rgb}, ${active ? 0.24 : 0.08})`,
-          color: active ? `rgb(${rgb})` : 'rgb(148 163 184)',
-        }}
-      >
-        <SymptomIcon className="h-5 w-5" name={symptom.icon} />
-      </span>
-
-      <span className="min-w-0 flex-1">
+      <div className="flex w-full items-center justify-between gap-4">
         <span
-          className="block text-[13px] leading-snug font-medium text-slate-300 transition-colors duration-500 sm:text-sm"
-          style={{ color: active ? 'white' : undefined }}
+          className={[
+            'font-mono text-[0.62rem] font-semibold tracking-[0.18em]',
+            'transition-colors duration-500',
+            active ? 'text-white/75' : 'text-slate-500',
+          ].join(' ')}
+        >
+          {number}
+        </span>
+
+        <span
+          className="truncate text-[0.58rem] font-semibold tracking-[0.14em] uppercase transition-all duration-500"
+          style={{
+            color: active ? `rgb(${rgb})` : 'rgb(100 116 139)',
+          }}
+        >
+          {symptom.short}
+        </span>
+      </div>
+
+      <div className="mt-4 flex w-full items-end justify-between gap-4">
+        <span
+          className={[
+            'block max-w-[18rem] min-w-0',
+            'text-[13px] leading-[1.35] font-medium',
+            'transition-colors duration-500',
+            'sm:text-sm',
+            active ? 'text-white' : 'text-slate-300',
+          ].join(' ')}
         >
           {symptom.title}
         </span>
-        <span
-          aria-hidden="true"
-          className="mt-1 block overflow-hidden text-[9px] font-semibold tracking-[0.12em] uppercase transition-all duration-500 md:text-[10px]"
-          style={{ color: `rgb(${rgb})`, maxHeight: active ? 20 : 0, opacity: active ? 0.9 : 0 }}
-        >
-          Explorar resposta
-        </span>
-      </span>
 
-      <span
-        aria-hidden="true"
-        className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-all duration-500"
-        style={{ color: `rgb(${rgb})` }}
-      >
         <svg
-          className="h-3 w-3 transition-transform duration-500"
+          aria-hidden="true"
+          className="mb-0.5 size-3.5 shrink-0 transition-all duration-500"
           fill="none"
-          style={{ transform: active ? 'translateX(1px)' : 'none' }}
+          style={{
+            color: active ? `rgb(${rgb})` : 'rgb(100 116 139)',
+            transform: active ? 'translateX(2px)' : 'translateX(0)',
+          }}
           viewBox="0 0 12 12"
         >
           <path
@@ -96,7 +111,29 @@ export default function SymptomCard({
             strokeLinejoin="round"
           />
         </svg>
-      </span>
+      </div>
+
+      <span
+        aria-hidden="true"
+        className="absolute inset-y-4 left-0 w-px rounded-full transition-opacity duration-500"
+        style={{
+          background: `rgb(${rgb})`,
+          opacity: active ? 1 : 0,
+        }}
+      />
+
+      <span
+        aria-hidden="true"
+        className="absolute right-4 bottom-0 left-4 h-px origin-left transition-transform duration-500"
+        style={{
+          background: `linear-gradient(
+            90deg,
+            rgba(${rgb}, 0.75),
+            rgba(${rgb}, 0)
+          )`,
+          transform: active ? 'scaleX(1)' : 'scaleX(0)',
+        }}
+      />
     </button>
   );
 }

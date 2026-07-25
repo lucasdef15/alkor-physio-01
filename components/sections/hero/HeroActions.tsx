@@ -2,8 +2,9 @@ export default function HeroActions() {
   return (
     <div className="mt-9 flex w-full flex-col items-center justify-center gap-3 sm:mt-10 sm:w-auto sm:flex-row">
       <a className="button-primary group w-full sm:w-auto" href="#contato">
-        Agendar avaliação
+        Conversar com o fisioterapeuta
         <svg
+          aria-hidden="true"
           className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
           fill="none"
           stroke="currentColor"
@@ -15,7 +16,7 @@ export default function HeroActions() {
       </a>
 
       <a className="button-secondary w-full sm:w-auto" href="#para-quem">
-        Conhecer o tratamento
+        Para quem é o atendimento
       </a>
     </div>
   );
