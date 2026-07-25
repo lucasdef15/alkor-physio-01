@@ -4,9 +4,12 @@ import { Geist, Montserrat_Alternates, Space_Grotesk } from 'next/font/google';
 
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
-import { SITE_CONFIG, SITE_URL } from '@/lib/site';
+import SmoothScrollProvider from '@/components/providers/SmoothScrollProvider';
+
+import 'lenis/dist/lenis.css';
 
 import './globals.css';
+import { SITE_CONFIG, SITE_URL } from '@/lib/site';
 
 const geistSans = Geist({
   subsets: ['latin'],
@@ -257,11 +260,13 @@ export default function RootLayout({
           type="application/ld+json"
         />
 
-        <Header />
+        <SmoothScrollProvider>
+          <Header />
 
-        <main className="flex-1">{children}</main>
+          <main className="flex-1">{children}</main>
 
-        <Footer />
+          <Footer />
+        </SmoothScrollProvider>
       </body>
     </html>
   );
