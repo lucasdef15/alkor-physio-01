@@ -30,11 +30,36 @@ interface PulseState {
   y: number;
 }
 
+interface PulseSample {
+  attraction: number;
+  deformation: number;
+  finished: boolean;
+  intensity: number;
+  progress: number;
+}
+
 interface QualityProfile {
   dprLimit: number;
   fps: number;
   particleCount: number;
   pointCount: number;
+}
+
+interface FlowLineDefinition {
+  alpha: number;
+  amplitude: number;
+  baseY: number;
+  frequency: number;
+  markerPositions: readonly number[];
+  overscan: number;
+  phase: number;
+  slope: number;
+  width: number;
+}
+
+interface Point {
+  x: number;
+  y: number;
 }
 
 interface UseBackgroundCanvasOptions {
@@ -45,7 +70,7 @@ interface UseBackgroundCanvasOptions {
 }
 
 const TAU = Math.PI * 2;
-const PULSE_DURATION = 1200;
+const PULSE_DURATION = 1250;
 const POINTER_MOVE_TOLERANCE = 10;
 const INTERACTIVE_SELECTOR = [
   'a',
@@ -56,6 +81,100 @@ const INTERACTIVE_SELECTOR = [
   '[role="button"]',
   '[data-hero-ignore-interaction]',
 ].join(',');
+
+const MOBILE_FLOW_LINES: readonly FlowLineDefinition[] = [
+  {
+    alpha: 0.22,
+    amplitude: 0.047,
+    baseY: 0.25,
+    frequency: 0.72,
+    markerPositions: [0.24, 0.69],
+    overscan: 0.34,
+    phase: 0.08,
+    slope: 0.22,
+    width: 1.15,
+  },
+  {
+    alpha: 0.12,
+    amplitude: 0.034,
+    baseY: 0.41,
+    frequency: 0.82,
+    markerPositions: [0.52],
+    overscan: 0.3,
+    phase: 0.43,
+    slope: -0.16,
+    width: 0.9,
+  },
+  {
+    alpha: 0.16,
+    amplitude: 0.052,
+    baseY: 0.61,
+    frequency: 0.64,
+    markerPositions: [0.34, 0.81],
+    overscan: 0.35,
+    phase: 0.71,
+    slope: 0.19,
+    width: 1,
+  },
+  {
+    alpha: 0.075,
+    amplitude: 0.031,
+    baseY: 0.75,
+    frequency: 0.88,
+    markerPositions: [],
+    overscan: 0.28,
+    phase: 0.92,
+    slope: -0.11,
+    width: 0.8,
+  },
+];
+
+const DESKTOP_FLOW_LINES: readonly FlowLineDefinition[] = [
+  {
+    alpha: 0.2,
+    amplitude: 0.055,
+    baseY: 0.27,
+    frequency: 0.68,
+    markerPositions: [0.19, 0.73],
+    overscan: 0.18,
+    phase: 0.08,
+    slope: 0.08,
+    width: 1.2,
+  },
+  {
+    alpha: 0.105,
+    amplitude: 0.038,
+    baseY: 0.42,
+    frequency: 0.78,
+    markerPositions: [0.48],
+    overscan: 0.16,
+    phase: 0.4,
+    slope: -0.055,
+    width: 0.9,
+  },
+  {
+    alpha: 0.145,
+    amplitude: 0.05,
+    baseY: 0.6,
+    frequency: 0.63,
+    markerPositions: [0.28, 0.82],
+    overscan: 0.2,
+    phase: 0.7,
+    slope: 0.075,
+    width: 1.05,
+  },
+  {
+    alpha: 0.065,
+    amplitude: 0.034,
+    baseY: 0.74,
+    frequency: 0.84,
+    markerPositions: [],
+    overscan: 0.16,
+    phase: 0.94,
+    slope: -0.045,
+    width: 0.8,
+  },
+];
 
 export function useBackgroundCanvas({
   canvasRef,
@@ -121,7 +240,7 @@ export function useBackgroundCanvas({
           dprLimit: 1,
           fps: 0,
           particleCount: 0,
-          pointCount: 24,
+          pointCount: 30,
         };
       }
 
@@ -130,19 +249,19 @@ export function useBackgroundCanvas({
           dprLimit: 1.15,
           fps: mobileFps,
           particleCount: isLowPowerDevice ? 4 : 7,
-          pointCount: isLowPowerDevice ? 28 : 32,
+          pointCount: isLowPowerDevice ? 34 : 42,
         };
       }
 
       return {
         dprLimit: 1.5,
         fps: desktopFps,
-        particleCount: 12,
-        pointCount: 44,
+        particleCount: 11,
+        pointCount: 62,
       };
     };
 
-    const getCanvasPoint = (clientX: number, clientY: number) => {
+    const getCanvasPoint = (clientX: number, clientY: number): Point => {
       const bounds = canvas.getBoundingClientRect();
 
       return {
@@ -185,6 +304,7 @@ export function useBackgroundCanvas({
       }
 
       const quality = getQualityProfile();
+      const isMobile = mobileQuery.matches;
       const animationTime = staticFrame ? 0 : time * 0.001;
       const deltaSeconds = staticFrame
         ? 0
@@ -192,7 +312,7 @@ export function useBackgroundCanvas({
 
       lastDrawTime = time;
 
-      const followStrength = staticFrame ? 1 : 1 - Math.exp(-6.5 * deltaSeconds);
+      const followStrength = staticFrame ? 1 : 1 - Math.exp(-6.2 * deltaSeconds);
 
       pointerOffsetX += (pointerTargetX - pointerOffsetX) * followStrength;
       pointerOffsetY += (pointerTargetY - pointerOffsetY) * followStrength;
@@ -203,103 +323,50 @@ export function useBackgroundCanvas({
         pulse = null;
       }
 
-      const baseCenterX = width * 0.5;
-      const baseCenterY = height * (mobileQuery.matches ? 0.43 : 0.45);
-
       const pulseDirectionX = pulse ? (pulse.x / width - 0.5) * 2 : 0;
       const pulseDirectionY = pulse ? (pulse.y / height - 0.5) * 2 : 0;
-      const pulseOffsetLimit = mobileQuery.matches ? 8 : 13;
+      const attractionLimit = isMobile ? 4 : 7;
 
-      const centerX =
-        baseCenterX +
-        pointerOffsetX +
-        pulseDirectionX * pulseOffsetLimit * pulseSample.attraction;
-      const centerY =
-        baseCenterY +
-        pointerOffsetY +
-        pulseDirectionY * pulseOffsetLimit * pulseSample.attraction;
-
-      const radiusX = Math.min(
-        width * (mobileQuery.matches ? 0.43 : 0.27),
-        mobileQuery.matches ? 220 : 470,
-      );
-      const radiusY = Math.min(
-        height * (mobileQuery.matches ? 0.31 : 0.44),
-        mobileQuery.matches ? 290 : 395,
-      );
-
-      const breathing = staticFrame ? 0 : Math.sin(animationTime * 0.54) * 0.012;
-      const phase = staticFrame ? 0.75 : animationTime * 0.32;
-      const interactiveScale = 1 + pulseSample.scale;
+      const fieldOffsetX =
+        pointerOffsetX + pulseDirectionX * attractionLimit * pulseSample.attraction;
+      const fieldOffsetY =
+        pointerOffsetY + pulseDirectionY * attractionLimit * pulseSample.attraction;
 
       context.clearRect(0, 0, width, height);
+
+      drawAmbientField(context, width, height, animationTime, pulse, pulseSample, isMobile);
 
       drawParticles(context, particles, animationTime, staticFrame, {
         pulse,
         pulseIntensity: pulseSample.intensity,
       });
 
+      const flowLines = isMobile ? MOBILE_FLOW_LINES : DESKTOP_FLOW_LINES;
+      const breathing = staticFrame ? 0 : Math.sin(animationTime * 0.5) * 0.006;
+      const phase = staticFrame ? 0.38 : animationTime * 0.055;
+
+      flowLines.forEach((line, lineIndex) => {
+        const points = createFlowPoints({
+          breathing,
+          fieldOffsetX,
+          fieldOffsetY,
+          height,
+          line,
+          lineIndex,
+          phase,
+          pointCount: quality.pointCount,
+          pulse,
+          pulseSample,
+          width,
+        });
+
+        drawFlowLine(context, points, line, lineIndex, pulse, pulseSample, isMobile);
+        drawFlowMarkers(context, points, line, pulse, pulseSample, isMobile);
+      });
+
       if (pulse && pulseSample.intensity > 0) {
-        drawPulseRing(context, pulse, pulseSample.progress, mobileQuery.matches);
+        drawPulseAura(context, pulse, pulseSample.progress, isMobile);
       }
-
-      context.save();
-
-      traceOrganicBlob(
-        context,
-        centerX,
-        centerY,
-        (radiusX + 14) * interactiveScale,
-        (radiusY + 10) * interactiveScale,
-        phase + 0.72,
-        quality.pointCount,
-      );
-      context.lineWidth = 1 + pulseSample.intensity * 0.18;
-      context.strokeStyle = `rgba(14, 165, 233, ${0.13 + pulseSample.intensity * 0.07})`;
-      context.stroke();
-
-      traceOrganicBlob(
-        context,
-        centerX,
-        centerY,
-        radiusX * (1 + breathing) * interactiveScale,
-        radiusY * (1 + breathing * 0.72) * interactiveScale,
-        phase,
-        quality.pointCount,
-      );
-
-      const gradientRadius = Math.max(width, height) * 0.42;
-      const fillGradient = context.createRadialGradient(
-        centerX,
-        centerY,
-        0,
-        centerX,
-        centerY,
-        gradientRadius,
-      );
-
-      fillGradient.addColorStop(
-        0,
-        `rgba(255, 255, 255, ${0.88 + pulseSample.intensity * 0.05})`,
-      );
-      fillGradient.addColorStop(
-        0.38,
-        `rgba(204, 251, 241, ${0.34 + pulseSample.intensity * 0.08})`,
-      );
-      fillGradient.addColorStop(
-        0.72,
-        `rgba(103, 232, 249, ${0.12 + pulseSample.intensity * 0.045})`,
-      );
-      fillGradient.addColorStop(1, 'rgba(103, 232, 249, 0)');
-
-      context.fillStyle = fillGradient;
-      context.fill();
-
-      context.lineWidth = (mobileQuery.matches ? 1 : 1.25) + pulseSample.intensity * 0.35;
-      context.strokeStyle = `rgba(13, 148, 136, ${0.38 + pulseSample.intensity * 0.18})`;
-      context.stroke();
-
-      context.restore();
     };
 
     const stopAnimation = () => {
@@ -381,8 +448,8 @@ export function useBackgroundCanvas({
       const normalizedX = point.x / Math.max(1, width) - 0.5;
       const normalizedY = point.y / Math.max(1, height) - 0.5;
 
-      pointerTargetX = normalizedX * 14;
-      pointerTargetY = normalizedY * 10;
+      pointerTargetX = normalizedX * 9;
+      pointerTargetY = normalizedY * 6;
     };
 
     const resetPointerTarget = () => {
@@ -545,6 +612,249 @@ export function useBackgroundCanvas({
   }, [canvasRef, desktopFps, interactionRootSelector, mobileFps]);
 }
 
+function createFlowPoints({
+  breathing,
+  fieldOffsetX,
+  fieldOffsetY,
+  height,
+  line,
+  lineIndex,
+  phase,
+  pointCount,
+  pulse,
+  pulseSample,
+  width,
+}: {
+  breathing: number;
+  fieldOffsetX: number;
+  fieldOffsetY: number;
+  height: number;
+  line: FlowLineDefinition;
+  lineIndex: number;
+  phase: number;
+  pointCount: number;
+  pulse: PulseState | null;
+  pulseSample: PulseSample;
+  width: number;
+}): Point[] {
+  const points: Point[] = [];
+  const startX = -width * line.overscan;
+  const endX = width * (1 + line.overscan);
+  const pulseInfluenceRadius = Math.min(Math.max(width, height) * 0.28, 320);
+
+  for (let index = 0; index < pointCount; index += 1) {
+    const progress = index / Math.max(1, pointCount - 1);
+    const wavePhase = (progress * line.frequency + line.phase + phase) * TAU;
+    const secondaryPhase =
+      (progress * (line.frequency * 1.7) - line.phase * 0.6 - phase * 0.45) * TAU;
+
+    let x = lerp(startX, endX, progress) + fieldOffsetX;
+    let y =
+      height * line.baseY +
+      height * line.slope * (progress - 0.5) +
+      Math.sin(wavePhase) * height * line.amplitude * (1 + breathing) +
+      Math.sin(secondaryPhase) * height * line.amplitude * 0.18 +
+      fieldOffsetY * (0.72 + lineIndex * 0.06);
+
+    if (pulse && pulseSample.intensity > 0) {
+      const distanceX = pulse.x - x;
+      const distanceY = pulse.y - y;
+      const distance = Math.hypot(distanceX, distanceY);
+      const proximity = smoothstep(clamp(1 - distance / pulseInfluenceRadius, 0, 1));
+
+      if (distance > 0 && proximity > 0) {
+        const deformationStrength = pulseSample.deformation * proximity * 15;
+
+        x += (distanceX / distance) * deformationStrength;
+        y += (distanceY / distance) * deformationStrength;
+      }
+    }
+
+    points.push({ x, y });
+  }
+
+  return points;
+}
+
+function drawFlowLine(
+  context: CanvasRenderingContext2D,
+  points: Point[],
+  line: FlowLineDefinition,
+  lineIndex: number,
+  pulse: PulseState | null,
+  pulseSample: PulseSample,
+  isMobile: boolean,
+): void {
+  if (points.length < 2) {
+    return;
+  }
+
+  context.save();
+  context.lineCap = 'round';
+  context.lineJoin = 'round';
+
+  traceOpenSmoothPath(context, points);
+  context.lineWidth = line.width + 3.6;
+  context.strokeStyle = `rgba(45, 212, 191, ${line.alpha * 0.09})`;
+  context.stroke();
+
+  traceOpenSmoothPath(context, points);
+  context.lineWidth = line.width;
+  context.strokeStyle =
+    lineIndex === 0
+      ? `rgba(13, 148, 136, ${line.alpha})`
+      : `rgba(14, 165, 233, ${line.alpha})`;
+  context.stroke();
+
+  if (pulse && pulseSample.intensity > 0) {
+    const nearestIndex = findNearestPointIndex(points, pulse);
+    const nearestPoint = points[nearestIndex];
+
+    if (nearestPoint) {
+      const distance = Math.hypot(nearestPoint.x - pulse.x, nearestPoint.y - pulse.y);
+      const influenceRadius = isMobile ? 210 : 290;
+      const proximity = clamp(1 - distance / influenceRadius, 0, 1);
+
+      if (proximity > 0) {
+        const segmentRadius = Math.max(3, Math.round(points.length * 0.085));
+        const start = Math.max(0, nearestIndex - segmentRadius);
+        const end = Math.min(points.length, nearestIndex + segmentRadius + 1);
+        const segment = points.slice(start, end);
+
+        if (segment.length > 1) {
+          traceOpenSmoothPath(context, segment);
+          context.lineWidth = line.width + 0.8;
+          context.strokeStyle = `rgba(45, 212, 191, ${
+            proximity * pulseSample.intensity * 0.42
+          })`;
+          context.stroke();
+        }
+      }
+    }
+  }
+
+  context.restore();
+}
+
+function drawFlowMarkers(
+  context: CanvasRenderingContext2D,
+  points: Point[],
+  line: FlowLineDefinition,
+  pulse: PulseState | null,
+  pulseSample: PulseSample,
+  isMobile: boolean,
+): void {
+  if (line.markerPositions.length === 0 || points.length < 2) {
+    return;
+  }
+
+  context.save();
+
+  line.markerPositions.forEach((position) => {
+    const point = samplePoint(points, position);
+    let proximity = 0;
+
+    if (pulse && pulseSample.intensity > 0) {
+      const distance = Math.hypot(point.x - pulse.x, point.y - pulse.y);
+      proximity = clamp(1 - distance / (isMobile ? 180 : 240), 0, 1);
+    }
+
+    const emphasis = proximity * pulseSample.intensity;
+    const radius = 1.25 + emphasis * 1.1;
+
+    context.beginPath();
+    context.arc(point.x, point.y, radius + 3.2, 0, TAU);
+    context.fillStyle = `rgba(45, 212, 191, ${0.025 + emphasis * 0.055})`;
+    context.fill();
+
+    context.beginPath();
+    context.arc(point.x, point.y, radius, 0, TAU);
+    context.fillStyle = `rgba(13, 148, 136, ${0.4 + emphasis * 0.38})`;
+    context.fill();
+  });
+
+  context.restore();
+}
+
+function drawAmbientField(
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  time: number,
+  pulse: PulseState | null,
+  pulseSample: PulseSample,
+  isMobile: boolean,
+): void {
+  const driftX = Math.sin(time * 0.11) * width * 0.018;
+  const driftY = Math.cos(time * 0.09) * height * 0.012;
+  const primaryX = width * (isMobile ? 0.22 : 0.24) + driftX;
+  const primaryY = height * (isMobile ? 0.34 : 0.31) + driftY;
+  const secondaryX = width * (isMobile ? 0.86 : 0.78) - driftX * 0.6;
+  const secondaryY = height * (isMobile ? 0.66 : 0.61) - driftY * 0.7;
+  const radius = Math.max(width, height) * (isMobile ? 0.53 : 0.49);
+
+  context.save();
+
+  const primaryGlow = context.createRadialGradient(
+    primaryX,
+    primaryY,
+    0,
+    primaryX,
+    primaryY,
+    radius,
+  );
+
+  primaryGlow.addColorStop(0, 'rgba(204, 251, 241, 0.25)');
+  primaryGlow.addColorStop(0.48, 'rgba(103, 232, 249, 0.09)');
+  primaryGlow.addColorStop(1, 'rgba(103, 232, 249, 0)');
+
+  context.fillStyle = primaryGlow;
+  context.fillRect(0, 0, width, height);
+
+  const secondaryGlow = context.createRadialGradient(
+    secondaryX,
+    secondaryY,
+    0,
+    secondaryX,
+    secondaryY,
+    radius * 0.78,
+  );
+
+  secondaryGlow.addColorStop(0, 'rgba(45, 212, 191, 0.13)');
+  secondaryGlow.addColorStop(0.56, 'rgba(153, 246, 228, 0.055)');
+  secondaryGlow.addColorStop(1, 'rgba(153, 246, 228, 0)');
+
+  context.fillStyle = secondaryGlow;
+  context.fillRect(0, 0, width, height);
+
+  if (pulse && pulseSample.intensity > 0) {
+    const pulseRadius = (isMobile ? 118 : 170) * (0.76 + pulseSample.progress * 0.4);
+    const pulseGlow = context.createRadialGradient(
+      pulse.x,
+      pulse.y,
+      0,
+      pulse.x,
+      pulse.y,
+      pulseRadius,
+    );
+
+    pulseGlow.addColorStop(
+      0,
+      `rgba(204, 251, 241, ${pulseSample.intensity * 0.11})`,
+    );
+    pulseGlow.addColorStop(
+      0.46,
+      `rgba(45, 212, 191, ${pulseSample.intensity * 0.05})`,
+    );
+    pulseGlow.addColorStop(1, 'rgba(45, 212, 191, 0)');
+
+    context.fillStyle = pulseGlow;
+    context.fillRect(0, 0, width, height);
+  }
+
+  context.restore();
+}
+
 function createParticles(count: number, width: number, height: number): Particle[] {
   return Array.from({ length: count }, (_, index) => {
     const horizontalSeed = pseudoRandom(index * 17 + 11);
@@ -552,9 +862,9 @@ function createParticles(count: number, width: number, height: number): Particle
     const radiusSeed = pseudoRandom(index * 37 + 5);
 
     return {
-      alpha: 0.12 + pseudoRandom(index * 43 + 3) * 0.18,
+      alpha: 0.08 + pseudoRandom(index * 43 + 3) * 0.14,
       phase: pseudoRandom(index * 53 + 13) * TAU,
-      radius: 0.8 + radiusSeed * 1.3,
+      radius: 0.7 + radiusSeed * 1.15,
       x: horizontalSeed * width,
       y: verticalSeed * height,
     };
@@ -579,7 +889,7 @@ function drawParticles(
   context.fillStyle = 'rgb(20, 184, 166)';
 
   particles.forEach((particle) => {
-    const pulse = staticFrame ? 0.5 : (Math.sin(time * 0.55 + particle.phase) + 1) / 2;
+    const pulse = staticFrame ? 0.5 : (Math.sin(time * 0.48 + particle.phase) + 1) / 2;
 
     let x = particle.x;
     let y = particle.y;
@@ -589,12 +899,12 @@ function drawParticles(
       const distanceX = particle.x - interaction.pulse.x;
       const distanceY = particle.y - interaction.pulse.y;
       const distance = Math.hypot(distanceX, distanceY);
-      const influenceRadius = 240;
+      const influenceRadius = 230;
 
       proximity = Math.max(0, 1 - distance / influenceRadius);
 
       if (distance > 0) {
-        const displacement = proximity * interaction.pulseIntensity * 5;
+        const displacement = proximity * interaction.pulseIntensity * 3.5;
         x += (distanceX / distance) * displacement;
         y += (distanceY / distance) * displacement;
       }
@@ -602,8 +912,8 @@ function drawParticles(
 
     context.globalAlpha =
       particle.alpha *
-      (0.55 + pulse * 0.45) *
-      (1 + proximity * interaction.pulseIntensity * 0.3);
+      (0.58 + pulse * 0.42) *
+      (1 + proximity * interaction.pulseIntensity * 0.24);
 
     context.beginPath();
     context.arc(x, y, particle.radius, 0, TAU);
@@ -613,52 +923,121 @@ function drawParticles(
   context.restore();
 }
 
-function drawPulseRing(
+function drawPulseAura(
   context: CanvasRenderingContext2D,
   pulse: PulseState,
   progress: number,
   isMobile: boolean,
 ): void {
   const easedProgress = easeOutCubic(progress);
-  const radius = 12 + easedProgress * (isMobile ? 58 : 82);
-  const alpha = (1 - easedProgress) * 0.13;
+  const radius = 18 + easedProgress * (isMobile ? 72 : 104);
+  const alpha = (1 - easedProgress) * 0.07;
+
+  const gradient = context.createRadialGradient(
+    pulse.x,
+    pulse.y,
+    0,
+    pulse.x,
+    pulse.y,
+    radius,
+  );
+
+  gradient.addColorStop(0, `rgba(20, 184, 166, ${alpha})`);
+  gradient.addColorStop(0.44, `rgba(45, 212, 191, ${alpha * 0.42})`);
+  gradient.addColorStop(1, 'rgba(45, 212, 191, 0)');
 
   context.save();
-  context.beginPath();
-  context.arc(pulse.x, pulse.y, radius, 0, TAU);
-  context.lineWidth = 1;
-  context.strokeStyle = `rgba(20, 184, 166, ${alpha})`;
-  context.stroke();
+  context.fillStyle = gradient;
+  context.fillRect(pulse.x - radius, pulse.y - radius, radius * 2, radius * 2);
   context.restore();
 }
 
-function getPulseSample(pulse: PulseState | null, time: number) {
+function getPulseSample(pulse: PulseState | null, time: number): PulseSample {
   if (!pulse || time <= 0) {
     return {
       attraction: 0,
+      deformation: 0,
       finished: false,
       intensity: 0,
       progress: 0,
-      scale: 0,
     };
   }
 
   const progress = clamp((time - pulse.startedAt) / PULSE_DURATION, 0, 1);
 
   return {
-    attraction: sampleKeyframes(progress, [0, 0.16, 0.52, 1], [0, 1, 0.62, 0]),
+    attraction: sampleKeyframes(progress, [0, 0.17, 0.52, 1], [0, 1, 0.48, 0]),
+    deformation: sampleKeyframes(progress, [0, 0.18, 0.48, 1], [0, 1, -0.58, 0]),
     finished: progress >= 1,
-    intensity: sampleKeyframes(progress, [0, 0.15, 0.56, 1], [0, 1, 0.72, 0]),
+    intensity: sampleKeyframes(progress, [0, 0.14, 0.58, 1], [0, 1, 0.62, 0]),
     progress,
-    scale: sampleKeyframes(progress, [0, 0.16, 0.48, 1], [0, -0.01, 0.016, 0]),
   };
 }
 
-function sampleKeyframes(
-  progress: number,
-  times: number[],
-  values: number[],
-): number {
+function traceOpenSmoothPath(context: CanvasRenderingContext2D, points: Point[]): void {
+  const first = points[0];
+  const last = points.at(-1);
+
+  if (!first || !last) {
+    return;
+  }
+
+  context.beginPath();
+  context.moveTo(first.x, first.y);
+
+  for (let index = 1; index < points.length - 1; index += 1) {
+    const current = points[index];
+    const next = points[index + 1];
+
+    if (!current || !next) {
+      continue;
+    }
+
+    const midpointX = (current.x + next.x) / 2;
+    const midpointY = (current.y + next.y) / 2;
+
+    context.quadraticCurveTo(current.x, current.y, midpointX, midpointY);
+  }
+
+  const penultimate = points.at(-2);
+
+  if (penultimate) {
+    context.quadraticCurveTo(penultimate.x, penultimate.y, last.x, last.y);
+  }
+}
+
+function findNearestPointIndex(points: Point[], target: Point): number {
+  let nearestIndex = 0;
+  let nearestDistance = Number.POSITIVE_INFINITY;
+
+  points.forEach((point, index) => {
+    const distance = (point.x - target.x) ** 2 + (point.y - target.y) ** 2;
+
+    if (distance < nearestDistance) {
+      nearestDistance = distance;
+      nearestIndex = index;
+    }
+  });
+
+  return nearestIndex;
+}
+
+function samplePoint(points: Point[], progress: number): Point {
+  const clampedProgress = clamp(progress, 0, 1);
+  const scaledIndex = clampedProgress * Math.max(0, points.length - 1);
+  const lowerIndex = Math.floor(scaledIndex);
+  const upperIndex = Math.min(points.length - 1, lowerIndex + 1);
+  const localProgress = scaledIndex - lowerIndex;
+  const lower = points[lowerIndex] ?? { x: 0, y: 0 };
+  const upper = points[upperIndex] ?? lower;
+
+  return {
+    x: lerp(lower.x, upper.x, localProgress),
+    y: lerp(lower.y, upper.y, localProgress),
+  };
+}
+
+function sampleKeyframes(progress: number, times: number[], values: number[]): number {
   for (let index = 0; index < times.length - 1; index += 1) {
     const startTime = times[index];
     const endTime = times[index + 1];
@@ -697,6 +1076,10 @@ function easeOutCubic(value: number): number {
   return 1 - (1 - value) ** 3;
 }
 
+function lerp(start: number, end: number, progress: number): number {
+  return start + (end - start) * progress;
+}
+
 function clamp(value: number, minimum: number, maximum: number): number {
   return Math.min(maximum, Math.max(minimum, value));
 }
@@ -705,57 +1088,4 @@ function pseudoRandom(seed: number): number {
   const value = Math.sin(seed * 12.9898) * 43758.5453;
 
   return value - Math.floor(value);
-}
-
-function traceOrganicBlob(
-  context: CanvasRenderingContext2D,
-  centerX: number,
-  centerY: number,
-  radiusX: number,
-  radiusY: number,
-  phase: number,
-  pointCount: number,
-): void {
-  const points: { x: number; y: number }[] = [];
-
-  for (let index = 0; index < pointCount; index += 1) {
-    const angle = (index / pointCount) * TAU;
-    const distortion =
-      Math.sin(angle * 3 + phase) * 0.033 +
-      Math.sin(angle * 5 - phase * 0.72) * 0.018 +
-      Math.sin(angle * 2 + 1.35) * 0.012;
-
-    points.push({
-      x: centerX + Math.cos(angle) * radiusX * (1 + distortion),
-      y: centerY + Math.sin(angle) * radiusY * (1 + distortion),
-    });
-  }
-
-  const first = points[0];
-  const last = points[points.length - 1];
-
-  if (!first || !last) {
-    return;
-  }
-
-  context.beginPath();
-  context.moveTo((last.x + first.x) / 2, (last.y + first.y) / 2);
-
-  for (let index = 0; index < points.length; index += 1) {
-    const current = points[index];
-    const next = points[(index + 1) % points.length];
-
-    if (!current || !next) {
-      continue;
-    }
-
-    context.quadraticCurveTo(
-      current.x,
-      current.y,
-      (current.x + next.x) / 2,
-      (current.y + next.y) / 2,
-    );
-  }
-
-  context.closePath();
 }
