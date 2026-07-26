@@ -11,24 +11,26 @@ export default function HeroContent() {
         </span>
 
         <span className="text-[10px] font-semibold tracking-[0.06em] text-slate-600 uppercase min-[360px]:text-[11px] min-[360px]:tracking-[0.12em] sm:text-xs">
-          <span className="sm:hidden">Fisioterapia respiratória e funcional</span>
+          <span className="slect-none sm:hidden">Fisioterapia respiratória e funcional</span>
 
-          <span className="hidden sm:inline">Fisioterapia cardiorrespiratória e funcional</span>
+          <span className="slect-none hidden sm:inline">
+            Fisioterapia cardiorrespiratória e funcional
+          </span>
         </span>
       </div>
 
       <h1
         aria-label="Da alta hospitalar à retomada da rotina, seu cuidado continua."
-        className="font-space-grotesk text-foreground max-w-[20ch] text-[2.35rem] leading-[1.03] font-semibold tracking-[-0.05em] text-balance min-[360px]:text-[2.65rem] sm:text-6xl md:text-[4.4rem] lg:text-[4.85rem]"
+        className="font-space-grotesk text-foreground max-w-[20ch] text-[2.35rem] leading-[1.03] font-semibold tracking-[-0.05em] text-balance select-none min-[360px]:text-[2.65rem] sm:text-6xl md:text-[4.4rem] lg:text-[4.85rem]"
         data-hero-heading
       >
-        <span aria-hidden="true" className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
+        <span aria-hidden="true" className="-mb-[0.08em] block overflow-hidden pb-[0.08em]">
           <span className="block" data-hero-line>
             Da alta hospitalar
           </span>
         </span>
 
-        <span aria-hidden="true" className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
+        <span aria-hidden="true" className="-mb-[0.08em] block overflow-hidden pb-[0.08em]">
           <span
             className="block bg-linear-to-r from-teal-600 via-teal-500 to-sky-500 bg-clip-text text-transparent"
             data-hero-line
@@ -37,7 +39,7 @@ export default function HeroContent() {
           </span>
         </span>
 
-        <span aria-hidden="true" className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
+        <span aria-hidden="true" className="-mb-[0.08em] block overflow-hidden pb-[0.08em]">
           <span className="block" data-hero-line>
             seu cuidado continua.
           </span>
@@ -45,7 +47,7 @@ export default function HeroContent() {
       </h1>
 
       <p
-        className="text-foreground-muted mt-7 max-w-2xl text-base leading-7 text-pretty sm:text-lg sm:leading-8 md:mt-8 md:text-xl"
+        className="slect-none text-foreground-muted mt-7 max-w-2xl text-base leading-7 text-pretty sm:text-lg sm:leading-8 md:mt-8 md:text-xl"
         data-hero-copy
       >
         Atendimento domiciliar para continuar a recuperação após internações, ventilação mecânica ou

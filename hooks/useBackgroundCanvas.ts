@@ -16,6 +16,20 @@ interface Particle {
   y: number;
 }
 
+interface PointerGesture {
+  eligible: boolean;
+  id: number;
+  moved: boolean;
+  x: number;
+  y: number;
+}
+
+interface PulseState {
+  startedAt: number;
+  x: number;
+  y: number;
+}
+
 interface QualityProfile {
   dprLimit: number;
   fps: number;
@@ -26,14 +40,27 @@ interface QualityProfile {
 interface UseBackgroundCanvasOptions {
   canvasRef: RefObject<HTMLCanvasElement | null>;
   desktopFps?: number;
+  interactionRootSelector?: string;
   mobileFps?: number;
 }
 
 const TAU = Math.PI * 2;
+const PULSE_DURATION = 1200;
+const POINTER_MOVE_TOLERANCE = 10;
+const INTERACTIVE_SELECTOR = [
+  'a',
+  'button',
+  'input',
+  'select',
+  'textarea',
+  '[role="button"]',
+  '[data-hero-ignore-interaction]',
+].join(',');
 
 export function useBackgroundCanvas({
   canvasRef,
   desktopFps = 30,
+  interactionRootSelector,
   mobileFps = 18,
 }: UseBackgroundCanvasOptions): void {
   useEffect(() => {
@@ -52,7 +79,12 @@ export function useBackgroundCanvas({
       return;
     }
 
+    const interactionRoot = interactionRootSelector
+      ? canvas.closest<HTMLElement>(interactionRootSelector)
+      : canvas.parentElement;
+
     const mobileQuery = window.matchMedia('(max-width: 767px)');
+    const finePointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
     const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     const navigatorInfo = navigator as NavigatorWithMemory;
@@ -68,11 +100,18 @@ export function useBackgroundCanvas({
     let resizeFrame = 0;
     let startTimer = 0;
     let lastFrameTime = 0;
+    let lastDrawTime = 0;
     let isRunning = false;
     let isIntersecting = true;
     let animationEnabled = false;
     let particles: Particle[] = [];
-    let fillGradient: CanvasGradient | null = null;
+    let pointerGesture: PointerGesture | null = null;
+    let pulse: PulseState | null = null;
+
+    let pointerTargetX = 0;
+    let pointerTargetY = 0;
+    let pointerOffsetX = 0;
+    let pointerOffsetY = 0;
 
     const getQualityProfile = (): QualityProfile => {
       const isMobile = mobileQuery.matches;
@@ -103,6 +142,18 @@ export function useBackgroundCanvas({
       };
     };
 
+    const getCanvasPoint = (clientX: number, clientY: number) => {
+      const bounds = canvas.getBoundingClientRect();
+
+      return {
+        x: clamp(clientX - bounds.left, 0, bounds.width),
+        y: clamp(clientY - bounds.top, 0, bounds.height),
+      };
+    };
+
+    const isIgnoredTarget = (target: EventTarget | null) =>
+      target instanceof Element && target.closest(INTERACTIVE_SELECTOR) !== null;
+
     const rebuildCanvas = () => {
       const bounds = canvas.getBoundingClientRect();
 
@@ -122,25 +173,8 @@ export function useBackgroundCanvas({
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
       context.imageSmoothingEnabled = true;
 
-      const centerX = width * 0.5;
-      const centerY = height * (mobileQuery.matches ? 0.43 : 0.45);
-      const gradientRadius = Math.max(width, height) * 0.42;
-
-      fillGradient = context.createRadialGradient(
-        centerX,
-        centerY,
-        0,
-        centerX,
-        centerY,
-        gradientRadius,
-      );
-
-      fillGradient.addColorStop(0, 'rgba(255, 255, 255, 0.88)');
-      fillGradient.addColorStop(0.38, 'rgba(204, 251, 241, 0.34)');
-      fillGradient.addColorStop(0.72, 'rgba(103, 232, 249, 0.12)');
-      fillGradient.addColorStop(1, 'rgba(103, 232, 249, 0)');
-
       particles = createParticles(quality.particleCount, width, height);
+      lastDrawTime = 0;
 
       drawFrame(0, true);
     };
@@ -152,13 +186,38 @@ export function useBackgroundCanvas({
 
       const quality = getQualityProfile();
       const animationTime = staticFrame ? 0 : time * 0.001;
+      const deltaSeconds = staticFrame
+        ? 0
+        : Math.min(0.08, Math.max(0.001, (time - lastDrawTime) / 1000 || 0.016));
 
-      context.clearRect(0, 0, width, height);
+      lastDrawTime = time;
 
-      drawParticles(context, particles, animationTime, staticFrame);
+      const followStrength = staticFrame ? 1 : 1 - Math.exp(-6.5 * deltaSeconds);
 
-      const centerX = width * 0.5;
-      const centerY = height * (mobileQuery.matches ? 0.43 : 0.45);
+      pointerOffsetX += (pointerTargetX - pointerOffsetX) * followStrength;
+      pointerOffsetY += (pointerTargetY - pointerOffsetY) * followStrength;
+
+      const pulseSample = getPulseSample(pulse, time);
+
+      if (pulse && pulseSample.finished) {
+        pulse = null;
+      }
+
+      const baseCenterX = width * 0.5;
+      const baseCenterY = height * (mobileQuery.matches ? 0.43 : 0.45);
+
+      const pulseDirectionX = pulse ? (pulse.x / width - 0.5) * 2 : 0;
+      const pulseDirectionY = pulse ? (pulse.y / height - 0.5) * 2 : 0;
+      const pulseOffsetLimit = mobileQuery.matches ? 8 : 13;
+
+      const centerX =
+        baseCenterX +
+        pointerOffsetX +
+        pulseDirectionX * pulseOffsetLimit * pulseSample.attraction;
+      const centerY =
+        baseCenterY +
+        pointerOffsetY +
+        pulseDirectionY * pulseOffsetLimit * pulseSample.attraction;
 
       const radiusX = Math.min(
         width * (mobileQuery.matches ? 0.43 : 0.27),
@@ -171,6 +230,18 @@ export function useBackgroundCanvas({
 
       const breathing = staticFrame ? 0 : Math.sin(animationTime * 0.54) * 0.012;
       const phase = staticFrame ? 0.75 : animationTime * 0.32;
+      const interactiveScale = 1 + pulseSample.scale;
+
+      context.clearRect(0, 0, width, height);
+
+      drawParticles(context, particles, animationTime, staticFrame, {
+        pulse,
+        pulseIntensity: pulseSample.intensity,
+      });
+
+      if (pulse && pulseSample.intensity > 0) {
+        drawPulseRing(context, pulse, pulseSample.progress, mobileQuery.matches);
+      }
 
       context.save();
 
@@ -178,32 +249,54 @@ export function useBackgroundCanvas({
         context,
         centerX,
         centerY,
-        radiusX + 14,
-        radiusY + 10,
+        (radiusX + 14) * interactiveScale,
+        (radiusY + 10) * interactiveScale,
         phase + 0.72,
         quality.pointCount,
       );
-      context.lineWidth = 1;
-      context.strokeStyle = 'rgba(14, 165, 233, 0.13)';
+      context.lineWidth = 1 + pulseSample.intensity * 0.18;
+      context.strokeStyle = `rgba(14, 165, 233, ${0.13 + pulseSample.intensity * 0.07})`;
       context.stroke();
 
       traceOrganicBlob(
         context,
         centerX,
         centerY,
-        radiusX * (1 + breathing),
-        radiusY * (1 + breathing * 0.72),
+        radiusX * (1 + breathing) * interactiveScale,
+        radiusY * (1 + breathing * 0.72) * interactiveScale,
         phase,
         quality.pointCount,
       );
 
-      if (fillGradient) {
-        context.fillStyle = fillGradient;
-        context.fill();
-      }
+      const gradientRadius = Math.max(width, height) * 0.42;
+      const fillGradient = context.createRadialGradient(
+        centerX,
+        centerY,
+        0,
+        centerX,
+        centerY,
+        gradientRadius,
+      );
 
-      context.lineWidth = mobileQuery.matches ? 1 : 1.25;
-      context.strokeStyle = 'rgba(13, 148, 136, 0.38)';
+      fillGradient.addColorStop(
+        0,
+        `rgba(255, 255, 255, ${0.88 + pulseSample.intensity * 0.05})`,
+      );
+      fillGradient.addColorStop(
+        0.38,
+        `rgba(204, 251, 241, ${0.34 + pulseSample.intensity * 0.08})`,
+      );
+      fillGradient.addColorStop(
+        0.72,
+        `rgba(103, 232, 249, ${0.12 + pulseSample.intensity * 0.045})`,
+      );
+      fillGradient.addColorStop(1, 'rgba(103, 232, 249, 0)');
+
+      context.fillStyle = fillGradient;
+      context.fill();
+
+      context.lineWidth = (mobileQuery.matches ? 1 : 1.25) + pulseSample.intensity * 0.35;
+      context.strokeStyle = `rgba(13, 148, 136, ${0.38 + pulseSample.intensity * 0.18})`;
       context.stroke();
 
       context.restore();
@@ -259,7 +352,95 @@ export function useBackgroundCanvas({
 
       isRunning = true;
       lastFrameTime = 0;
+      lastDrawTime = 0;
       animationFrame = window.requestAnimationFrame(animationLoop);
+    };
+
+    const triggerPulse = (clientX: number, clientY: number) => {
+      if (reduceMotionQuery.matches || getQualityProfile().fps <= 0) {
+        return;
+      }
+
+      const point = getCanvasPoint(clientX, clientY);
+
+      pulse = {
+        startedAt: performance.now(),
+        x: point.x,
+        y: point.y,
+      };
+
+      syncAnimationState();
+    };
+
+    const updatePointerTarget = (clientX: number, clientY: number) => {
+      if (!finePointerQuery.matches || reduceMotionQuery.matches) {
+        return;
+      }
+
+      const point = getCanvasPoint(clientX, clientY);
+      const normalizedX = point.x / Math.max(1, width) - 0.5;
+      const normalizedY = point.y / Math.max(1, height) - 0.5;
+
+      pointerTargetX = normalizedX * 14;
+      pointerTargetY = normalizedY * 10;
+    };
+
+    const resetPointerTarget = () => {
+      pointerTargetX = 0;
+      pointerTargetY = 0;
+    };
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!event.isPrimary || event.button !== 0) {
+        return;
+      }
+
+      pointerGesture = {
+        eligible: !isIgnoredTarget(event.target),
+        id: event.pointerId,
+        moved: false,
+        x: event.clientX,
+        y: event.clientY,
+      };
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      updatePointerTarget(event.clientX, event.clientY);
+
+      if (!pointerGesture || pointerGesture.id !== event.pointerId) {
+        return;
+      }
+
+      const distanceX = event.clientX - pointerGesture.x;
+      const distanceY = event.clientY - pointerGesture.y;
+
+      if (
+        distanceX * distanceX + distanceY * distanceY >
+        POINTER_MOVE_TOLERANCE * POINTER_MOVE_TOLERANCE
+      ) {
+        pointerGesture.moved = true;
+      }
+    };
+
+    const handlePointerUp = (event: PointerEvent) => {
+      const gesture = pointerGesture;
+      pointerGesture = null;
+
+      if (
+        !gesture ||
+        gesture.id !== event.pointerId ||
+        gesture.moved ||
+        !gesture.eligible ||
+        isIgnoredTarget(event.target)
+      ) {
+        return;
+      }
+
+      triggerPulse(event.clientX, event.clientY);
+    };
+
+    const handlePointerCancel = () => {
+      pointerGesture = null;
     };
 
     const scheduleResize = () => {
@@ -276,6 +457,9 @@ export function useBackgroundCanvas({
     };
 
     const handleMediaChange = () => {
+      resetPointerTarget();
+      pointerGesture = null;
+      pulse = null;
       scheduleResize();
     };
 
@@ -309,8 +493,25 @@ export function useBackgroundCanvas({
       window.addEventListener('resize', scheduleResize, { passive: true });
     }
 
+    interactionRoot?.addEventListener('pointerdown', handlePointerDown, {
+      passive: true,
+    });
+    interactionRoot?.addEventListener('pointermove', handlePointerMove, {
+      passive: true,
+    });
+    interactionRoot?.addEventListener('pointerup', handlePointerUp, {
+      passive: true,
+    });
+    interactionRoot?.addEventListener('pointercancel', handlePointerCancel, {
+      passive: true,
+    });
+    interactionRoot?.addEventListener('pointerleave', resetPointerTarget, {
+      passive: true,
+    });
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
     mobileQuery.addEventListener('change', handleMediaChange);
+    finePointerQuery.addEventListener('change', handleMediaChange);
     reduceMotionQuery.addEventListener('change', handleMediaChange);
 
     startTimer = window.setTimeout(() => {
@@ -330,11 +531,18 @@ export function useBackgroundCanvas({
         window.removeEventListener('resize', scheduleResize);
       }
 
+      interactionRoot?.removeEventListener('pointerdown', handlePointerDown);
+      interactionRoot?.removeEventListener('pointermove', handlePointerMove);
+      interactionRoot?.removeEventListener('pointerup', handlePointerUp);
+      interactionRoot?.removeEventListener('pointercancel', handlePointerCancel);
+      interactionRoot?.removeEventListener('pointerleave', resetPointerTarget);
+
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       mobileQuery.removeEventListener('change', handleMediaChange);
+      finePointerQuery.removeEventListener('change', handleMediaChange);
       reduceMotionQuery.removeEventListener('change', handleMediaChange);
     };
-  }, [canvasRef, desktopFps, mobileFps]);
+  }, [canvasRef, desktopFps, interactionRootSelector, mobileFps]);
 }
 
 function createParticles(count: number, width: number, height: number): Particle[] {
@@ -358,6 +566,10 @@ function drawParticles(
   particles: Particle[],
   time: number,
   staticFrame: boolean,
+  interaction: {
+    pulse: PulseState | null;
+    pulseIntensity: number;
+  },
 ): void {
   if (particles.length === 0) {
     return;
@@ -369,13 +581,124 @@ function drawParticles(
   particles.forEach((particle) => {
     const pulse = staticFrame ? 0.5 : (Math.sin(time * 0.55 + particle.phase) + 1) / 2;
 
-    context.globalAlpha = particle.alpha * (0.55 + pulse * 0.45);
+    let x = particle.x;
+    let y = particle.y;
+    let proximity = 0;
+
+    if (interaction.pulse && interaction.pulseIntensity > 0) {
+      const distanceX = particle.x - interaction.pulse.x;
+      const distanceY = particle.y - interaction.pulse.y;
+      const distance = Math.hypot(distanceX, distanceY);
+      const influenceRadius = 240;
+
+      proximity = Math.max(0, 1 - distance / influenceRadius);
+
+      if (distance > 0) {
+        const displacement = proximity * interaction.pulseIntensity * 5;
+        x += (distanceX / distance) * displacement;
+        y += (distanceY / distance) * displacement;
+      }
+    }
+
+    context.globalAlpha =
+      particle.alpha *
+      (0.55 + pulse * 0.45) *
+      (1 + proximity * interaction.pulseIntensity * 0.3);
+
     context.beginPath();
-    context.arc(particle.x, particle.y, particle.radius, 0, TAU);
+    context.arc(x, y, particle.radius, 0, TAU);
     context.fill();
   });
 
   context.restore();
+}
+
+function drawPulseRing(
+  context: CanvasRenderingContext2D,
+  pulse: PulseState,
+  progress: number,
+  isMobile: boolean,
+): void {
+  const easedProgress = easeOutCubic(progress);
+  const radius = 12 + easedProgress * (isMobile ? 58 : 82);
+  const alpha = (1 - easedProgress) * 0.13;
+
+  context.save();
+  context.beginPath();
+  context.arc(pulse.x, pulse.y, radius, 0, TAU);
+  context.lineWidth = 1;
+  context.strokeStyle = `rgba(20, 184, 166, ${alpha})`;
+  context.stroke();
+  context.restore();
+}
+
+function getPulseSample(pulse: PulseState | null, time: number) {
+  if (!pulse || time <= 0) {
+    return {
+      attraction: 0,
+      finished: false,
+      intensity: 0,
+      progress: 0,
+      scale: 0,
+    };
+  }
+
+  const progress = clamp((time - pulse.startedAt) / PULSE_DURATION, 0, 1);
+
+  return {
+    attraction: sampleKeyframes(progress, [0, 0.16, 0.52, 1], [0, 1, 0.62, 0]),
+    finished: progress >= 1,
+    intensity: sampleKeyframes(progress, [0, 0.15, 0.56, 1], [0, 1, 0.72, 0]),
+    progress,
+    scale: sampleKeyframes(progress, [0, 0.16, 0.48, 1], [0, -0.01, 0.016, 0]),
+  };
+}
+
+function sampleKeyframes(
+  progress: number,
+  times: number[],
+  values: number[],
+): number {
+  for (let index = 0; index < times.length - 1; index += 1) {
+    const startTime = times[index];
+    const endTime = times[index + 1];
+    const startValue = values[index];
+    const endValue = values[index + 1];
+
+    if (
+      startTime === undefined ||
+      endTime === undefined ||
+      startValue === undefined ||
+      endValue === undefined
+    ) {
+      continue;
+    }
+
+    if (progress <= endTime) {
+      const localProgress = clamp(
+        (progress - startTime) / Math.max(0.0001, endTime - startTime),
+        0,
+        1,
+      );
+      const eased = smoothstep(localProgress);
+
+      return startValue + (endValue - startValue) * eased;
+    }
+  }
+
+  return values.at(-1) ?? 0;
+}
+
+function smoothstep(value: number): number {
+  return value * value * (3 - 2 * value);
+}
+
+function easeOutCubic(value: number): number {
+  return 1 - (1 - value) ** 3;
+}
+
+function clamp(value: number, minimum: number, maximum: number): number {
+  return Math.min(maximum, Math.max(minimum, value));
 }
 
 function pseudoRandom(seed: number): number {
