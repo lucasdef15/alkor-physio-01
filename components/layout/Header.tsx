@@ -318,7 +318,7 @@ export default function Header() {
         immediate: reduceMotionRef.current,
         lerp: reduceMotionRef.current ? 1 : 0.095,
         lock: false,
-        offset: isHome ? 0 : -88,
+        offset: isHome ? 0 : 100,
 
         onComplete: () => {
           isNavigatingRef.current = false;

@@ -42,15 +42,6 @@ export default function MobileHeader({
   const reduceMotionRef = useRef(false);
   const wasOpenRef = useRef(false);
 
-  /**
-   * Uma única timeline controla toda a abertura:
-   *
-   * 1. painel aparece;
-   * 2. links entram em sequência;
-   * 3. CTA entra por último.
-   *
-   * Não existe ScrollTrigger nem animação de abertura via CSS.
-   */
   useGSAP(
     () => {
       const menu = menuRef.current;
@@ -166,9 +157,6 @@ export default function MobileHeader({
     },
   );
 
-  /**
-   * Reproduz ou reverte a timeline conforme o estado externo.
-   */
   useEffect(() => {
     const menu = menuRef.current;
 
@@ -221,18 +209,9 @@ export default function MobileHeader({
       timeline.timeScale(1).play();
       return;
     }
-
-    /*
-     * O fechamento fica ligeiramente mais rápido.
-     * Isso faz o menu parecer responsivo, não pesado.
-     */
     timeline.timeScale(1.15).reverse();
   }, [isOpen]);
 
-  /**
-   * Leva o foco ao primeiro link quando abre
-   * e devolve ao botão quando fecha.
-   */
   useEffect(() => {
     let frameId: number | undefined;
 
@@ -257,26 +236,25 @@ export default function MobileHeader({
     };
   }, [isOpen, triggerRef]);
 
-  /**
-   * Navegação por âncora é delegada ao Header,
-   * que já possui a instância do Lenis.
-   */
   const handleNavigation = useCallback(
     (event: MouseEvent<HTMLAnchorElement>, href: string) => {
-      if (href.startsWith('#')) {
-        event.preventDefault();
-        onNavigate(href);
+      if (!href.startsWith('#')) {
+        setIsMenuOpen(false);
         return;
       }
 
+      event.preventDefault();
+      event.stopPropagation();
+
       setIsMenuOpen(false);
+
+      window.requestAnimationFrame(() => {
+        onNavigate(href);
+      });
     },
     [onNavigate, setIsMenuOpen],
   );
 
-  /**
-   * Mantém o foco dentro do menu enquanto estiver aberto.
-   */
   const trapFocus = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
       if (!isOpen || event.key !== 'Tab') {
@@ -311,7 +289,7 @@ export default function MobileHeader({
   return (
     <div
       aria-hidden={!isOpen}
-      className="invisible absolute top-[calc(100%+0.5rem)] right-0 left-0 max-h-[calc(100dvh-7rem)] touch-pan-y overflow-x-hidden overflow-y-auto overscroll-contain rounded-[1.4rem] border border-slate-900/7 bg-white/92 shadow-[0_2px_4px_rgba(15,23,42,0.04),0_24px_64px_-24px_rgba(15,23,42,0.28)] backdrop-blur-2xl backdrop-saturate-150 will-change-[transform,opacity,clip-path] lg:hidden"
+      className="invisible absolute top-[calc(100%+0.5rem)] right-0 left-0 z-[70] max-h-[calc(100dvh-7rem)] touch-pan-y overflow-x-hidden overflow-y-auto overscroll-contain rounded-[1.4rem] border border-slate-900/7 bg-white/92 shadow-[0_2px_4px_rgba(15,23,42,0.04),0_24px_64px_-24px_rgba(15,23,42,0.28)] backdrop-blur-2xl backdrop-saturate-150 will-change-[transform,opacity,clip-path] lg:hidden"
       data-lenis-prevent
       id="mobile-menu"
       inert={!isOpen}

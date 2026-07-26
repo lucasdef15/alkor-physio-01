@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { useRevealAnimation } from '@/components/motion/useRevealAnimation';
 
+import EvolutionAreaItem from './EvolutionAreaItem';
 import { EVOLUTION_AREAS, EVOLUTION_DIMENSIONS } from './results.data';
 
 export default function Results() {
@@ -15,7 +16,7 @@ export default function Results() {
     <section
       aria-labelledby="results-title"
       className="relative overflow-hidden bg-white"
-      id="resultados"
+      id="results"
       ref={containerRef}
     >
       <div
@@ -30,7 +31,14 @@ export default function Results() {
 
       <div className="site-container section-space relative">
         <div
-          className="relative mx-auto max-w-6xl overflow-hidden rounded-[1.75rem] border border-slate-900/10 bg-[#07131f] shadow-[0_45px_110px_-52px_rgba(2,15,27,0.78)] sm:rounded-[2.25rem] lg:rounded-[2.75rem]"
+          className={[
+            'relative mx-auto max-w-6xl overflow-hidden',
+            'rounded-[1.75rem] border border-slate-900/10',
+            'bg-[#07131f]',
+            'shadow-[0_45px_110px_-52px_rgba(2,15,27,0.78)]',
+            'sm:rounded-[2.25rem]',
+            'lg:rounded-[2.75rem]',
+          ].join(' ')}
           data-reveal="media"
         >
           <div
@@ -92,7 +100,7 @@ export default function Results() {
                   {EVOLUTION_DIMENSIONS.map((dimension, index) => (
                     <span
                       className="group/dimension inline-flex items-center gap-2 text-xs text-slate-400"
-                      key={dimension}
+                      key={dimension + index}
                     >
                       <span className="font-mono text-[0.55rem] font-semibold tracking-[0.14em] text-white/20 transition-colors duration-300 group-hover/dimension:text-teal-300/70">
                         {String(index + 1).padStart(2, '0')}
@@ -108,68 +116,13 @@ export default function Results() {
             </header>
 
             <ol className="relative grid border-t border-white/8 lg:grid-rows-4 lg:border-t-0 lg:border-l">
-              {EVOLUTION_AREAS.map(({ description, id, indicators, title }, index) => {
-                const number = String(index + 1).padStart(2, '0');
-
-                return (
-                  <li
-                    className="group relative flex overflow-hidden border-b border-white/8 last:border-b-0"
-                    data-reveal
-                    key={id}
-                  >
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-0 bg-linear-to-r from-teal-400/[0.065] via-teal-400/[0.018] to-transparent opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100"
-                    />
-
-                    <div
-                      aria-hidden="true"
-                      className="absolute top-0 bottom-0 left-0 w-px origin-top scale-y-0 bg-linear-to-b from-teal-300 via-teal-400/60 to-transparent transition-transform duration-500 ease-out group-hover:scale-y-100"
-                    />
-
-                    <div
-                      aria-hidden="true"
-                      className="absolute top-1/2 right-8 size-24 -translate-y-1/2 rounded-full bg-teal-300/[0.035] opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
-                    />
-
-                    <div className="relative grid w-full grid-cols-[2.25rem_minmax(0,1fr)] gap-x-4 px-5 py-7 sm:grid-cols-[2.75rem_minmax(0,1fr)] sm:gap-x-6 sm:px-8 sm:py-8 lg:items-start lg:px-10 lg:py-9">
-                      <div className="relative pt-1">
-                        <span className="font-mono text-[0.62rem] font-semibold tracking-[0.18em] text-slate-500 transition-colors duration-300 group-hover:text-teal-300/80">
-                          {number}
-                        </span>
-
-                        <span
-                          aria-hidden="true"
-                          className="absolute top-7 left-[0.1rem] h-0 w-px bg-linear-to-b from-teal-300/50 to-transparent transition-all duration-500 ease-out group-hover:h-8"
-                        />
-                      </div>
-
-                      <div className="min-w-0">
-                        <h3 className="font-space-grotesk max-w-md text-lg leading-[1.2] font-semibold tracking-[-0.025em] text-white transition-transform duration-500 ease-out motion-safe:group-hover:translate-x-1 sm:text-xl lg:text-[1.35rem]">
-                          {title}
-                        </h3>
-
-                        <p className="mt-3 max-w-xl text-sm leading-6 text-slate-300 sm:text-[0.95rem] sm:leading-7">
-                          {description}
-                        </p>
-
-                        <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/6 pt-4">
-                          {indicators.map((indicator) => (
-                            <span
-                              className="inline-flex items-center gap-2 text-[0.58rem] font-semibold tracking-[0.12em] text-slate-500 uppercase transition-colors duration-300 group-hover:text-slate-400"
-                              key={indicator}
-                            >
-                              <span className="size-1 rounded-full bg-teal-400/60 shadow-[0_0_0_3px_rgba(45,212,191,0.04)] transition-shadow duration-300 group-hover:shadow-[0_0_0_4px_rgba(45,212,191,0.07)]" />
-
-                              {indicator}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                );
-              })}
+              {EVOLUTION_AREAS.map((area, index) => (
+                <EvolutionAreaItem
+                  area={area}
+                  key={area.id}
+                  number={String(index + 1).padStart(2, '0')}
+                />
+              ))}
             </ol>
           </div>
 
@@ -188,14 +141,32 @@ export default function Results() {
             </p>
 
             <Link
-              className="group inline-flex w-fit items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-white transition-all duration-300 hover:border-teal-300/30 hover:bg-teal-300/[0.07] hover:text-teal-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-300"
+              className={[
+                'group inline-flex w-fit items-center justify-center gap-2',
+                'rounded-full border border-white/12 bg-white/[0.04]',
+                'px-4 py-2.5 text-xs font-semibold text-white',
+                'transition-all duration-300',
+                'hover:border-teal-300/30',
+                'hover:bg-teal-300/[0.07]',
+                'hover:text-teal-200',
+                'active:border-teal-300/30',
+                'active:bg-teal-300/[0.07]',
+                'active:text-teal-200',
+                'focus-visible:outline-2',
+                'focus-visible:outline-offset-4',
+                'focus-visible:outline-teal-300',
+              ].join(' ')}
               href="#contato"
             >
               <span>Conversar sobre sua recuperação</span>
 
               <svg
                 aria-hidden="true"
-                className="size-4 transition-transform duration-300 ease-out group-hover:translate-x-1"
+                className={[
+                  'size-4 transition-transform duration-300 ease-out',
+                  'group-hover:translate-x-1',
+                  'group-active:translate-x-1',
+                ].join(' ')}
                 fill="none"
                 stroke="currentColor"
                 strokeLinecap="round"
