@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from 'react';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { useRevealAnimation } from '@/components/motion/useRevealAnimation';
 import { useActiveSymptom } from '@/hooks/useActiveSymptom';
@@ -24,7 +24,32 @@ export default function ForWhom() {
   const { active, clearHover, clearSelection, hasSelection, hover, isActive, isSelected, select } =
     useActiveSymptom(SYMPTOMS);
 
-  const horizontalScroll = useHorizontalScroll(symptomsRef);
+  const selectedId = SYMPTOMS.find((symptom) => isSelected(symptom.id))?.id ?? null;
+  const selectedIdRef = useRef<null | string>(selectedId);
+
+  selectedIdRef.current = selectedId;
+
+  const handleSelect = useCallback(
+    (id: string) => {
+      selectedIdRef.current = selectedIdRef.current === id ? null : id;
+      select(id);
+    },
+    [select],
+  );
+
+  const handleActiveCardChange = useCallback(
+    (id: string) => {
+      if (selectedIdRef.current === id) return;
+
+      selectedIdRef.current = id;
+      select(id);
+    },
+    [select],
+  );
+
+  const horizontalScroll = useHorizontalScroll(symptomsRef, {
+    onActiveChange: handleActiveCardChange,
+  });
 
   useEffect(() => {
     const clearWithEscape = (event: KeyboardEvent) => {
@@ -148,10 +173,10 @@ export default function ForWhom() {
                 className={[
                   'flex cursor-grab snap-x snap-mandatory gap-2',
                   'touch-pan-x overflow-x-auto pb-2 select-none',
-                  '[scrollbar-width:none]',
+                  '[scrollbar-width:none] overscroll-x-contain scroll-smooth',
                   'data-[dragging=true]:cursor-grabbing',
                   'data-[dragging=true]:snap-none',
-                  'sm:grid sm:cursor-auto sm:grid-cols-2',
+                  'sm:grid sm:cursor-auto sm:snap-none sm:grid-cols-2',
                   'sm:overflow-visible sm:pb-0 sm:select-auto',
                   'lg:grid-cols-1',
                   '[&::-webkit-scrollbar]:hidden',
@@ -164,10 +189,12 @@ export default function ForWhom() {
                   <SymptomCard
                     active={isActive(symptom.id)}
                     index={index}
+                    isFirst={index === 0}
+                    isLast={index === SYMPTOMS.length - 1}
                     key={symptom.id}
                     onLeave={clearHover}
                     onPeek={hover}
-                    onSelect={select}
+                    onSelect={handleSelect}
                     selected={isSelected(symptom.id)}
                     symptom={symptom}
                   />

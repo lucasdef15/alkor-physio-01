@@ -1,7 +1,7 @@
 export default function ScrollBadge({ text = 'Explore' }: { text?: string }) {
   return (
     <div
-      className="absolute inset-x-0 bottom-0 flex justify-center text-slate-400"
+      className="absolute inset-x-0 bottom-5 flex justify-center text-slate-400"
       data-hero-scroll
     >
       <div className="flex flex-col items-center gap-3">
