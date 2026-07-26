@@ -7,16 +7,20 @@ import ScrollBadge from './ScrollBadge';
 export default function Hero() {
   return (
     <section
-      className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-linear-to-b from-[#F8FCFD] via-[#F3FAFB] to-[#EDF8FA]"
+      className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-linear-to-b from-[#F8FCFD] via-[#F3FAFB] to-[#F7FBFC]"
       id="inicio"
     >
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute top-[5%] left-[-15%] h-144 w-xl rounded-full bg-cyan-300/18 blur-[180px]" />
+
         <div className="absolute right-[-15%] bottom-[-10%] h-136 w-136 rounded-full bg-teal-300/18 blur-[180px]" />
+
+        <div className="absolute bottom-[-10rem] left-1/2 h-72 w-[85%] max-w-6xl -translate-x-1/2 rounded-full bg-teal-200/10 blur-[140px]" />
       </div>
 
       <HeroBackgroundCanvas />
-      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-5 pt-32 pb-32 text-center sm:px-8 md:pt-36 md:pb-28">
+
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-5 pt-32 pb-40 text-center sm:px-8 md:pt-36 md:pb-36">
         <HeroContent />
         <HeroActions />
         <Indicators />

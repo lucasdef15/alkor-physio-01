@@ -17,7 +17,10 @@ export default function Testimonials() {
         <div className="mx-auto max-w-3xl text-center">
           <span className="section-eyebrow">Experiências de cuidado</span>
           <h2 className="section-title mx-auto mt-6">
-            Quando respirar melhor também significa viver com mais confiança.
+            Quando respirar melhor também significa
+            <span className="block bg-linear-to-r from-teal-600 via-cyan-500 to-sky-500 bg-clip-text text-transparent">
+              viver com mais confiança.
+            </span>
           </h2>
           <p className="section-copy mx-auto mt-6">
             A evolução clínica ganha significado quando devolve tranquilidade, autonomia e presença

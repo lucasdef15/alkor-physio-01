@@ -54,7 +54,7 @@ export default function ContactCTA() {
                 id="contact-title"
               >
                 Sua recuperação pode começar com uma{' '}
-                <span className="bg-linear-to-r from-teal-300 via-teal-200 to-sky-300 bg-clip-text text-transparent">
+                <span className="block bg-linear-to-r from-teal-600 via-cyan-500 to-sky-500 bg-clip-text text-transparent">
                   conversa tranquila.
                 </span>
               </h2>

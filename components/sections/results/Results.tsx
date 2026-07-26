@@ -69,7 +69,7 @@ export default function Results() {
                   id="results-title"
                 >
                   Quando o corpo volta a responder,
-                  <span className="mt-1 block bg-linear-to-r from-teal-300 via-teal-200 to-sky-300 bg-clip-text text-transparent">
+                  <span className="block bg-linear-to-r from-teal-600 via-cyan-500 to-sky-500 bg-clip-text text-transparent">
                     a rotina começa a mudar.
                   </span>
                 </h2>

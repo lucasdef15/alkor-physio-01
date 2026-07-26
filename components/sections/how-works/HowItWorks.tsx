@@ -24,7 +24,10 @@ export default function HowItWorks() {
               <span className="section-eyebrow">Abordagem clínica</span>
 
               <h2 className="section-title mt-6 max-w-lg" id="clinical-approach-title">
-                Cada decisão parte do que o paciente apresenta.
+                Cada decisão parte do que o{' '}
+                <span className="block bg-linear-to-r from-teal-600 via-cyan-500 to-sky-500 bg-clip-text text-transparent">
+                  paciente apresenta.
+                </span>
               </h2>
 
               <p className="section-copy mt-6 max-w-lg">

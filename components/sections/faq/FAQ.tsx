@@ -10,7 +10,10 @@ export default function FAQ() {
           <div className="lg:sticky lg:top-32">
             <span className="section-eyebrow">Dúvidas frequentes</span>
             <h2 className="section-title mt-6 max-w-[13ch]">
-              Clareza também faz parte do cuidado.
+              Clareza também faz{' '}
+              <span className="block bg-linear-to-r from-teal-600 via-cyan-500 to-sky-500 bg-clip-text text-transparent">
+                parte do cuidado.
+              </span>
             </h2>
             <p className="section-copy mt-6 max-w-md">
               Encontre respostas para as dúvidas mais comuns antes de iniciar seu acompanhamento.
