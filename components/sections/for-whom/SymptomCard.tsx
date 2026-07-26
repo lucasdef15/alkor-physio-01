@@ -3,6 +3,8 @@ import type { Symptom } from './symptoms';
 interface SymptomCardProps {
   active: boolean;
   index: number;
+  isFirst: boolean;
+  isLast: boolean;
   onLeave: () => void;
   onPeek: (id: string) => void;
   onSelect: (id: string) => void;
@@ -13,6 +15,8 @@ interface SymptomCardProps {
 export default function SymptomCard({
   active,
   index,
+  isFirst,
+  isLast,
   onLeave,
   onPeek,
   onSelect,
@@ -29,7 +33,10 @@ export default function SymptomCard({
       aria-pressed={selected}
       className={[
         'group relative flex min-h-[92px] w-[86%] max-w-[20rem]',
-        'shrink-0 snap-start flex-col justify-between overflow-hidden',
+        'shrink-0 snap-center flex-col justify-between overflow-hidden',
+        '[scroll-snap-stop:always]',
+        isFirst ? 'ml-[7%] min-[420px]:ml-[11%] sm:ml-0' : '',
+        isLast ? 'mr-[7%] min-[420px]:mr-[11%] sm:mr-0' : '',
         'rounded-[1.1rem] border px-4 py-3.5 text-left',
         'transition-all duration-500 ease-out outline-none',
         'focus-visible:ring-2 focus-visible:ring-white/70',
@@ -39,8 +46,20 @@ export default function SymptomCard({
         'sm:px-4 sm:py-3.5',
         'motion-safe:hover:-translate-y-px',
       ].join(' ')}
+      data-horizontal-scroll-item
+      data-scroll-id={symptom.id}
       onBlur={onLeave}
-      onClick={() => onSelect(symptom.id)}
+      onClick={(event) => {
+        if (window.matchMedia('(max-width: 639px)').matches) {
+          event.currentTarget.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'center',
+          });
+        }
+
+        onSelect(symptom.id);
+      }}
       onFocus={() => onPeek(symptom.id)}
       onMouseEnter={() => onPeek(symptom.id)}
       onMouseLeave={onLeave}
