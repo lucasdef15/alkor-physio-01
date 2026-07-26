@@ -13,6 +13,7 @@ export default function Indicators() {
             'flex min-h-9 items-center justify-center gap-2 px-3 py-1.5 text-center text-[.8rem] leading-none',
             index > 0 ? 'sm:border-l sm:border-slate-200/80' : '',
           ].join(' ')}
+          data-hero-indicator
           key={label}
         >
           <svg

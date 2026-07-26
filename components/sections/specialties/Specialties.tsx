@@ -33,7 +33,10 @@ export default function Specialties() {
             <span className="section-eyebrow">Áreas de atuação</span>
 
             <h2 className="section-title mt-6 max-w-3xl" id="practice-areas-title">
-              Cuidado respiratório e funcional em diferentes momentos da recuperação.
+              Cuidado respiratório e funcional em diferentes{' '}
+              <span className="block bg-linear-to-r from-teal-600 via-cyan-500 to-sky-500 bg-clip-text text-transparent">
+                momentos da recuperação.
+              </span>
             </h2>
           </div>
 

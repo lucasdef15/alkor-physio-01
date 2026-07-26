@@ -1,6 +1,9 @@
+'use client';
+
 import { ArrowRight, CalendarCheck, MapPin, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 
+import { useRevealAnimation } from '@/components/motion/useRevealAnimation';
 import { SITE_CONFIG } from '@/lib/site';
 
 const CONTACT_DETAILS = [
@@ -19,11 +22,16 @@ const CONTACT_DETAILS = [
 ] as const;
 
 export default function ContactCTA() {
+  const { containerRef } = useRevealAnimation<HTMLElement>({
+    start: 'top 84%',
+  });
+
   return (
     <section
       aria-labelledby="contact-title"
       className="relative scroll-mt-24 overflow-hidden bg-[#06111c]"
       id="contato"
+      ref={containerRef}
     >
       <div
         aria-hidden="true"
@@ -43,7 +51,7 @@ export default function ContactCTA() {
       <div className="site-container section-space relative">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] lg:items-end lg:gap-16 xl:gap-24">
-            <header>
+            <header data-reveal="default">
               <span className="inline-flex items-center gap-3 text-[0.62rem] font-semibold tracking-[0.2em] text-teal-300 uppercase">
                 <span className="h-px w-7 bg-teal-300/50" />
                 Próximo passo
@@ -54,7 +62,7 @@ export default function ContactCTA() {
                 id="contact-title"
               >
                 Sua recuperação pode começar com uma{' '}
-                <span className="bg-linear-to-r from-teal-300 via-teal-200 to-sky-300 bg-clip-text text-transparent">
+                <span className="block bg-linear-to-r from-teal-600 via-cyan-500 to-sky-500 bg-clip-text text-transparent">
                   conversa tranquila.
                 </span>
               </h2>
@@ -65,7 +73,10 @@ export default function ContactCTA() {
               </p>
             </header>
 
-            <div className="border-t border-white/10 pt-7 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10 xl:pl-12">
+            <div
+              className="border-t border-white/10 pt-7 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10 xl:pl-12"
+              data-reveal="default"
+            >
               <div className="flex items-start gap-4">
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-teal-300/15 bg-teal-300/[0.07] text-teal-300">
                   <CalendarCheck aria-hidden="true" className="size-4.5" strokeWidth={1.7} />
@@ -142,6 +153,7 @@ export default function ContactCTA() {
                   'sm:py-6',
                   index > 0 ? 'border-t border-white/8 sm:border-t-0 sm:border-l' : '',
                 ].join(' ')}
+                data-reveal="default"
                 key={label}
               >
                 <span className="text-[0.58rem] font-semibold tracking-[0.17em] text-slate-500 uppercase">
@@ -163,7 +175,10 @@ export default function ContactCTA() {
             ))}
           </div>
 
-          <p className="mx-auto mt-6 max-w-2xl text-center text-xs leading-5 text-slate-500">
+          <p
+            className="mx-auto mt-6 max-w-2xl text-center text-xs leading-5 text-slate-500"
+            data-reveal="default"
+          >
             O contato inicial não substitui uma avaliação profissional. A indicação e a condução do
             acompanhamento dependem das necessidades identificadas em cada caso.
           </p>

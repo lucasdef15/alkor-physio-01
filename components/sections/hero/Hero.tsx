@@ -1,27 +1,27 @@
 import HeroActions from './HeroActions';
 import HeroBackgroundCanvas from './HeroBackgroundCanvas';
 import HeroContent from './HeroContent';
+import HeroMotion from './HeroMotion';
 import Indicators from './Indicators';
 import ScrollBadge from './ScrollBadge';
 
 export default function Hero() {
   return (
-    <section
-      className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-linear-to-b from-[#F8FCFD] via-[#F3FAFB] to-[#EDF8FA]"
-      id="inicio"
-    >
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute top-[5%] left-[-15%] h-144 w-xl rounded-full bg-cyan-300/18 blur-[180px]" />
-        <div className="absolute right-[-15%] bottom-[-10%] h-136 w-136 rounded-full bg-teal-300/18 blur-[180px]" />
-      </div>
+    <HeroMotion>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_16%,rgba(103,232,249,.22),transparent_34%),radial-gradient(circle_at_88%_82%,rgba(45,212,191,.18),transparent_32%),radial-gradient(circle_at_50%_78%,rgba(153,246,228,.11),transparent_36%)]"
+        data-hero-ambient
+      />
 
       <HeroBackgroundCanvas />
-      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-5 pt-32 pb-32 text-center sm:px-8 md:pt-36 md:pb-28">
+
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-5 pt-32 pb-40 text-center sm:px-8 md:pt-36 md:pb-36">
         <HeroContent />
         <HeroActions />
         <Indicators />
         <ScrollBadge />
       </div>
-    </section>
+    </HeroMotion>
   );
 }
