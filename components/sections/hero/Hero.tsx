@@ -1,22 +1,18 @@
 import HeroActions from './HeroActions';
 import HeroBackgroundCanvas from './HeroBackgroundCanvas';
 import HeroContent from './HeroContent';
+import HeroMotion from './HeroMotion';
 import Indicators from './Indicators';
 import ScrollBadge from './ScrollBadge';
 
 export default function Hero() {
   return (
-    <section
-      className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-linear-to-b from-[#F8FCFD] via-[#F3FAFB] to-[#F7FBFC]"
-      id="inicio"
-    >
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute top-[5%] left-[-15%] h-144 w-xl rounded-full bg-cyan-300/18 blur-[180px]" />
-
-        <div className="absolute right-[-15%] bottom-[-10%] h-136 w-136 rounded-full bg-teal-300/18 blur-[180px]" />
-
-        <div className="absolute bottom-[-10rem] left-1/2 h-72 w-[85%] max-w-6xl -translate-x-1/2 rounded-full bg-teal-200/10 blur-[140px]" />
-      </div>
+    <HeroMotion>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_16%,rgba(103,232,249,.22),transparent_34%),radial-gradient(circle_at_88%_82%,rgba(45,212,191,.18),transparent_32%),radial-gradient(circle_at_50%_78%,rgba(153,246,228,.11),transparent_36%)]"
+        data-hero-ambient
+      />
 
       <HeroBackgroundCanvas />
 
@@ -26,6 +22,6 @@ export default function Hero() {
         <Indicators />
         <ScrollBadge />
       </div>
-    </section>
+    </HeroMotion>
   );
 }
