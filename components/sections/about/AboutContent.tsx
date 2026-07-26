@@ -236,7 +236,7 @@ export default function AboutContent() {
               id="care-manifesto-title"
             >
               Da internação ao retorno à rotina, cada etapa da{' '}
-              <span className="text-primary">recuperação</span> importa.
+              <span className="text-primary">recuperação importa.</span>
             </h3>
 
             <p className="text-foreground-muted mx-auto mt-5 max-w-2xl text-sm leading-7 text-pretty sm:text-base">

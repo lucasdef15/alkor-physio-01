@@ -429,7 +429,7 @@ export default function Header() {
             onClick={(event) => handleDesktopNavigation(event, '#inicio')}
           >
             <div className="will-change-transform" ref={logoRef}>
-              <LogoSVG className="h-12 w-auto" fill="#0f172a" name="DAVI FARIA" surname="PHYSIO" />
+              <LogoSVG className="w-29.78 h-12" fill="#0f172a" name="DAVI FARIA" surname="PHYSIO" />
             </div>
           </Link>
 
