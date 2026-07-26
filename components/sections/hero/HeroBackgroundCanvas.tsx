@@ -10,14 +10,14 @@ export default function HeroBackgroundCanvas() {
   useBackgroundCanvas({
     canvasRef,
     desktopFps: 30,
-    interactionRootSelector: '[data-hero-interaction-root]',
+    interactionRootSelector: '#inicio',
     mobileFps: 18,
   });
 
   return (
     <canvas
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 h-full w-full opacity-70 [contain:strict]"
+      className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.86] [contain:strict] sm:opacity-75"
       data-hero-canvas
       ref={canvasRef}
     />
