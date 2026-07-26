@@ -10,6 +10,7 @@ export default function HeroBackgroundCanvas() {
   useBackgroundCanvas({
     canvasRef,
     desktopFps: 30,
+    interactionRootSelector: '[data-hero-interaction-root]',
     mobileFps: 18,
   });
 
