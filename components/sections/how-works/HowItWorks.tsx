@@ -2,6 +2,7 @@
 
 import { useRevealAnimation } from '@/components/motion/useRevealAnimation';
 
+import ApproachItem from './ApproachItem';
 import { PILLARS } from './works.data';
 
 export default function HowItWorks() {
@@ -58,63 +59,7 @@ export default function HowItWorks() {
             {PILLARS.map((pillar, index) => {
               const number = String(index + 1).padStart(2, '0');
 
-              return (
-                <li
-                  className="group border-border/70 relative overflow-hidden border-b last:border-b-0"
-                  data-reveal="default"
-                  key={pillar.id}
-                >
-                  <div
-                    aria-hidden="true"
-                    className="from-primary/[0.045] absolute inset-0 bg-gradient-to-r to-transparent opacity-0 transition-opacity duration-500 motion-safe:group-hover:opacity-100"
-                  />
-
-                  <div
-                    className={[
-                      'relative grid grid-cols-[2.5rem_minmax(0,1fr)]',
-                      'gap-x-4 py-7',
-                      'sm:grid-cols-[3rem_minmax(0,1fr)] sm:gap-x-6 sm:py-9',
-                      'lg:grid-cols-[3.5rem_minmax(0,0.8fr)_minmax(0,1.2fr)]',
-                      'lg:items-start lg:gap-x-7 lg:py-10',
-                    ].join(' ')}
-                  >
-                    <span
-                      className={[
-                        'row-span-2 pt-1',
-                        'font-mono text-[0.65rem] font-semibold',
-                        'tracking-[0.18em] text-slate-300',
-                        'transition-colors duration-300',
-                        'group-hover:text-primary/70',
-                        'lg:row-span-1',
-                      ].join(' ')}
-                    >
-                      {number}
-                    </span>
-
-                    <h3
-                      className={[
-                        'font-space-grotesk text-foreground',
-                        'max-w-sm text-lg leading-[1.2] font-semibold',
-                        'tracking-[-0.025em]',
-                        'transition-transform duration-500',
-                        'motion-safe:group-hover:translate-x-1',
-                        'sm:text-xl',
-                      ].join(' ')}
-                    >
-                      {pillar.title}
-                    </h3>
-
-                    <p className="text-foreground-muted mt-3 max-w-xl text-sm leading-6 lg:mt-0 lg:pr-5">
-                      {pillar.description}
-                    </p>
-                  </div>
-
-                  <div
-                    aria-hidden="true"
-                    className="bg-primary absolute bottom-0 left-0 h-px w-0 transition-[width] duration-500 ease-out motion-safe:group-hover:w-24"
-                  />
-                </li>
-              );
+              return <ApproachItem key={pillar.id} number={number} pillar={pillar} />;
             })}
           </ol>
         </div>
