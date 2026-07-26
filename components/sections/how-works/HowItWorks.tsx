@@ -13,7 +13,7 @@ export default function HowItWorks() {
     <section
       aria-labelledby="clinical-approach-title"
       className="relative overflow-hidden border-y border-slate-100 bg-[linear-gradient(180deg,#ffffff_0%,#f7fcfc_100%)]"
-      id="como-funciona"
+      id="abordagem"
       ref={containerRef}
     >
       <div

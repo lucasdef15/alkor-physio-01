@@ -6,7 +6,7 @@ import Hero from '@/components/sections/hero/Hero';
 import HowItWorks from '@/components/sections/how-works/HowItWorks';
 import Results from '@/components/sections/results/Results';
 import Specialties from '@/components/sections/specialties/Specialties';
-import Testimonials from '@/components/sections/testimonials/Testimonials';
+// import Testimonials from '@/components/sections/testimonials/Testimonials';
 
 export default function Home() {
   return (
@@ -17,7 +17,7 @@ export default function Home() {
       <Specialties />
       <HowItWorks />
       <Results />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <FAQ />
       <ContactCTA />
     </div>

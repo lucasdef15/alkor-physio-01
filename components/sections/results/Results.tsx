@@ -15,7 +15,7 @@ export default function Results() {
     <section
       aria-labelledby="results-title"
       className="relative overflow-hidden bg-white"
-      id="resultados"
+      id="results"
       ref={containerRef}
     >
       <div
